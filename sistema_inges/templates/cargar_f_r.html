@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}
+  Agregar Factura
+{% endblock %}
+{% block content %}
+	<div class="span4">
+		<section id="contenido">
+	    	<form method="post">
+	    		<div id="form">
+	        		{% csrf_token %}
+		    		{{form.as_p}}
+		    		<input class="btn" type="submit" value="Guardar y cargar otro" name="addanother">
+		    		<input class="btn btn-info" type="submit" value="Guardar" name="save">
+
+		    	</div>
+			<form>
+		</section>
+	</div>
+
+	<div class="span7">
+		<h3>&Uacute;ltima Cargada</h3>
+				{% if ultimaFactura %}
+				<table class="table">
+					<thead>
+					    <tr>
+					      <th>Fecha</th>
+					      <th>Emisor</th>
+					      <th>#Factura</th>
+					      <th>Neto</th>
+					      <th>Iva</th>
+					      <th>P/Otros</th>
+					      <th>TOTAL</th>
+					      <th></th>
+					    </tr>
+					</thead>
+					<tbody>
+	    			<tr>
+					    	<td>{{ultimaFactura.fecha}}</td>
+						    <td>{{ultimaFactura.emisor|upper}}</td>
+						    <td>{{ultimaFactura.nro_factura}}</td>
+						    <td>${{ultimaFactura.neto|floatformat:"-2"}}</td>
+						    <td>${{ultimaFactura.impuesto|floatformat:"-2"}}</td>
+						    <td>${{ultimaFactura.percepciones_otros|floatformat:"-2"}}</td>
+						    <td>${{ultimaFactura.total|floatformat:"-2"}}</td>
+						    <td><a class="btn btn-link" href="/admin/facturacion/factura_recibida/{{ultimaFactura.pk}}/delete"><i class="icon-remove"></i></a><a class="btn btn-link" href="/admin/facturacion/factura_recibida/{{ultimaFactura.pk}}/"><i class="icon-pencil"></i></a></td>
+						</tr>
+	    		</tbody>
+	    		</table>
+	    		{% else %}
+	    		{% endif %}
+			</div>
+{% block script %}
+<script>
+$( document ).ready(function() {
+	$("#id_fecha").attr("type", "date")
+});
+</script>
+{% endblock %}
+{% endblock %}

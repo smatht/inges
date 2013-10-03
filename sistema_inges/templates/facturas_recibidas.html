@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block title %}
+  Facturas recibidas
+{% endblock %}
+{% block content %}
+	<div class="container-fluid">
+		<div class="row-fluid">
+			<div class="span12">
+				<label class="control-label">Seleccione rango a mostrar:</label>
+				<select id="select-mes-inicial" style="width:100px">
+				  <option value="1">Enero</option>
+				  <option value="2">Febrero</option>
+				  <option value="3">Marzo</option>
+				  <option value="4">Abril</option>
+				  <option value="5">Mayo</option>
+				  <option value="6">Junio</option>
+				  <option value="7">Julio</option>
+				  <option value="8">Agosto</option>
+				  <option value="9">Septiembre</option>
+				  <option value="10">Octubre</option>
+				  <option value="11">Noviembre</option>
+				  <option value="12">Diciembre</option>
+				</select>
+				<select id="select-mes-final" style="width:100px">
+				  <option value="1">Enero</option>
+				  <option value="2">Febrero</option>
+				  <option value="3">Marzo</option>
+				  <option value="4">Abril</option>
+				  <option value="5">Mayo</option>
+				  <option value="6">Junio</option>
+				  <option value="7">Julio</option>
+				  <option value="8">Agosto</option>
+				  <option value="9">Septiembre</option>
+				  <option value="10">Octubre</option>
+				  <option value="11">Noviembre</option>
+				  <option value="12">Diciembre</option>
+				</select>
+				<button class="btn btn-primary btn-block" style="width:75px" type="button" onclick="buscarFacturas()">Buscar</button>
+				<a class="btn btn-mini btn-inverse pull-right" href="/facturas_recibidas/add/">Cargar</a>
+			</div>
+			<div class="span12">
+				{% if facturas %}
+				<table class="table">
+					<thead>
+					    <tr>
+					      <th>#</th>
+					      <th>Fecha</th>
+					      <th>Emisor</th>
+					      <th>#Factura</th>
+					      <th>Neto s/iva</th>
+					      <th>Iva</th>
+					      <th>P/Otros</th>
+					      <th>TOTAL</th>
+					      <th></th>
+					    </tr>
+					</thead>
+					<tbody>
+	    		{% for factura in facturas %}
+	    			<tr>
+						    <td>{{forloop.counter}}</td>
+					    	<td>{{factura.fecha}}</td>
+						    <td>{{factura.emisor|upper}}</td>
+						    <td>{{factura.nro_factura}}</td>
+						    <td>${{factura.neto|floatformat:"-2"}}</td>
+						    <td>${{factura.impuesto|floatformat:"-2"}} <span class="badge">{{factura.iva}}%</span></td>
+						    <td>${{factura.percepciones_otros|floatformat:"-2"}}</td>
+						    <td>${{factura.total|floatformat:"-2"}}</td>
+						    <td><a class="btn btn-link" href="/admin/facturacion/factura_recibida/{{factura.pk}}/delete"><i class="icon-remove"></i></a><a class="btn btn-link" href="/admin/facturacion/factura_recibida/{{factura.pk}}/"><i class="icon-pencil"></i></a></td>
+						</tr>
+	    		{% endfor %}
+	    		</tbody>
+	    		</table>
+	    		{% else %}
+	    			<div class="alert alert-error">
+	    				<strong>Oh no hay nada!</strong> No se encontro ninguna factura registrada este mes.
+					</div>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+	{% block script %}
+	  <script type="text/javascript">
+        function buscarFacturas(){
+	      var a = document.getElementById('select-mes-inicial');
+	      var b = document.getElementById('select-mes-final');
+	      var desde = a.options[a.selectedIndex].value;
+	      var hasta = b.options[b.selectedIndex].value;
+	      window.open("/facturas_recibidas/"+desde+"/"+hasta,"_self")
+
+	    }
+  	  </script>
+    {% endblock %}
+{% endblock %}
