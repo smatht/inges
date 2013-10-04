@@ -1,0 +1,8 @@
+.header-login{
+	background-color: #373b3d;
+	background-repeat: no-repeat;
+	background-image: -webkit-gradient(linear, left top, right top, from(#3f4345), to(#373b3d));
+	border-left: 1px solid #2f3334;
+	height: 45px;
+	padding-left: 10px;
+}

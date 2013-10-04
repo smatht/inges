@@ -173,3 +173,66 @@ from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
 TEMPLATE_CONTEXT_PROCESSORS = TCP + (
     'django.core.context_processors.request',
 )
+
+# Django Suit configuration example
+SUIT_CONFIG = {
+    # header
+    'ADMIN_NAME': 'Sistema Inge$',
+    # 'HEADER_DATE_FORMAT': 'l, j. F Y',
+    # 'HEADER_TIME_FORMAT': 'H:i',
+
+    # forms
+    'SHOW_REQUIRED_ASTERISK': False,  # Default True
+    # 'CONFIRM_UNSAVED_CHANGES': True, # Default True
+
+    # menu
+    # 'SEARCH_URL': '/admin/auth/user/',
+    # 'MENU_ICONS': {
+    #    'sites': 'icon-leaf',
+    #    'auth': 'icon-lock',
+    # },
+    # 'MENU_OPEN_FIRST_CHILD': True, # Default True
+    # 'MENU_EXCLUDE': ('auth.group',),
+    # 'MENU': (
+    #     'sites',
+    #     {'app': 'auth', 'icon':'icon-lock', 'models': ('user', 'group')},
+    #     {'label': 'Settings', 'icon':'icon-cog', 'models': ('auth.user', 'auth.group')},
+    #     {'label': 'Support', 'icon':'icon-question-sign', 'url': '/support/'},
+    # ),
+    'MENU_ORDER': (
+
+      (('facturacion', '/administracion/facturacion/factura_recibida/',),
+        (
+            ('Facturas recibidas', '/administracion/facturacion/factura_recibida/',),
+            ('Facturas emitidas', '/administracion/facturacion/factura_emitida/',),
+
+            ('Empresas', '/administracion/facturacion/empresa/',),
+            ('Discriminacion IVA', '/facturacion/discriminacion_iva/',),
+
+        )
+      ),
+      ('auth', ('user', 'group')),
+      # ('sites',),
+
+
+      
+
+      # To add custom item, define it as tuple or list:
+      # For parent: (Name, Link, Icon, Permission) - Last two are optional
+      # For child: (Name, Link, Permission) - Last one is optional
+      # You can also mix custom and native apps and models
+      # Link can be absolute url or url name
+      # Permission can be string or tuple/list for multiple
+      # If MENU_OPEN_FIRST_CHILD=True and children exists, you can leave parent link blank
+
+      # Example:
+      (('Custom link', '/admin/custom/', 'icon-cog',),
+       (
+           ('Child 1', '/admin/child/', 'auth.add_user'),
+           ('Child 2', '/admin/child2/')
+       )
+      )
+    )
+    # misc
+    # 'LIST_PER_PAGE': 15
+}

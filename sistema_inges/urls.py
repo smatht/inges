@@ -5,14 +5,16 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = patterns('',
-	url(r'^$', 'facturacion.views.index', name='index'),
+	url(r'^$', 'facturacion.views.inicio', name='inicio'),
     url(r'^facturas_recibidas/$', 'facturacion.views.facturas_recibidas', name='facturas-recibidas'),
 	url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^administracion/', include(admin.site.urls)),
     (r'^logout/$', 'django.contrib.auth.views.logout',
                           {'next_page': '/'}),
     url(r'^facturas_recibidas/(\d+)/(\d+)$', 'facturacion.views.facturas_recibidas', name='facturas'),
     url(r'^facturas_recibidas/add/$', 'facturacion.views.addFR', name='add'),
+    url(r'^facturacion/discriminacion_iva/$', 'facturacion.views.discriminacionIva', name='DI'),
+
 
     # Examples:
     # url(r'^$', 'sistema_inges.views.home', name='home'),
