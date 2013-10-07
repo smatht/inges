@@ -1,4 +1,4 @@
-from facturacion.models import Factura_recibida, Iva, Empresa
+from facturacion.models import *
 from django.contrib import admin
 from actions import export_as_csv
 
@@ -24,5 +24,7 @@ class Factura_recibida_admin(admin.ModelAdmin):
 		return "%.2f" % resultado
 
 admin.site.register(Factura_recibida, Factura_recibida_admin)
+admin.site.register(Factura_emitida)
 admin.site.register(Iva)
 admin.site.register(Empresa)
+admin.site.register(Ente)

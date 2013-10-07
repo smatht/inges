@@ -20,7 +20,7 @@ class Factura_recibida(models.Model):
 	fecha = models.DateField()
 	emisor = models.ForeignKey(to=Empresa, related_name="pertenece")
 	nro_factura = models.CharField(max_length=15)
-	neto = models.DecimalField(max_digits=6, decimal_places=2)
+	neto = models.DecimalField(max_digits=10, decimal_places=2)
 	iva = models.ForeignKey(to=Iva, related_name="posee")
 	percepciones_otros = models.DecimalField(max_digits=6, decimal_places=2, default=0)
 	# Para registrar al usuario que agrega el registro
@@ -64,11 +64,15 @@ class Factura_emitida(models.Model):
 	fecha = models.DateField()
 	ente = models.ForeignKey(to=Ente, related_name="pertenece")
 	nro_factura = models.CharField(max_length=15)
-	neto_iva = models.DecimalField(max_digits=6, decimal_places=2)
+	neto_iva = models.DecimalField(max_digits=10, decimal_places=2)
 	# iva = models.ForeignKey(to=Iva, related_name="corresponde")
 
+	def __unicode__(self):
+		
+		return "para: " + unicode(self.ente) + " - fecha: "+unicode(self.fecha)
+
 	def iva(self):
-		resultado = self.neto_iva - (self.neto_iva/1.21)
+		resultado = float(self.neto_iva) - (float(self.neto_iva)/float(1.21))
 		return resultado
 
 	

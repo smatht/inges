@@ -8,8 +8,8 @@ import calendar
 from facturacion.forms import *
 from django.template.context import RequestContext
 
-def index(request):
-	template = 'index.html'
+def inicio(request):
+	template = 'inicio.html'
 	# return render(request, template,{"request":request})
 	username = password = ''
 	if request.POST:
@@ -21,12 +21,29 @@ def index(request):
         	if user.is_active:
         		login(request, user)
             	state = "You're successfully logged in!"
+                return HttpResponseRedirect("/administracion/")
+ 
         	# else:
          #    	state = "Your account is not active, please contact the site admin."
         else:
         	state = "Your username and/or password were incorrect."
 
 	return render(request, template,{'request': request, 'state': state})
+
+def discriminacionIva(request):
+    now = datetime.datetime.now()
+    facturas_emitidas = Factura_emitida.objects.filter(fecha__month = now.month)
+    facturas_recibidas = Factura_recibida.objects.filter(fecha__month = now.month)
+    facturacion_iva = 0;
+    descuento_iva = 0;
+    for f in facturas_emitidas:
+        descuento_iva = descuento_iva + f.iva()
+    for fr in facturas_recibidas:
+        facturacion_iva = facturacion_iva + fr.impuesto()
+    template = 'discriminacion_iva.html'
+
+    
+    return render(request, template,{'request': request, 'fact_iva': facturacion_iva, 'title': 'Discriminacion del IVA', 'desc_iva': descuento_iva})
 
 @login_required
 def facturas_recibidas(request, desde=0, hasta=0):
