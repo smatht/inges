@@ -37,10 +37,12 @@ def discriminacionIva(request):
     facturacion_iva = 0;
     descuento_iva = 0;
     for f in facturas_emitidas:
-        facturacion_iva = facturacion_iva + f.iva()
+        descuento_iva = descuento_iva + f.iva()
     for fr in facturas_recibidas:
-        descuento_iva = descuento_iva + fr.impuesto()
+        facturacion_iva = facturacion_iva + fr.impuesto()
     template = 'discriminacion_iva.html'
+
+    
     return render(request, template,{'request': request, 'fact_iva': facturacion_iva, 'title': 'Discriminacion del IVA', 'desc_iva': descuento_iva})
 
 @login_required
