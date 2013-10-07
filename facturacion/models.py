@@ -38,9 +38,13 @@ class Factura_recibida(models.Model):
 	def valor_iva_imagen(self):
 		resultado = (self.iva.porcentaje * self.neto)/100
 		if self.iva.porcentaje == 21:
-			return 'http://placehold.it/80x4 0/89B51F/ffffff/&text=$+%.2f' % resultado
+			return 'http://placehold.it/80x4 0/2ECC5F/ffffff/&text=$+%.2f' % resultado
 		elif self.iva.porcentaje == 10.5:
-			return 'http://placehold.it/80x4 0/E8117F/ffffff/&text=$+%.2f' % resultado
+			return 'http://placehold.it/80x4 0/FF8753/ffffff/&text=$+%.2f' % resultado
+		elif self.iva.porcentaje == 27:
+			return 'http://placehold.it/80x4 0/5E7699/ffffff/&text=$+%.2f' % resultado
+		elif self.iva.porcentaje == 0:
+			return 'http://placehold.it/80x4 0/069F9C/FFFFFF/&text=$+%.2f' % resultado
 
 	def impuesto(self):
 		resultado = (self.iva.porcentaje * self.neto)/100
