@@ -15,7 +15,8 @@ class Factura_recibida_admin(admin.ModelAdmin):
 	actions = [export_as_csv]
 	def valor_iva(self, obj):
 		url = obj.valor_iva_imagen()
-		tag = '<img src="%s" />' % url
+		# tag = '<img src="%s" />' % url
+		tag = url
 		return tag
 	valor_iva.allow_tags = True
 

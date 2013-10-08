@@ -207,31 +207,18 @@ SUIT_CONFIG = {
             ('Facturas emitidas', '/administracion/facturacion/factura_emitida/',),
 
             ('Empresas', '/administracion/facturacion/empresa/',),
-            ('Discriminacion IVA', '/facturacion/discriminacion_iva/',),
+            ('Informes', '/facturacion/informes/',),
 
         )
       ),
       ('auth', ('user', 'group')),
-      # ('sites',),
-
-
       
-
-      # To add custom item, define it as tuple or list:
-      # For parent: (Name, Link, Icon, Permission) - Last two are optional
-      # For child: (Name, Link, Permission) - Last one is optional
-      # You can also mix custom and native apps and models
-      # Link can be absolute url or url name
-      # Permission can be string or tuple/list for multiple
-      # If MENU_OPEN_FIRST_CHILD=True and children exists, you can leave parent link blank
-
-      # Example:
-      (('Custom link', '/admin/custom/', 'icon-cog',),
-       (
-           ('Child 1', '/admin/child/', 'auth.add_user'),
-           ('Child 2', '/admin/child2/')
-       )
-      )
+      # (('Custom link', '/admin/custom/', 'icon-cog',),
+      #  (
+      #      ('Child 1', '/admin/child/', 'auth.add_user'),
+      #      ('Child 2', '/admin/child2/')
+      #  )
+      # )
     )
     # misc
     # 'LIST_PER_PAGE': 15

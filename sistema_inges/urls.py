@@ -13,7 +13,7 @@ urlpatterns = patterns('',
                           {'next_page': '/'}),
     url(r'^facturas_recibidas/(\d+)/(\d+)$', 'facturacion.views.facturas_recibidas', name='facturas'),
     url(r'^facturas_recibidas/add/$', 'facturacion.views.addFR', name='add'),
-    url(r'^facturacion/discriminacion_iva/$', 'facturacion.views.discriminacionIva', name='DI'),
+    url(r'^facturacion/informes/$', 'facturacion.views.informesFacturacion', name='informe facturacion'),
 
 
     # Examples:

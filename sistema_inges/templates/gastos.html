@@ -6,53 +6,7 @@
   <script src="/static/js/chart/highcharts.js" type="text/javascript"></script>
   <script src="/static/js/chart/modules/exporting.js" type="text/javascript"></script>
   <script type="text/javascript">
-  $(function () {
-    ivaFact = {{fact_iva}};
-    descuento = {{desc_iva}};
-    diferencia = ivaFact - descuento;
-    $('#grafico').highcharts({
-        chart: {
-            plotBackgroundColor: null,
-            plotBorderWidth: null,
-            plotShadow: false
-        },
-        title: {
-            text: 'DISCRIMINACION DEL IVA DEL MES'
-        },
-        tooltip: {
-          pointFormat: '{series.name}: <b>${point.y:.1f}</b>'
-        },
-        plotOptions: {
-            pie: {
-                allowPointSelect: false,
-                cursor: 'pointer',
-                dataLabels: {
-                    enabled: true,
-                    color: '#000000',
-                    connectorColor: '#000000',
-                    format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-                }
-            }
-        },
-        series: [{
-            type: 'pie',
-            name: 'Cantidad',
-            data: [
-                
-                ['Iva de facturacion',   {{fact_iva}}],
-                {
-                    name: 'Diferencia',
-                    //y: ({{fact_iva}} - {{desc_iva}}),
-                    y: diferencia,
-                    sliced: true,
-                    selected: true
-                },
-                ['Descuento de Iva',       {{desc_iva}}]
-                
-            ]
-        }]
-    });
-});
+  
   </script>
 {% endblock %}
 
@@ -135,26 +89,9 @@
               {% endif %}{% endblock %}
 
               {% block content %}
-              	
-                
-              <table class="table table-bordered table-condensed table-striped">
-                <thead>
-                  <tr>
-                    <th colspan="1" class="required">Gastos sin IVA</th>
-                    <th>Gastos con IVA</th>
-                    <th>IVA</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>{{gastoSIva}}</td>
-                    <td>{{gastoCIva}}</td>
-                    <td>{{iva}}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-          <div id="grafico"></div>
+              	{{gastoCIva}}<br />
+              	{{gastoSIva}}
+          		<div id="grafico"></div>
 
                 {% block object-tools %}{% endblock %}
                 {{ content }}

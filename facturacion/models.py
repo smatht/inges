@@ -38,13 +38,15 @@ class Factura_recibida(models.Model):
 	def valor_iva_imagen(self):
 		resultado = (self.iva.porcentaje * self.neto)/100
 		if self.iva.porcentaje == 21:
-			return 'http://placehold.it/80x4 0/2ECC5F/ffffff/&text=$+%.2f' % resultado
+			return '<img src="http://placehold.it/80x40/2ECC5F/ffffff/&text=$+%.2f" title= "21%%" />' % resultado
 		elif self.iva.porcentaje == 10.5:
-			return 'http://placehold.it/80x4 0/FF8753/ffffff/&text=$+%.2f' % resultado
+			return '<img src="http://placehold.it/80x40/FF8753/ffffff/&text=$+%.2f" title= "10,5%%" />' % resultado
 		elif self.iva.porcentaje == 27:
-			return 'http://placehold.it/80x4 0/5E7699/ffffff/&text=$+%.2f' % resultado
+			return '<img src="http://placehold.it/80x40/5E7699/ffffff/&text=$+%.2f" title= "27%%" />' % resultado
 		elif self.iva.porcentaje == 0:
-			return 'http://placehold.it/80x4 0/069F9C/FFFFFF/&text=$+%.2f' % resultado
+			return '<img src="http://placehold.it/80x40/069F9C/FFFFFF/&text=$+%.2f" title= "Sin Iva" />' % resultado
+		else:
+			return '<img src="http://placehold.it/80x40/B3888F/FFFFFF/&text=$+%.2f" title= "%.1f%%" />' % (resultado, self.iva.porcentaje)
 
 	def impuesto(self):
 		resultado = (self.iva.porcentaje * self.neto)/100
@@ -79,4 +81,5 @@ class Factura_emitida(models.Model):
 		resultado = float(self.neto_iva) - (float(self.neto_iva)/float(1.21))
 		return resultado
 
-	
+
+

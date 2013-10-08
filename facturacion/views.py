@@ -30,20 +30,26 @@ def inicio(request):
 
 	return render(request, template,{'request': request, 'state': state})
 
-def discriminacionIva(request):
+def informesFacturacion(request):
     now = datetime.datetime.now()
     facturas_emitidas = Factura_emitida.objects.filter(fecha__month = now.month)
     facturas_recibidas = Factura_recibida.objects.filter(fecha__month = now.month)
     facturacion_iva = 0;
     descuento_iva = 0;
+    gasto_c_iva = 0
+    gasto_s_iva = 0
     for f in facturas_emitidas:
         descuento_iva = descuento_iva + f.iva()
     for fr in facturas_recibidas:
         facturacion_iva = facturacion_iva + fr.impuesto()
+        gasto_c_iva = gasto_c_iva + fr.total()
+        gasto_s_iva = gasto_s_iva + fr.neto
     template = 'discriminacion_iva.html'
-
+    iva = gasto_c_iva - gasto_s_iva
     
-    return render(request, template,{'request': request, 'fact_iva': facturacion_iva, 'title': 'Discriminacion del IVA', 'desc_iva': descuento_iva})
+    return render(request, template,{'request': request, 'fact_iva': facturacion_iva, 
+        'title': 'Informes', 'desc_iva': descuento_iva, 'gastoCIva': gasto_c_iva, 
+        'gastoSIva': gasto_s_iva, 'iva': iva})
 
 @login_required
 def facturas_recibidas(request, desde=0, hasta=0):
@@ -89,3 +95,17 @@ def addFR(request):
     # context_instance sirvepara hacer validacion de contexto para evitar
     # ataques en los forms, usar solo para forms.
     return render_to_response(template, context_instance = RequestContext(request,locals()))
+
+
+def gastos(request):
+    now = datetime.datetime.now()
+    facturas_recibidas = Factura_recibida.objects.filter(fecha__month = now.month)
+    gasto_c_iva = 0
+    gasto_s_iva = 0
+    for f in facturas_recibidas:
+        gasto_c_iva = gasto_c_iva + f.total()
+        gasto_s_iva = gasto_s_iva + f.neto
+    template = 'gastos.html'
+
+    
+    return render(request, template,{'request': request, 'gastoCIva': gasto_c_iva, 'gastoSIva': gasto_s_iva})
