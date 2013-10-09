@@ -8,9 +8,33 @@ class Iva(models.Model):
 	def __unicode__(self):
 		return unicode(self.porcentaje)
 
+class Pais(models.Model):
+	nombre = models.CharField(max_length=50)
+
+	def __unicode__(self):
+		return unicode(self.nombre)
+
+class Ciudad(models.Model):
+	nombre = models.CharField(max_length=50)
+
+	def __unicode__(self):
+		return unicode(self.nombre)
+
+class Localidad(models.Model):
+	nombre = models.CharField(max_length=50)
+
+	def __unicode__(self):
+		return unicode(self.nombre)
+
 
 class Empresa(models.Model):
 	nombre = models.CharField(max_length=75)
+	direccion = models.CharField(max_length=140, blank=True)
+	telefono = models.CharField(max_length=50, blank=True)
+	telefono_secundario = models.CharField(max_length=50, blank=True)
+	pais = models.ForeignKey(to=Pais, related_name="radicada", blank=True, null=True)
+	ciudad = models.ForeignKey(to=Ciudad, related_name="pertenece", blank=True, null=True)
+	localidad = models.ForeignKey(to=Localidad, related_name="pertenece", blank=True, null=True)
 
 	def __unicode__(self):
 		return unicode(self.nombre)
@@ -19,7 +43,7 @@ class Empresa(models.Model):
 class Factura_recibida(models.Model):
 	fecha = models.DateField()
 	emisor = models.ForeignKey(to=Empresa, related_name="pertenece")
-	nro_factura = models.CharField(max_length=15)
+	nro_factura = models.CharField(max_length=15, blank=True)
 	neto = models.DecimalField(max_digits=10, decimal_places=2)
 	iva = models.ForeignKey(to=Iva, related_name="posee")
 	percepciones_otros = models.DecimalField(max_digits=6, decimal_places=2, default=0)
