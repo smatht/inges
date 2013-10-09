@@ -82,4 +82,9 @@ class Factura_emitida(models.Model):
 		return resultado
 
 
+class Informes(models.Model):
+    class Meta:
+        permissions = (("can_view_informe", "Can view informe"),)
+
+
 

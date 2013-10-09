@@ -4,9 +4,9 @@
 
 {% block extrastyle %}
   {{ block.super }}
-  {#  <link rel="stylesheet" type="text/css" href="{% static "admin/css/changelists.css" %}" />#}
+  {# <link rel="stylesheet" type="text/css" href="{% static "admin/css/changelists.css" %}" />#}
   {% if cl.formset %}
-    {#    <link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}" />#}
+    {# <link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}" />#}
   {% endif %}
   {% if cl.formset or action_form %}
     {% url 'admin:jsi18n' as jsi18nurl %}
@@ -15,7 +15,7 @@
   {{ media.css }}
   {% if not actions_on_top and not actions_on_bottom %}
     <style>
-      {#      #changelist table thead th:first-child {width: inherit}#}
+      {# #changelist table thead th:first-child {width: inherit}#}
     </style>
   {% endif %}
 {% endblock %}
@@ -110,7 +110,7 @@
                   <br>
                   <a href="?{% if cl.is_popup %}pop=1{% endif %}">{% trans 'Reset search and filters' %}</a>
                 {% else %}
-                  {% blocktrans with cl.opts.verbose_name_plural|capfirst as name_plural %}{{ name_plural }} are not created yet{% endblocktrans %}.
+                  {% blocktrans with cl.opts.verbose_name|capfirst as name %}No hay ningun/a {{ name }}{% endblocktrans %}.
                   {% if has_add_permission %}<a href="{% url cl.opts|admin_urlname:'add' %}{% if is_popup %}?_popup=1{% endif %}">
                     {% blocktrans with cl.opts.verbose_name as name %}Add {{ name }}{% endblocktrans %}</a>{% endif %}
                 {% endif %}

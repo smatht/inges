@@ -30,7 +30,7 @@ html,body{height:100%;}
 .header #user-tools .separator{color:#999;display:inline-block;margin:0 5px}
 .header i{background-image:url(../img/glyphicons-halflings-white-nav.png)}
 .footer{color:#666;background-color:#d5d7d8;font-size:11px;line-height:1.5em;text-shadow:0 1px rgba(255,255,255,0.5)}.footer .content{border-top:5px solid #e1e3e5}.footer .content .tools{float:left;padding:15px 0 0 20px}
-.footer .content .branding{padding:15px 0 0 0;margin:0 auto;width:200px;text-align:center}
+.footer .content .branding{padding:15px 0 0 0;margin:0 auto;width:250px;text-align:center}
 .footer .content .copyright{padding:9px 20px 0 0;float:right;text-align:right}
 .nav-quick-search{margin:20px 0 2px 15px;position:relative}.nav-quick-search .search-query{border-radius:15px;width:150px;padding:3px 10px;background:#f6f7f8}
 .nav-quick-search .submit{background:transparent;border:0;display:inline-block;position:absolute;width:20px;height:20px;right:20px;top:3px}

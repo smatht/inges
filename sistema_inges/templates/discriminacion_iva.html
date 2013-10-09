@@ -39,15 +39,15 @@
             name: 'Cantidad',
             data: [
                 
-                ['Iva de facturacion',   {{fact_iva}}],
+                ['Iva de facturacion', {{fact_iva}}],
                 {
                     name: 'Diferencia',
                     //y: ({{fact_iva}} - {{desc_iva}}),
                     y: diferencia,
-                    sliced: true,
+                    sliced: false,
                     selected: true
                 },
-                ['Descuento de Iva',       {{desc_iva}}]
+                ['Descuento de Iva', {{desc_iva}}]
                 
             ]
         }]
@@ -59,13 +59,13 @@
 
 {# Additional CSS includes #}
 {#{% block extrastyle %}#}
-{#  <link rel="stylesheet" type="text/css" href="{% static 'css/my_project.css' %}" media="all">#}
+{# <link rel="stylesheet" type="text/css" href="{% static 'css/my_project.css' %}" media="all">#}
 {#{% endblock %}#}
 
 
 {# Additional JS files in footer, right before </body> #}
 {#{% block extrajs %}#}
-{#  <script type="text/javascript" src="{% static 'js/my_project.js' %}"></script>#}
+{# <script type="text/javascript" src="{% static 'js/my_project.js' %}"></script>#}
 {#{% endblock %}#}
 
 
@@ -76,29 +76,29 @@
 
 {# Additional header content like notifications or language switcher #}
 {% block header_content %}
-{#    {{ block.super }}#}
-{#    <div class="header-content">#}
-{#        <!-- First icon column -->#}
-{#        <div class="header-column icon">#}
-{#            <i class="icon-home"></i><br>#}
-{#            <i class="icon-cog"></i>#}
-{#        </div>#}
-{#        <div class="header-column" style="margin-right: 20px">#}
-{#            <a href="/" class="grey">Front-end</a><br>#}
-{#            <a href="" class="grey">One more link</a>#}
-{#        </div>#}
-{#        <!-- Second icon column -->#}
-{#        <div class="header-column icon">#}
-{#            <i class="icon-comment"></i>#}
-{#        </div>#}
-{#        <div class="header-column">#}
-{#            <a href="" class="grey">5 new messages</a>#}
-{#        </div>#}
-{#    </div>#}
+{# {{ block.super }}#}
+{# <div class="header-content">#}
+{# <!-- First icon column -->#}
+{# <div class="header-column icon">#}
+{# <i class="icon-home"></i><br>#}
+{# <i class="icon-cog"></i>#}
+{# </div>#}
+{# <div class="header-column" style="margin-right: 20px">#}
+{# <a href="/" class="grey">Front-end</a><br>#}
+{# <a href="" class="grey">One more link</a>#}
+{# </div>#}
+{# <!-- Second icon column -->#}
+{# <div class="header-column icon">#}
+{# <i class="icon-comment"></i>#}
+{# </div>#}
+{# <div class="header-column">#}
+{# <a href="" class="grey">5 new messages</a>#}
+{# </div>#}
+{# </div>#}
 {% endblock %}
 
 {% block content-center %}
-		<div id="suit-center" class="suit-column">
+<div id="suit-center" class="suit-column">
 
             {% if not is_popup %}
               {% block breadcrumbs %}
@@ -135,7 +135,7 @@
               {% endif %}{% endblock %}
 
               {% block content %}
-              	
+              
                 
               <table class="table table-bordered table-condensed table-striped">
                 <thead>
@@ -164,7 +164,7 @@
               {% endblock %}
             </div>
             <!-- END Content -->
-          </div>          
+          </div>
 {% endblock %}
 
 

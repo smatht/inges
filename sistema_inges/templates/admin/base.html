@@ -51,13 +51,13 @@
 
             {% block header_content %}
               <!--<div class="header-content">
-                <div class="header-column icon">
-                  <i class="icon-comment"></i>
-                </div>
-                <div class="header-column">
-                  <a href="" class="grey"><b>2</b> new messages</a>
-                </div>
-              </div>-->
+<div class="header-column icon">
+<i class="icon-comment"></i>
+</div>
+<div class="header-column">
+<a href="" class="grey"><b>2</b> new messages</a>
+</div>
+</div>-->
             {% endblock %}
 
             {% if user.is_active and user.is_staff %}
@@ -190,7 +190,7 @@
 
       <div class="branding">{% block footer_branding %}
         {% with 'ADMIN_NAME'|suit_conf as admin_name %}
-          {{ admin_name }}
+          {{ admin_name }} te saluda: {{saludo}}
           {% if admin_name == 'Django Suit' %}
             v{{ 'VERSION'|suit_conf }}
           {% endif %}

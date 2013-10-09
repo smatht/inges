@@ -15,12 +15,12 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'db',                      # Or path to database file if using sqlite3.
+        'NAME': 'db', # Or path to database file if using sqlite3.
         # The following settings are not used with sqlite3:
         'USER': '',
         'PASSWORD': '',
-        'HOST': '',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        'PORT': '',                      # Set to empty string for default.
+        'HOST': '', # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+        'PORT': '', # Set to empty string for default.
     }
 }
 
@@ -90,7 +90,7 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+# 'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 # Make this unique, and don't share it with anybody.
@@ -100,7 +100,7 @@ SECRET_KEY = '$5o+=*d#pa=3z2%*vun0@6h_))&2r!^1u@onv7i1!@b))vl&g&'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
+# 'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -172,6 +172,7 @@ LOGGING = {
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
 TEMPLATE_CONTEXT_PROCESSORS = TCP + (
     'django.core.context_processors.request',
+    'facturacion.context_processors.ejemplo',
 )
 
 # Django Suit configuration example
@@ -182,42 +183,42 @@ SUIT_CONFIG = {
     # 'HEADER_TIME_FORMAT': 'H:i',
 
     # forms
-    'SHOW_REQUIRED_ASTERISK': False,  # Default True
+    'SHOW_REQUIRED_ASTERISK': False, # Default True
     # 'CONFIRM_UNSAVED_CHANGES': True, # Default True
 
     # menu
     # 'SEARCH_URL': '/admin/auth/user/',
     # 'MENU_ICONS': {
-    #    'sites': 'icon-leaf',
-    #    'auth': 'icon-lock',
+    # 'sites': 'icon-leaf',
+    # 'auth': 'icon-lock',
     # },
     # 'MENU_OPEN_FIRST_CHILD': True, # Default True
     # 'MENU_EXCLUDE': ('auth.group',),
     # 'MENU': (
-    #     'sites',
-    #     {'app': 'auth', 'icon':'icon-lock', 'models': ('user', 'group')},
-    #     {'label': 'Settings', 'icon':'icon-cog', 'models': ('auth.user', 'auth.group')},
-    #     {'label': 'Support', 'icon':'icon-question-sign', 'url': '/support/'},
+    # 'sites',
+    # {'app': 'auth', 'icon':'icon-lock', 'models': ('user', 'group')},
+    # {'label': 'Settings', 'icon':'icon-cog', 'models': ('auth.user', 'auth.group')},
+    # {'label': 'Support', 'icon':'icon-question-sign', 'url': '/support/'},
     # ),
     'MENU_ORDER': (
 
       (('facturacion', '/administracion/facturacion/factura_recibida/',),
         (
-            ('Facturas recibidas', '/administracion/facturacion/factura_recibida/',),
-            ('Facturas emitidas', '/administracion/facturacion/factura_emitida/',),
+            ('Facturas recibidas', '/administracion/facturacion/factura_recibida/', 'facturacion.add_factura_recibida'),
+            ('Facturas emitidas', '/administracion/facturacion/factura_emitida/', 'facturacion.add_factura_emitida'),
 
-            ('Empresas', '/administracion/facturacion/empresa/',),
-            ('Informes', '/facturacion/informes/',),
+            ('Empresas', '/administracion/facturacion/empresa/', 'facturacion.add_empresa'),
+            ('Informes', '/facturacion/informes/', 'facturacion.add_informes'),
 
         )
       ),
       ('auth', ('user', 'group')),
       
       # (('Custom link', '/admin/custom/', 'icon-cog',),
-      #  (
-      #      ('Child 1', '/admin/child/', 'auth.add_user'),
-      #      ('Child 2', '/admin/child2/')
-      #  )
+      # (
+      # ('Child 1', '/admin/child/', 'auth.add_user'),
+      # ('Child 2', '/admin/child2/')
+      # )
       # )
     )
     # misc
