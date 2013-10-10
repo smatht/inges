@@ -10,6 +10,8 @@
     ivaFact = {{fact_iva}};
     descuento = {{desc_iva}};
     diferencia = ivaFact - descuento;
+    porc = (diferencia * 100) / (ivaFact + descuento + diferencia);
+    slice = ((porc < 30) ? true : false);
     $('#grafico').highcharts({
         chart: {
             plotBackgroundColor: null,
@@ -44,7 +46,7 @@
                     name: 'Diferencia',
                     //y: ({{fact_iva}} - {{desc_iva}}),
                     y: diferencia,
-                    sliced: false,
+                    sliced: slice,
                     selected: true
                 },
                 ['Descuento de Iva', {{desc_iva}}]
@@ -140,16 +142,16 @@
               <table class="table table-bordered table-condensed table-striped">
                 <thead>
                   <tr>
-                    <th colspan="1" class="required">Gastos sin IVA</th>
+                    <th style="background-color: #FFF898">Gastos sin IVA</th>
                     <th>Gastos con IVA</th>
                     <th>IVA</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td>{{gastoSIva}}</td>
-                    <td>{{gastoCIva}}</td>
-                    <td>{{iva}}
+                    <td class="table-gastoSI" style="background-color: #EFDFBF">${{gastoSIva}}</td>
+                    <td class="table-gastoCI" style="background-color: #F3C0AF">${{gastoCIva}}</td>
+                    <td class="table-gastoIVA" style="background-color: #AEBBBF">${{iva}}
                     </td>
                   </tr>
                 </tbody>

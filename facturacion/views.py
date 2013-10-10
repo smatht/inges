@@ -9,26 +9,29 @@ from facturacion.forms import *
 from django.template.context import RequestContext
 
 def inicio(request):
-    template = 'inicio.html'
-    # return render(request, template,{"request":request})
-    username = password = ''
-    if request.POST:
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        state = "deslogueado"
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                state = "You're successfully logged in!"
-                return HttpResponseRedirect("/administracion/")
+    return HttpResponseRedirect("/administracion/")
+    # template = 'inicio.html'
+    # # return render(request, template,{"request":request})
+    # username = password = ''
+    # if request.POST:
+    #     username = request.POST.get('username')
+    #     password = request.POST.get('password')
+    #     state = "deslogueado"
+    #     user = authenticate(username=username, password=password)
+    #     if user is not None:
+    #         if user.is_active:
+    #             login(request, user)
+    #             state = "You're successfully logged in!"
+    #             return HttpResponseRedirect("/administracion/")
          
-                # else:
-                # state = "Your account is not active, please contact the site admin."
-            else:
-                state = "Your username and/or password were incorrect."
+    #             # else:
+    #             # state = "Your account is not active, please contact the site admin."
+    #         else:
+    #             state = "Your username and/or password were incorrect."
+    #     else:
+    #         state = 'Incorrect username or password'
 
-    return render(request, template,{'request': request, 'state': state})
+    # return render(request, template,{'request': request, 'state': state})
 
 @login_required
 def informesFacturacion(request):

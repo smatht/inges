@@ -46,12 +46,19 @@ class Factura_emitida_admin(admin.ModelAdmin):
 # Otra forma
 # filter_vertical = ('campo_de_la_relacion',)
 
+class CiudadAdmin(admin.ModelAdmin):
+    def get_model_perms(self, request):
+        """
+        Return empty perms dict thus hiding the model from admin index.
+        """
+        return {}
+
 
 admin.site.register(Factura_recibida, Factura_recibida_admin)
 admin.site.register(Factura_emitida, Factura_emitida_admin)
 admin.site.register(Iva)
 admin.site.register(Empresa)
 admin.site.register(Ente)
-admin.site.register(Pais)
-admin.site.register(Ciudad)
-admin.site.register(Localidad)
+admin.site.register(Pais, CiudadAdmin)
+admin.site.register(Ciudad, CiudadAdmin)
+admin.site.register(Localidad, CiudadAdmin)

@@ -183,7 +183,7 @@ SUIT_CONFIG = {
     # 'HEADER_TIME_FORMAT': 'H:i',
 
     # forms
-    'SHOW_REQUIRED_ASTERISK': False, # Default True
+    'SHOW_REQUIRED_ASTERISK': True, # Default True
     # 'CONFIRM_UNSAVED_CHANGES': True, # Default True
 
     # menu
