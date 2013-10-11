@@ -11,8 +11,31 @@
   <script src="{% static 'suit/js/jquery-1.8.3.min.js' %}"></script>
   <script type="text/javascript">var Suit = { $: $.noConflict() }; if (!$) $ = Suit.$; </script>
   <script src="{% static 'suit/bootstrap/js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/hotkeys.js' %}" type="text/javascript"></script>
   {% if 'SHOW_REQUIRED_ASTERISK'|suit_conf %}
   <style type="text/css">.required:after { content: '*'; margin: 0 0 0 5px; position: absolute; color: #BF2120;}</style>
+  <script>
+    $(function () {
+      jQuery('#platform-details').html('<code>' + navigator.userAgent + '</code>');
+                
+                var elements = [
+                "esc","f2"];
+                
+                // the fetching...
+                $.each(elements, function(i, e) { // i is element index. e is element as text.
+                 var newElement = ( /[\+]+/.test(elements[i]) ) ? elements[i].replace("+","_") : elements[i];
+
+                   // Binding keys
+                   $(document).bind('keydown', elements[i], function assets() {
+                    if (elements[i] == 'f2'){
+                      document.getElementById('add_factura_r').click();
+                    }
+                     
+                     return false;
+                 });
+               });
+    });
+  </script>
   {% endif %}
   {% block extrahead %}{% endblock %}
   {% block blockbots %}

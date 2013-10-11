@@ -60,18 +60,19 @@ class Factura_recibida(models.Model):
 		
 		return unicode(self.emisor)+" - "+self.nro_factura
 
-	def valor_iva_imagen(self):
-		resultado = (self.iva.porcentaje * self.neto)/100
-		if self.iva.porcentaje == 21:
-			return '<img src="http://placehold.it/80x40/2ECC5F/ffffff/&text=$+%.2f" title= "21%%" />' % resultado
-		elif self.iva.porcentaje == 10.5:
-			return '<img src="http://placehold.it/80x40/FF8753/ffffff/&text=$+%.2f" title= "10,5%%" />' % resultado
-		elif self.iva.porcentaje == 27:
-			return '<img src="http://placehold.it/80x40/5E7699/ffffff/&text=$+%.2f" title= "27%%" />' % resultado
-		elif self.iva.porcentaje == 0:
-			return '<img src="http://placehold.it/80x40/069F9C/FFFFFF/&text=$+%.2f" title= "Sin Iva" />' % resultado
-		else:
-			return '<img src="http://placehold.it/80x40/B3888F/FFFFFF/&text=$+%.2f" title= "%.1f%%" />' % (resultado, self.iva.porcentaje)
+	# Para enviar una imagen al admin
+	# def valor_iva_imagen(self):
+	# 	resultado = (self.iva.porcentaje * self.neto)/100
+	# 	if self.iva.porcentaje == 21:
+	# 		return '<img src="http://placehold.it/80x40/2ECC5F/ffffff/&text=$+%.2f" title= "21%%" />' % resultado
+	# 	elif self.iva.porcentaje == 10.5:
+	# 		return '<img src="http://placehold.it/80x40/FF8753/ffffff/&text=$+%.2f" title= "10,5%%" />' % resultado
+	# 	elif self.iva.porcentaje == 27:
+	# 		return '<img src="http://placehold.it/80x40/5E7699/ffffff/&text=$+%.2f" title= "27%%" />' % resultado
+	# 	elif self.iva.porcentaje == 0:
+	# 		return '<img src="http://placehold.it/80x40/069F9C/FFFFFF/&text=$+%.2f" title= "Sin Iva" />' % resultado
+	# 	else:
+	# 		return '<img src="http://placehold.it/80x40/B3888F/FFFFFF/&text=$+%.2f" title= "%.1f%%" />' % (resultado, self.iva.porcentaje)
 
 	def impuesto(self):
 		resultado = (self.iva.porcentaje * self.neto)/100
