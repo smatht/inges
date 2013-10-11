@@ -42,6 +42,7 @@ class Empresa(models.Model):
 
 class Factura_recibida(models.Model):
 	fecha = models.DateField()
+	registrado_el = models.DateTimeField(auto_now_add = True)
 	emisor = models.ForeignKey(to=Empresa, related_name="pertenece")
 	nro_factura = models.CharField(max_length=15, blank=True)
 	neto = models.DecimalField(max_digits=10, decimal_places=2)
@@ -92,6 +93,7 @@ class Ente(models.Model):
 
 class Factura_emitida(models.Model):
 	fecha = models.DateField()
+	registrado_el = models.DateTimeField(auto_now_add = True)
 	ente = models.ForeignKey(to=Ente, related_name="pertenece")
 	nro_factura = models.CharField(max_length=15)
 	neto_iva = models.DecimalField(max_digits=10, decimal_places=2)

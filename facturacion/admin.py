@@ -1,4 +1,5 @@
 from facturacion.models import *
+from django.contrib.sites.models import Site
 from django.contrib import admin
 from actions import export_as_csv
 
@@ -29,6 +30,8 @@ class Factura_recibida_admin(admin.ModelAdmin):
 		resultado = obj.neto + obj.impuesto() + obj.percepciones_otros
 		return "%.2f" % resultado
 
+	
+
 # Sirve para poder agregar facturas inline cuando se agrega un registro
 # de un campo relacionado por clave foranea #
 # class Factura_recibida_inline(admin.StackedInline):
@@ -46,7 +49,7 @@ class Factura_emitida_admin(admin.ModelAdmin):
 # Otra forma
 # filter_vertical = ('campo_de_la_relacion',)
 
-class CiudadAdmin(admin.ModelAdmin):
+class HideAdmin(admin.ModelAdmin):
     def get_model_perms(self, request):
         """
         Return empty perms dict thus hiding the model from admin index.
@@ -56,9 +59,10 @@ class CiudadAdmin(admin.ModelAdmin):
 
 admin.site.register(Factura_recibida, Factura_recibida_admin)
 admin.site.register(Factura_emitida, Factura_emitida_admin)
-admin.site.register(Iva)
+admin.site.register(Iva, HideAdmin)
 admin.site.register(Empresa)
 admin.site.register(Ente)
-admin.site.register(Pais, CiudadAdmin)
-admin.site.register(Ciudad, CiudadAdmin)
-admin.site.register(Localidad, CiudadAdmin)
+admin.site.register(Pais, HideAdmin)
+admin.site.register(Ciudad, HideAdmin)
+admin.site.register(Localidad, HideAdmin)
+admin.site.unregister(Site)

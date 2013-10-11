@@ -36,8 +36,8 @@ def inicio(request):
 @login_required
 def informesFacturacion(request):
     now = datetime.datetime.now()
-    facturas_emitidas = Factura_emitida.objects.filter(fecha__month = now.month)
-    facturas_recibidas = Factura_recibida.objects.filter(fecha__month = now.month)
+    facturas_emitidas = Factura_emitida.objects.filter(registrado_el__month = now.month)
+    facturas_recibidas = Factura_recibida.objects.filter(registrado_el__month = now.month)
     facturacion_iva = 0;
     descuento_iva = 0;
     gasto_c_iva = 0
@@ -54,6 +54,28 @@ def informesFacturacion(request):
     return render(request, template,{'request': request, 'fact_iva': facturacion_iva,
         'title': 'Informes', 'desc_iva': descuento_iva, 'gastoCIva': gasto_c_iva,
         'gastoSIva': gasto_s_iva, 'iva': iva})
+
+@login_required
+def detalleFacturas(request):
+    now = datetime.datetime.now()
+    facturas_emitidas = Factura_emitida.objects.filter(registrado_el__month = now.month)
+    facturas_recibidas = Factura_recibida.objects.filter(registrado_el__month = now.month)
+    facturacion_iva = 0;
+    descuento_iva = 0;
+    gasto_c_iva = 0
+    gasto_s_iva = 0
+    for f in facturas_emitidas:
+        descuento_iva = descuento_iva + f.iva()
+    for fr in facturas_recibidas:
+        facturacion_iva = facturacion_iva + fr.impuesto()
+        gasto_c_iva = gasto_c_iva + fr.total()
+        gasto_s_iva = gasto_s_iva + fr.neto
+    template = 'detalle_facturas.html'
+    iva = gasto_c_iva - gasto_s_iva
+    
+    return render(request, template,{'request': request, 'fact_iva': facturacion_iva,
+        'title': 'Detalles', 'desc_iva': descuento_iva, 'gastoCIva': gasto_c_iva,
+        'gastoSIva': gasto_s_iva, 'iva': iva, 'detalleFacturas': facturas_recibidas})
 
 @login_required
 def facturas_recibidas(request, desde=0, hasta=0):

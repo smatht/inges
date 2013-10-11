@@ -3,59 +3,7 @@
 
 {# Additional <head> content here, some extra meta tags or favicon #}
 {% block extrahead %}
-  <script src="/static/js/chart/highcharts.js" type="text/javascript"></script>
-  <script src="/static/js/chart/modules/exporting.js" type="text/javascript"></script>
-  <script type="text/javascript">
-  $(function () {
-    ivaFact = {{fact_iva}};
-    descuento = {{desc_iva}};
-    diferencia = ivaFact - descuento;
-    porc = (diferencia * 100) / (ivaFact + descuento + diferencia);
-    slice = ((porc < 30) ? true : false);
-    $('#grafico').highcharts({
-        chart: {
-            plotBackgroundColor: null,
-            plotBorderWidth: null,
-            plotShadow: false
-        },
-        title: {
-            text: 'DISCRIMINACION DEL IVA DEL MES'
-        },
-        tooltip: {
-          pointFormat: '{series.name}: <b>${point.y:.1f}</b>'
-        },
-        plotOptions: {
-            pie: {
-                allowPointSelect: false,
-                cursor: 'pointer',
-                dataLabels: {
-                    enabled: true,
-                    color: '#000000',
-                    connectorColor: '#000000',
-                    format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-                }
-            }
-        },
-        series: [{
-            type: 'pie',
-            name: 'Cantidad',
-            data: [
-                
-                ['Iva de facturacion', {{fact_iva}}],
-                {
-                    name: 'Diferencia',
-                    //y: ({{fact_iva}} - {{desc_iva}}),
-                    y: diferencia,
-                    sliced: slice,
-                    selected: true
-                },
-                ['Descuento de Iva', {{desc_iva}}]
-                
-            ]
-        }]
-    });
-});
-  </script>
+  
 {% endblock %}
 
 
@@ -105,7 +53,9 @@
             {% if not is_popup %}
               {% block breadcrumbs %}
                 <ul class="breadcrumb">
-                  <li><a href="{% url 'admin:index' %}">Inicio</a>
+                  <li><a href="{% url 'admin:index' %}">Inicio</a></li>
+                  <span class="divider">&raquo;</span>
+                  <li><a href="{% url 'facturacion.views.informesFacturacion' %}">Informes</a>
                     {% if title %}
                       <span class="divider">&raquo;</span>
                       </li>
@@ -137,27 +87,41 @@
               {% endif %}{% endblock %}
 
               {% block content %}
-              
-                
+
               <table class="table table-bordered table-condensed table-striped">
                 <thead>
                   <tr>
-                    <th style="background-color: #FFF898">Gastos sin IVA</th>
-                    <th>Gastos con IVA</th>
+                    <th>Emisor</th>
+                    <th>Fecha</th>
+                    <th>Neto</th>
                     <th>IVA</th>
+                    <th>P/Otros</th>
+                    <th>Total</th>
                   </tr>
                 </thead>
                 <tbody>
+              {% for item in detalleFacturas %}
                   <tr>
+                    <th>{{item.emisor}}</th>
+                    <th>{{item.fecha}}</th>
+                    <th>{{item.neto}}</th>
+                    <th>{{item.impuesto}}</th>
+                    <th>{{item.percepciones_otros}}</th>
+                    <th>{{item.total}}</th>
+                  </tr>
+              {% endfor %}
+                  <tr>
+                    <td></td>
+                    <td> </td>
                     <td class="table-gastoSI" style="background-color: #EFDFBF">${{gastoSIva}}</td>
-                    <td class="table-gastoCI" style="background-color: #F3C0AF">${{gastoCIva}}</td>
                     <td class="table-gastoIVA" style="background-color: #AEBBBF">${{iva}}
+                    <td> </td>
+                    <td class="table-gastoCI" style="background-color: #F3C0AF">${{gastoCIva}}</td>
                     </td>
                   </tr>
                 </tbody>
               </table>
-              <a href="/facturacion/informes/detalle">Ver detalle de facturas</a>
-          <div id="grafico"></div>
+              
 
                 {% block object-tools %}{% endblock %}
                 {{ content }}
