@@ -179,19 +179,15 @@
           //   alert($("#id_iva option:selected").val());
           //   alert($("#id_iva").options[1].value);
           //   document.getElementById("{{ adminform.first_field.id_for_label }}").focus();
-          var previous;
-
-          $("#id_iva").focus(function () {
-              // Store the current value on focus and on change
-              previous = this.options[this.selectedIndex].text;
-          }).change(function() {
-              // Do something with the previous value after the change
-              alert(previous);
-
-              // Make sure the previous value is updated
-              previous = this.options[this.selectedIndex].text;
+          var porc;
+          $("#id_iva").change(function() {
+              porc = this.options[this.selectedIndex].text;
           });
-          
+          $("#id_percepciones_otros").focus(function(){
+            var neto = document.getElementById('id_neto').value;
+            total = neto + ((neto * porc)/100);
+            $("#total").html(total);
+          });
           </script>
         {% endif %}
 
