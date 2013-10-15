@@ -49,11 +49,10 @@ def informesFacturacion(request):
         gasto_c_iva = gasto_c_iva + fr.total()
         gasto_s_iva = gasto_s_iva + fr.neto
     template = 'discriminacion_iva.html'
-    iva = gasto_c_iva - gasto_s_iva
     
     return render(request, template,{'request': request, 'fact_iva': facturacion_iva,
         'title': 'Informes', 'desc_iva': descuento_iva, 'gastoCIva': gasto_c_iva,
-        'gastoSIva': gasto_s_iva, 'iva': iva})
+        'gastoSIva': gasto_s_iva})
 
 @login_required
 def detalleFacturas(request):
@@ -64,18 +63,19 @@ def detalleFacturas(request):
     descuento_iva = 0;
     gasto_c_iva = 0
     gasto_s_iva = 0
+    percep_otros = 0
     for f in facturas_emitidas:
         descuento_iva = descuento_iva + f.iva()
     for fr in facturas_recibidas:
         facturacion_iva = facturacion_iva + fr.impuesto()
+        percep_otros = percep_otros + fr.percepciones_otros
         gasto_c_iva = gasto_c_iva + fr.total()
         gasto_s_iva = gasto_s_iva + fr.neto
     template = 'detalle_facturas.html'
-    iva = gasto_c_iva - gasto_s_iva
     
     return render(request, template,{'request': request, 'fact_iva': facturacion_iva,
         'title': 'Detalles', 'desc_iva': descuento_iva, 'gastoCIva': gasto_c_iva,
-        'gastoSIva': gasto_s_iva, 'iva': iva, 'detalleFacturas': facturas_recibidas})
+        'gastoSIva': gasto_s_iva, 'detalleFacturas': facturas_recibidas, 'percep_otros': percep_otros})
 
 @login_required
 def facturas_recibidas(request, desde=0, hasta=0):

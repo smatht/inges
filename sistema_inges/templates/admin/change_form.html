@@ -89,7 +89,9 @@
 
         <div class="box save-box">
 
-          {% block submit_buttons_bottom %}{% submit_row %}{% endblock %}
+          {% block submit_buttons_bottom %}{% submit_row %}
+          <input type="button" value="{% trans "Cancelar" %}" class="btn btn-inverse" onclick="history.go(-1);" />
+          {% endblock %}
 
         </div>
 
@@ -171,7 +173,26 @@
         {% include 'suit/includes/change_form_includes.html' with position='bottom' %}
 
         {% if adminform and add %}
-          <script type="text/javascript">document.getElementById("{{ adminform.first_field.id_for_label }}").focus();</script>
+          <script type="text/javascript">
+          document.getElementById("{{ adminform.first_field.id_for_label }}").focus();
+          // document.getElementById("id_percepciones_otros").onfocus=function(){
+          //   alert($("#id_iva option:selected").val());
+          //   alert($("#id_iva").options[1].value);
+          //   document.getElementById("{{ adminform.first_field.id_for_label }}").focus();
+          var previous;
+
+          $("#id_iva").focus(function () {
+              // Store the current value on focus and on change
+              previous = this.options[this.selectedIndex].text;
+          }).change(function() {
+              // Do something with the previous value after the change
+              alert(previous);
+
+              // Make sure the previous value is updated
+              previous = this.options[this.selectedIndex].text;
+          });
+          
+          </script>
         {% endif %}
 
         {# JavaScript for prepopulated fields #}

@@ -42,7 +42,7 @@
             name: 'Cantidad',
             data: [
                 
-                ['Iva de facturacion', {{fact_iva}}],
+                ['Iva de facturacion', ivaFact],
                 {
                     name: 'Diferencia',
                     //y: ({{fact_iva}} - {{desc_iva}}),
@@ -50,7 +50,7 @@
                     sliced: slice,
                     selected: true
                 },
-                ['Descuento de Iva', {{desc_iva}}]
+                ['Descuento de Iva', descuento]
                 
             ]
         }]
@@ -167,7 +167,7 @@
                   <tr>
                     <td class="table-gastoSI" style="background-color: #EFDFBF">${{gastoSIva}}</td>
                     <td class="table-gastoCI" style="background-color: #F3C0AF">${{gastoCIva}}</td>
-                    <td class="table-gastoIVA" style="background-color: #AEBBBF">${{iva}}
+                    <td class="table-gastoIVA" style="background-color: #AEBBBF">${{fact_iva}}
                     </td>
                   </tr>
                 </tbody>

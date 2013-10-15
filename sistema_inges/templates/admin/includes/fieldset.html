@@ -70,11 +70,13 @@
         {% if forloop.last %}
             </div>
             </div>
+            {% if field.field.name == "percepciones_otros" %}
+              <div id="total">Total = $56.25</div>
+            {% endif %}
         {% endif %}
 
           {% endspaceless %}
         {% endfor %}
-
       </div>
     {% endwith %}
   {% endfor %}
