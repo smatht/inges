@@ -10,7 +10,7 @@ from actions import export_as_csv
 # Tambien con list_filter colocamos un filtro.
 class Factura_recibida_admin(admin.ModelAdmin):
 	list_display = ('emisor', 'fecha', 'nro_factura', 'neto', 'valor_iva', 'percepciones_otros', 'total')
-	list_filter = ('iva', 'fecha', 'registrado_el')
+	list_filter = ('iva', 'registrado_el', 'registrado_el')
 	#search_fields = ('iva__porcentaje',)
 	search_fields = ('nro_factura',)
 	# Para editar un campo de forma inline
