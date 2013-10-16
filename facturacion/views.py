@@ -36,8 +36,16 @@ def inicio(request):
 @login_required
 def informesFacturacion(request):
     now = datetime.datetime.now()
-    facturas_emitidas = Factura_emitida.objects.filter(registrado_el__month = now.month)
-    facturas_recibidas = Factura_recibida.objects.filter(registrado_el__month = now.month)
+    mes=now.month
+    if request.method == "POST":
+        if request.POST.get('fecha'):
+
+            mes = request.POST.get('fecha')[-2:]
+            # anio = int(request.POST.get('anio'))
+            #now = datetime.datetime(anio,mes,1)
+        
+    facturas_emitidas = Factura_emitida.objects.filter(registrado_el__month = mes)
+    facturas_recibidas = Factura_recibida.objects.filter(registrado_el__month = mes)
     facturacion_iva = 0;
     descuento_iva = 0;
     gasto_c_iva = 0
@@ -52,7 +60,7 @@ def informesFacturacion(request):
     
     return render(request, template,{'request': request, 'fact_iva': facturacion_iva,
         'title': 'Informes', 'desc_iva': descuento_iva, 'gastoCIva': gasto_c_iva,
-        'gastoSIva': gasto_s_iva})
+        'gastoSIva': gasto_s_iva, 'mes': mes})
 
 @login_required
 def detalleFacturas(request):

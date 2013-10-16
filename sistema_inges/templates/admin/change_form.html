@@ -178,6 +178,7 @@
 
         {% if opts.object_name.lower == 'factura_recibida' %}
           <script type="text/javascript">
+          $(".form-row").show();
           var neto;
           var otros;
           $("#id_iva").focus(function() {
@@ -207,9 +208,9 @@
         {% endif %}
         {% if opts.object_name.lower == 'factura_emitida' %}
           <script type="text/javascript">
+          $(".field-valor_iva").show();
           var neto;
           var iva = 1.21;
-          $(".field-total").hide();
           $("#id_neto_iva").change(function(){
             neto = parseFloat(this.value);
             var subtotal = neto / iva;
