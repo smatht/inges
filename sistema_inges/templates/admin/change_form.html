@@ -144,7 +144,6 @@
               {{ adminform.form.non_field_errors }}
             </div>
           {% endif %}
-
           {# render suit_form_includes at top position #}
           {% include 'suit/includes/change_form_includes.html' with position='top' %}
 
@@ -175,20 +174,51 @@
         {% if adminform and add %}
           <script type="text/javascript">
           document.getElementById("{{ adminform.first_field.id_for_label }}").focus();
-          // document.getElementById("id_percepciones_otros").onfocus=function(){
-          //   alert($("#id_iva option:selected").val());
-          //   alert($("#id_iva").options[1].value);
-          //   document.getElementById("{{ adminform.first_field.id_for_label }}").focus();
+          </script>
+
+        {% if opts.object_name.lower == 'factura_recibida' %}
+          <script type="text/javascript">
+          var neto;
+          var otros;
+          $("#id_iva").focus(function() {
+            neto = parseFloat(document.getElementById('id_neto').value);
+          });
           var porc;
+          var valorIva
           $("#id_iva").change(function() {
-              porc = this.options[this.selectedIndex].text;
+              porc = parseFloat(this.options[this.selectedIndex].text);
+              valorIva = (neto * porc)/100;
+              valorIva = Number(valorIva.toFixed(2))
+              document.getElementById("valor_iva").value = valorIva;
           });
           $("#id_percepciones_otros").focus(function(){
-            var neto = document.getElementById('id_neto').value;
-            total = neto + ((neto * porc)/100);
-            $("#total").html(total);
+            otros = parseFloat(document.getElementById('id_percepciones_otros').value);
+            total = neto + valorIva + otros;
+            total = Number(total.toFixed(2))
+            document.getElementById("total").value = total;
+          });
+          $("#id_percepciones_otros").change(function(){
+            otros = parseFloat(document.getElementById('id_percepciones_otros').value);
+            total = neto + valorIva + otros;
+            total = Number(total.toFixed(2))
+            document.getElementById("total").value = total;
           });
           </script>
+        {% endif %}
+        {% if opts.object_name.lower == 'factura_emitida' %}
+          <script type="text/javascript">
+          var neto;
+          var iva = 1.21;
+          $(".field-total").hide();
+          $("#id_neto_iva").change(function(){
+            neto = parseFloat(this.value);
+            var subtotal = neto / iva;
+            impuesto = neto - subtotal;
+            impuesto = Number(impuesto.toFixed(2))
+            document.getElementById("valor_iva").value = impuesto;
+          });
+          </script>
+        {% endif %}
         {% endif %}
 
         {# JavaScript for prepopulated fields #}

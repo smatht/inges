@@ -70,15 +70,37 @@
         {% if forloop.last %}
             </div>
             </div>
-            {% if field.field.name == "percepciones_otros" %}
-              <div id="total">Total = $56.25</div>
-            {% endif %}
+
         {% endif %}
 
           {% endspaceless %}
+
         {% endfor %}
       </div>
+
     {% endwith %}
+    {% if forloop.last %}
+              <div class="control-group form-row field-valor_iva">
+                <div>
+                  <div class="control-label">
+                    <label>VALOR DE IVA:</label>
+                  </div>
+                  <div class="controls">
+                    <input id="valor_iva" name="valor_iva" type="text" value="0" disabled>
+                  </div>
+                </div>
+              </div>
+              <div class="control-group form-row field-total">
+                <div>
+                  <div class="control-label">
+                    <label>TOTAL:</label>
+                  </div>
+                  <div class="controls">
+                    <input id="total" name="total" type="text" value="0" disabled>
+                  </div>
+                </div>
+            
+    {% endif %}
   {% endfor %}
 </fieldset>
 {# For closing line #}
