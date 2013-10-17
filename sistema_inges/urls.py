@@ -2,19 +2,21 @@ from django.conf.urls import patterns, include, url
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
+from model_report import report
 admin.autodiscover()
+report.autodiscover()
 
 urlpatterns = patterns('',
 	url(r'^$', 'facturacion.views.inicio', name='inicio'),
     url(r'^facturas_recibidas/$', 'facturacion.views.facturas_recibidas', name='facturas-recibidas'),
 	url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
+    url(r'^report', include('model_report.urls')),
     url(r'^administracion/', include(admin.site.urls)),
     (r'^logout/$', 'django.contrib.auth.views.logout',
                           {'next_page': '/'}),
     url(r'^facturas_recibidas/(\d+)/(\d+)$', 'facturacion.views.facturas_recibidas', name='facturas'),
     url(r'^facturas_recibidas/add/$', 'facturacion.views.addFR', name='add'),
     url(r'^facturacion/informes/$', 'facturacion.views.informesFacturacion', name='informe'),
-    url(r'^facturacion/informes/detalle/$', 'facturacion.views.detalleFacturas', name='detalle'),
 
 
     # Examples:

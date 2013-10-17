@@ -14,7 +14,7 @@ $(function () {
   diferencia = ivaFact - descuento;
   porc = (diferencia * 100) / (ivaFact + descuento + diferencia);
   slice = ((porc < 30) ? true : false);
-  $('#grafico').highcharts({
+  $('#grafico-iva').highcharts({
     chart: {
       plotBackgroundColor: null,
       plotBorderWidth: null,
@@ -81,7 +81,8 @@ $(function () {
 
 {# Additional header content like notifications or language switcher #}
 {% block header_content %}
-{# {{ block.super }}#}
+{{ block.super }}
+
 {# <div class="header-content">#}
 {# <!-- First icon column -->#}
 {# <div class="header-column icon">#}
@@ -138,14 +139,24 @@ $(function () {
     {% block content_title %}{% if title %}
     <h2 class="content-title">{{ title }}</h2>
     {% endif %}{% endblock %}
-    {{mes}}
     {% block content %}
-    <form class="navbar-form" action="" method="post">
-      <input class="span3" type="month" placeholder="mes" name="fecha">
-      {% csrf_token %}
+
+    <!-- ///////////////////////// -->
+    <!--       FORM BUSQUEDA       -->
+    <!-- ///////////////////////// -->
+    <form class="form-inline" action="" method="get">
+      <input type="month" placeholder="mes" name="fecha">
+      {#{% csrf_token %}#}
       <button type="submit" class="btn">Mostrar</button>
     </form>
+    <!-- ///////////////////////// -->
+    <!--          FIN FORM         -->
+    <!-- ///////////////////////// -->
 
+
+    <!-- ///////////////////////// -->
+    <!--      SECCION GASTOS       -->
+    <!-- ///////////////////////// -->
     <table class="table table-bordered table-condensed table-striped">
       <thead>
         <tr>
@@ -162,8 +173,105 @@ $(function () {
         </tr>
       </tbody>
     </table>
-    <a href="/facturacion/informes/detalle">Ver detalle de facturas</a>
-    <div id="grafico"></div>
+    <a href="#tabla-detalles">Ver detalle de facturas</a>
+    <!-- ///////////////////////// -->
+    <!--        FIN SECCION        -->
+    <!-- ///////////////////////// -->
+
+
+    <div id="grafico-iva"></div>
+
+
+    <!-- /////////////////////////////////// -->
+    <!-- SECCION TABLA DE DETALLES RECIBIDAS -->
+    <!-- /////////////////////////////////// -->
+    {% if detalleFacturasR %}
+    <a name="tabla-detalles"></a>
+    <table class="table table-bordered table-condensed table-striped">
+      <thead>
+        <tr>
+          <th colspan="6" class="text-center">Detalle de facturas recibidas</th>
+        </th>
+        <tr>
+          <th>Emisor</th>
+          <th>Fecha</th>
+          <th>Neto</th>
+          <th>IVA</th>
+          <th>P/Otros</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in detalleFacturasR %}
+        <tr>
+          <th>{{item.emisor}}</th>
+          <th>{{item.fecha}}</th>
+          <th>{{item.neto}}</th>
+          <th>{{item.impuesto}}</th>
+          <th>{{item.percepciones_otros}}</th>
+          <th>{{item.total}}</th>
+        </tr>
+        {% endfor %}
+        <tr>
+          <td></td>
+          <td> </td>
+          <td class="table-gastoSI" style="background-color: #EFDFBF">${{gastoSIva|floatformat:"2"}}</td>
+          <td class="table-gastoIVA" style="background-color: #AEBBBF">${{fact_iva|floatformat:"2"}}
+            <td>${{percep_otros|floatformat:"2"}}</td>
+            <td class="table-gastoCI" style="background-color: #F3C0AF">${{gastoCIva|floatformat:"2"}}</td>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    {% endif %}
+    <!-- ///////////////////////// -->
+    <!--        FIN SECCION        -->
+    <!-- ///////////////////////// -->
+
+    <!-- ////////////////////////////////// -->
+    <!-- SECCION TABLA DE DETALLES EMITIDAS -->
+    <!-- ////////////////////////////////// -->
+    {% if detalleFacturasE %}
+    <a name="tabla-detalles"></a>
+    <table class="table table-bordered table-condensed table-striped">
+      <thead>
+        <tr>
+          <th colspan="6" class="text-center">Detalle de facturas emitidas</th>
+        </th>
+        <tr>
+          <th>Fecha</th>
+          <th>Ente</th>
+          <th>Nro factura</th>
+          <th>Neto C/IVA</th>
+          <th>Valor IVA</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in detalleFacturasE %}
+        <tr>
+          <th>{{item.fecha}}</th>
+          <th>{{item.ente}}</th>
+          <th>{{item.nro_factura}}</th>
+          <th>{{item.neto_iva}}</th>
+          <th>{{item.iva|floatformat:"2"}}</th>
+        </tr>
+        {% endfor %}
+        <!-- <tr>
+          <td></td>
+          <td> </td>
+          <td class="table-gastoSI" style="background-color: #EFDFBF">${{gastoSIva|floatformat:"2"}}</td>
+          <td class="table-gastoIVA" style="background-color: #AEBBBF">${{fact_iva|floatformat:"2"}}
+            <td>${{percep_otros|floatformat:"2"}}</td>
+            <td class="table-gastoCI" style="background-color: #F3C0AF">${{gastoCIva|floatformat:"2"}}</td>
+          </td>
+        </tr> -->
+      </tbody>
+    </table>
+    {% endif %}
+    <!-- ///////////////////////// -->
+    <!--        FIN SECCION        -->
+    <!-- ///////////////////////// -->
+    <button type="button" class="print btn btn-warning" onclick="javascript:window.print()">Imprimir</button>
 
     {% block object-tools %}{% endblock %}
     {{ content }}

@@ -37,10 +37,10 @@ def inicio(request):
 def informesFacturacion(request):
     now = datetime.datetime.now()
     mes=now.month
-    if request.method == "POST":
-        if request.POST.get('fecha'):
+    if request.method == "GET":
+        if request.GET.get('fecha'):
 
-            mes = request.POST.get('fecha')[-2:]
+            mes = request.GET.get('fecha')[-2:]
             # anio = int(request.POST.get('anio'))
             #now = datetime.datetime(anio,mes,1)
         
@@ -50,40 +50,22 @@ def informesFacturacion(request):
     descuento_iva = 0;
     gasto_c_iva = 0
     gasto_s_iva = 0
-    for f in facturas_emitidas:
-        descuento_iva = descuento_iva + f.iva()
-    for fr in facturas_recibidas:
-        facturacion_iva = facturacion_iva + fr.impuesto()
-        gasto_c_iva = gasto_c_iva + fr.total()
-        gasto_s_iva = gasto_s_iva + fr.neto
-    template = 'discriminacion_iva.html'
-    
-    return render(request, template,{'request': request, 'fact_iva': facturacion_iva,
-        'title': 'Informes', 'desc_iva': descuento_iva, 'gastoCIva': gasto_c_iva,
-        'gastoSIva': gasto_s_iva, 'mes': mes})
-
-@login_required
-def detalleFacturas(request):
-    now = datetime.datetime.now()
-    facturas_emitidas = Factura_emitida.objects.filter(registrado_el__month = now.month)
-    facturas_recibidas = Factura_recibida.objects.filter(registrado_el__month = now.month)
-    facturacion_iva = 0;
-    descuento_iva = 0;
-    gasto_c_iva = 0
-    gasto_s_iva = 0
     percep_otros = 0
     for f in facturas_emitidas:
         descuento_iva = descuento_iva + f.iva()
     for fr in facturas_recibidas:
         facturacion_iva = facturacion_iva + fr.impuesto()
-        percep_otros = percep_otros + fr.percepciones_otros
         gasto_c_iva = gasto_c_iva + fr.total()
         gasto_s_iva = gasto_s_iva + fr.neto
-    template = 'detalle_facturas.html'
+        percep_otros = percep_otros + fr.percepciones_otros
+    template = 'discriminacion_iva.html'
     
     return render(request, template,{'request': request, 'fact_iva': facturacion_iva,
-        'title': 'Detalles', 'desc_iva': descuento_iva, 'gastoCIva': gasto_c_iva,
-        'gastoSIva': gasto_s_iva, 'detalleFacturas': facturas_recibidas, 'percep_otros': percep_otros})
+        'title': 'Informes', 'desc_iva': descuento_iva, 'gastoCIva': gasto_c_iva,
+        'gastoSIva': gasto_s_iva, 'mes': mes, 'detalleFacturasR': facturas_recibidas,
+        'detalleFacturasE': facturas_emitidas, 'percep_otros': percep_otros})
+
+
 
 @login_required
 def facturas_recibidas(request, desde=0, hasta=0):
