@@ -62,7 +62,7 @@ def informesFacturacion(request):
     
     return render(request, template,{'request': request, 'fact_iva': facturacion_iva,
         'title': 'Informes', 'desc_iva': descuento_iva, 'gastoCIva': gasto_c_iva,
-        'gastoSIva': gasto_s_iva, 'mes': mes, 'detalleFacturasR': facturas_recibidas,
+        'gastoSIva': gasto_s_iva, 'mespy': mes, 'detalleFacturasR': facturas_recibidas,
         'detalleFacturasE': facturas_emitidas, 'percep_otros': percep_otros})
 
 
