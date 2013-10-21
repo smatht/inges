@@ -201,8 +201,8 @@ $(function () {
         <tr>
           <th>Emisor</th>
           <th>Fecha</th>
-          <th>Neto</th>
-          <th>IVA</th>
+          <th>subtotal</th>
+          <th>Valor IVA</th>
           <th>P/Otros</th>
           <th>Total</th>
         </tr>
@@ -212,7 +212,7 @@ $(function () {
         <tr>
           <th>{{item.emisor}}</th>
           <th>{{item.fecha}}</th>
-          <th>{{item.neto}}</th>
+          <th>{{item.subtotal}}</th>
           <th>{{item.impuesto}}</th>
           <th>{{item.percepciones_otros}}</th>
           <th>{{item.total}}</th>
@@ -248,8 +248,9 @@ $(function () {
           <th>Fecha</th>
           <th>Ente</th>
           <th>Nro factura</th>
-          <th>Neto C/IVA</th>
+          <th>Subtotal</th>
           <th>Valor IVA</th>
+          <th>TOTAL</th>
         </tr>
       </thead>
       <tbody>
@@ -258,8 +259,9 @@ $(function () {
           <th>{{item.fecha}}</th>
           <th>{{item.ente}}</th>
           <th>{{item.nro_factura}}</th>
-          <th>{{item.neto_iva}}</th>
-          <th>{{item.iva|floatformat:"2"}}</th>
+          <th>{{item.subtotal}}</th>
+          <th>{{item.impuesto|floatformat:"2"}}</th>
+          <th>{{item.total}}</th>
         </tr>
         {% endfor %}
         <!-- <tr>

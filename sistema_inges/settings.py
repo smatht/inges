@@ -207,7 +207,7 @@ SUIT_CONFIG = {
             ('Facturas recibidas', '/administracion/facturacion/factura_recibida/', 'facturacion.add_factura_recibida'),
             ('Facturas emitidas', '/administracion/facturacion/factura_emitida/', 'facturacion.add_factura_emitida'),
 
-            ('Empresas', '/administracion/facturacion/empresa/', 'facturacion.add_empresa'),
+            ('Empresas', '/administracion/facturacion/empresa_ente/', 'facturacion.add_empresa_ente'),
             ('Informes', '/facturacion/informes/', 'facturacion.add_informes'),
 
         )

@@ -1,12 +1,15 @@
 from django.db import models
 #from django.contrib.auth.models import User
 
-
+############################################
+#           Clases secundarias             #
+############################################
 class Iva(models.Model):
 	porcentaje = models.DecimalField(max_digits=5, decimal_places=2)
 
 	def __unicode__(self):
 		return unicode(self.porcentaje)
+
 
 class Pais(models.Model):
 	nombre = models.CharField(max_length=50)
@@ -14,11 +17,13 @@ class Pais(models.Model):
 	def __unicode__(self):
 		return unicode(self.nombre)
 
+
 class Ciudad(models.Model):
 	nombre = models.CharField(max_length=50)
 
 	def __unicode__(self):
 		return unicode(self.nombre)
+
 
 class Localidad(models.Model):
 	nombre = models.CharField(max_length=50)
@@ -27,7 +32,7 @@ class Localidad(models.Model):
 		return unicode(self.nombre)
 
 
-class Empresa(models.Model):
+class Empresa_Ente(models.Model):
 	nombre = models.CharField(max_length=75)
 	direccion = models.CharField(max_length=140, blank=True)
 	telefono = models.CharField(max_length=50, blank=True)
@@ -40,14 +45,32 @@ class Empresa(models.Model):
 		return unicode(self.nombre)
 
 
-class Factura_recibida(models.Model):
+
+############################################
+#     Clases principales facturacion       #
+############################################
+class Factura(models.Model):
 	fecha = models.DateField()
 	registrado_el = models.DateTimeField(auto_now_add = True)
-	emisor = models.ForeignKey(to=Empresa, related_name="pertenece")
-	nro_factura = models.CharField(max_length=15, blank=True)
-	neto = models.DecimalField(max_digits=10, decimal_places=2)
-	iva = models.ForeignKey(to=Iva, related_name="posee")
+	nro_factura = models.CharField(max_length=15)
+	subtotal = models.DecimalField(max_digits=10, decimal_places=2)
+	iva = models.ForeignKey(Iva)
 	percepciones_otros = models.DecimalField(max_digits=6, decimal_places=2, default=0)
+
+	def impuesto(self):
+		resultado = (self.iva.porcentaje * self.subtotal)/100
+		return resultado
+
+	def total(self):
+		resultado = self.subtotal + self.impuesto() + self.percepciones_otros
+		return resultado
+
+	class Meta:
+		abstract = True
+
+
+class Factura_recibida(Factura):
+	emisor = models.ForeignKey(Empresa_Ente)
 	# Para registrar al usuario que agrega el registro
 	# usuario = models.ForeignKey(User)
 
@@ -55,9 +78,6 @@ class Factura_recibida(models.Model):
 	# timestamp = models.DateTimeField(auto_now_add=True)
 
 	def __unicode__(self):
-		# Optimo
-		# return "%s - %s" (self.emisor, self.nro_factura)
-		
 		return unicode(self.emisor)+" - "+self.nro_factura
 
 	# Para enviar una imagen al admin
@@ -74,44 +94,43 @@ class Factura_recibida(models.Model):
 	# 	else:
 	# 		return '<img src="http://placehold.it/80x40/B3888F/FFFFFF/&text=$+%.2f" title= "%.1f%%" />' % (resultado, self.iva.porcentaje)
 
-	def impuesto(self):
-		resultado = (self.iva.porcentaje * self.neto)/100
-		return resultado
-
-	def total(self):
-		resultado = self.neto + self.impuesto() + self.percepciones_otros
-		return resultado
 
 
-
-class Ente(models.Model):
-	nombre = models.CharField(max_length=75)
+class Factura_emitida(Factura):
+	ente = models.ForeignKey(Empresa_Ente)
 
 	def __unicode__(self):
-		return unicode(self.nombre)
-
-
-
-class Factura_emitida(models.Model):
-	fecha = models.DateField()
-	registrado_el = models.DateTimeField(auto_now_add = True)
-	ente = models.ForeignKey(to=Ente, related_name="pertenece")
-	nro_factura = models.CharField(max_length=15)
-	neto_iva = models.DecimalField(max_digits=10, decimal_places=2)
-	# iva = models.ForeignKey(to=Iva, related_name="corresponde")
-
-	def __unicode__(self):
-		
 		return "para: " + unicode(self.ente) + " - fecha: "+unicode(self.fecha)
-
-	def iva(self):
-		resultado = float(self.neto_iva) - (float(self.neto_iva)/float(1.21))
-		return resultado
 
 
 class Informes(models.Model):
     class Meta:
         permissions = (("can_view_informe", "Can view informe"),)
 
+
+class Albaran(models.Model):
+	fecha = models.DateField()
+	registrado_el = models.DateTimeField(auto_now_add = True)
+	nro_albaran = models.CharField(max_length=15, blank=True)
+	total = models.DecimalField(max_digits=10, decimal_places=2)
+
+	
+	class Meta:
+		abstract = True
+
+
+
+class Albaran_emitido(Albaran):
+	ente = models.ForeignKey(Empresa_Ente)
+
+	def __unicode__(self):
+		return "para: " + unicode(self.ente) + " - fecha: "+unicode(self.fecha)
+
+
+class Albaran_recibido(Albaran):
+	emisor = models.ForeignKey(Empresa_Ente)
+
+	def __unicode__(self):
+		return "de: " + unicode(self.emisor) + " - fecha: "+unicode(self.fecha)
 
 
