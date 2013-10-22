@@ -199,9 +199,9 @@
     <div class="content">
       <div class="tools">
         {% block footer_links %}
-          <a href="http://sticchimatias.com.ar/contacto.php" target="_blank" class="icon"><i class="icon-question-sign"></i>Soporte</a>
+          <a href="#" class="icon" onclick="alert('No implementado');"><i class="icon-question-sign"></i>Soporte</a>
           <!-- <a href="http://djangosuit.com/pricing/" target="_blank" class="icon"><i class="icon-bookmark"></i>Licence</a> -->
-          <a href="http://sticchimatias.com.ar/contacto.php" target="_blank" class="icon"><i class="icon-comment"></i>Reportar un problema</a>
+          <a href="#" class="icon" onclick="alert('No implementado');"><i class="icon-comment"></i>Reportar un problema</a>
         {% endblock %}
       </div>
 
@@ -213,7 +213,7 @@
 
       <div class="branding">{% block footer_branding %}
         {% with 'ADMIN_NAME'|suit_conf as admin_name %}
-          {{ admin_name }} te saluda: {{saludo}}
+          {{ admin_name }}
           {% if admin_name == 'Django Suit' %}
             v{{ 'VERSION'|suit_conf }}
           {% endif %}

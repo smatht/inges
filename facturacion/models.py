@@ -2,7 +2,7 @@ from django.db import models
 #from django.contrib.auth.models import User
 
 ############################################
-#           Clases secundarias             #
+#     Clases secundarias Facturacion       #
 ############################################
 class Iva(models.Model):
 	porcentaje = models.DecimalField(max_digits=5, decimal_places=2)
@@ -34,12 +34,13 @@ class Localidad(models.Model):
 
 class Empresa_Ente(models.Model):
 	nombre = models.CharField(max_length=75)
+	cuit = models.CharField(max_length=20, blank=True)
 	direccion = models.CharField(max_length=140, blank=True)
 	telefono = models.CharField(max_length=50, blank=True)
 	telefono_secundario = models.CharField(max_length=50, blank=True)
-	pais = models.ForeignKey(to=Pais, related_name="radicada", blank=True, null=True)
-	ciudad = models.ForeignKey(to=Ciudad, related_name="pertenece", blank=True, null=True)
-	localidad = models.ForeignKey(to=Localidad, related_name="pertenece", blank=True, null=True)
+	pais = models.ForeignKey(Pais, blank=True, null=True)
+	ciudad = models.ForeignKey(Ciudad, blank=True, null=True)
+	localidad = models.ForeignKey(Localidad, blank=True, null=True)
 
 	def __unicode__(self):
 		return unicode(self.nombre)
@@ -47,7 +48,7 @@ class Empresa_Ente(models.Model):
 
 
 ############################################
-#     Clases principales facturacion       #
+#     Clases principales Facturacion       #
 ############################################
 class Factura(models.Model):
 	fecha = models.DateField()

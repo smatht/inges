@@ -48,8 +48,20 @@ class Factura_recibida_admin(admin.ModelAdmin):
 # extra = 1
 
 class Factura_emitida_admin(admin.ModelAdmin):
-	list_display = ('ente', 'fecha', 'subtotal', 'iva')
+	list_display = ('ente', 'fecha', 'subtotal', 'impuesto')
 	list_filter = ('fecha',)
+	actions = [export_as_csv]
+
+
+class Albaran_recibido_admin(admin.ModelAdmin):
+	list_display = ('emisor', 'fecha', 'total')
+	list_filter = ('fecha',)
+	actions = [export_as_csv]
+
+
+class Empresa_Ente_admin(admin.ModelAdmin):
+	list_display = ('nombre', 'cuit','direccion', 'telefono')
+	search_fields = ('nombre',)
 	actions = [export_as_csv]
 
 # Para facilitar el agregado de Many To Many Field se hace esto...
@@ -68,10 +80,10 @@ class HideAdmin(admin.ModelAdmin):
 
 admin.site.register(Factura_recibida, Factura_recibida_admin)
 admin.site.register(Factura_emitida, Factura_emitida_admin)
-admin.site.register(Albaran_emitido)
-admin.site.register(Albaran_recibido)
+admin.site.register(Albaran_emitido, HideAdmin)
+admin.site.register(Albaran_recibido, Albaran_recibido_admin)
 admin.site.register(Iva, HideAdmin)
-admin.site.register(Empresa_Ente)
+admin.site.register(Empresa_Ente, Empresa_Ente_admin)
 admin.site.register(Pais, HideAdmin)
 admin.site.register(Ciudad, HideAdmin)
 admin.site.register(Localidad, HideAdmin)
