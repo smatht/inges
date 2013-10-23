@@ -179,8 +179,8 @@ TEMPLATE_CONTEXT_PROCESSORS = TCP + (
 SUIT_CONFIG = {
     # header
     'ADMIN_NAME': 'Sistema Inge$',
-    # 'HEADER_DATE_FORMAT': 'l, j. F Y',
-    # 'HEADER_TIME_FORMAT': 'H:i',
+    'HEADER_DATE_FORMAT': 'l, j. F Y',
+    'HEADER_TIME_FORMAT': 'H:i',
 
     # forms
     'SHOW_REQUIRED_ASTERISK': True, # Default True
@@ -192,14 +192,21 @@ SUIT_CONFIG = {
     # 'sites': 'icon-leaf',
     # 'auth': 'icon-lock',
     # },
-    # 'MENU_OPEN_FIRST_CHILD': True, # Default True
+    'MENU_OPEN_FIRST_CHILD': False, # Default True
     # 'MENU_EXCLUDE': ('auth.group',),
-    # 'MENU': (
-    # 'sites',
-    # {'app': 'auth', 'icon':'icon-lock', 'models': ('user', 'group')},
+    'MENU': (
+    {'app': 'facturacion', 'icon':'None', 'models': (
+        {'model': 'facturacion.factura_recibida', 'label': 'Facturas recibidas'},
+        {'model': 'facturacion.factura_emitida', 'label': 'Facturas emitidas'},
+        'facturacion.empresa')},
+    {'app': 'auth', 'icon':'icon-lock', 'models': ('user', 'group')},
     # {'label': 'Settings', 'icon':'icon-cog', 'models': ('auth.user', 'auth.group')},
-    # {'label': 'Support', 'icon':'icon-question-sign', 'url': '/support/'},
-    # ),
+    {'label': 'Support', 'icon':'icon-question-sign', 'url': '/support/'},
+    {'label': 'Custom', 'icon':None, 'models': (
+            'auth.group',
+            {'model': 'auth.user', 'label': 'Staff'}
+        )},
+    ),
     'MENU_ORDER': (
 
       (('facturacion', '/administracion/facturacion/factura_recibida/',),
