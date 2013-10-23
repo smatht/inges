@@ -182,7 +182,7 @@
           var neto;
           var otros;
           $("#id_iva").focus(function() {
-            neto = parseFloat(document.getElementById('id_neto').value);
+            neto = parseFloat(document.getElementById('id_subtotal').value);
           });
           var porc;
           var valorIva
@@ -208,15 +208,31 @@
         {% endif %}
         {% if opts.object_name.lower == 'factura_emitida' %}
           <script type="text/javascript">
-          $(".field-valor_iva").show();
+          $(".form-row").show();
           var neto;
-          var iva = 1.21;
-          $("#id_neto_iva").change(function(){
-            neto = parseFloat(this.value);
-            var subtotal = neto / iva;
-            impuesto = neto - subtotal;
-            impuesto = Number(impuesto.toFixed(2))
-            document.getElementById("valor_iva").value = impuesto;
+          var otros;
+          $("#id_iva").focus(function() {
+            neto = parseFloat(document.getElementById('id_subtotal').value);
+          });
+          var porc;
+          var valorIva
+          $("#id_iva").change(function() {
+              porc = parseFloat(this.options[this.selectedIndex].text);
+              valorIva = (neto * porc)/100;
+              valorIva = Number(valorIva.toFixed(2))
+              document.getElementById("valor_iva").value = valorIva;
+          });
+          $("#id_percepciones_otros").focus(function(){
+            otros = parseFloat(document.getElementById('id_percepciones_otros').value);
+            total = neto + valorIva + otros;
+            total = Number(total.toFixed(2))
+            document.getElementById("total").value = total;
+          });
+          $("#id_percepciones_otros").change(function(){
+            otros = parseFloat(document.getElementById('id_percepciones_otros').value);
+            total = neto + valorIva + otros;
+            total = Number(total.toFixed(2))
+            document.getElementById("total").value = total;
           });
           </script>
         {% endif %}

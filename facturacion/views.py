@@ -1,4 +1,4 @@
-from facturacion.models import Factura_recibida, Iva, Empresa
+from facturacion.models import Factura_recibida, Iva, Empresa_Ente
 from django.shortcuts import render_to_response, get_object_or_404, HttpResponse, render, HttpResponseRedirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
@@ -46,24 +46,37 @@ def informesFacturacion(request):
         
     facturas_emitidas = Factura_emitida.objects.filter(registrado_el__month = mes)
     facturas_recibidas = Factura_recibida.objects.filter(registrado_el__month = mes)
-    facturacion_iva = 0;
-    descuento_iva = 0;
-    gasto_c_iva = 0
-    gasto_s_iva = 0
+    albaranes_recibidos = Albaran_recibido.objects.filter(registrado_el__month = mes)
+    facturacion_iva = 0
+    descuento_iva = 0
+    total_ingresos = 0
+    subtotal_ingresos =0
+    f_r_civa = 0
+    f_r_siva = 0
     percep_otros = 0
+    totalAlb = 0
     for f in facturas_emitidas:
-        descuento_iva = descuento_iva + f.iva()
+        descuento_iva = descuento_iva + f.impuesto()
+        total_ingresos = total_ingresos + f.total()
+        subtotal_ingresos = subtotal_ingresos + f.subtotal
     for fr in facturas_recibidas:
         facturacion_iva = facturacion_iva + fr.impuesto()
-        gasto_c_iva = gasto_c_iva + fr.total()
-        gasto_s_iva = gasto_s_iva + fr.neto
+        f_r_civa = f_r_civa + fr.total()
+        f_r_siva = f_r_siva + fr.subtotal
         percep_otros = percep_otros + fr.percepciones_otros
+    for ar in albaranes_recibidos:
+        totalAlb = totalAlb + ar.total
+        
     template = 'discriminacion_iva.html'
+    gasto_c_iva = f_r_civa + totalAlb
+    gasto_s_iva = f_r_siva + totalAlb
     
     return render(request, template,{'request': request, 'fact_iva': facturacion_iva,
         'title': 'Informes', 'desc_iva': descuento_iva, 'gastoCIva': gasto_c_iva,
         'gastoSIva': gasto_s_iva, 'mespy': mes, 'detalleFacturasR': facturas_recibidas,
-        'detalleFacturasE': facturas_emitidas, 'percep_otros': percep_otros})
+        'detalleFacturasE': facturas_emitidas, 'detalleAlbaranesR': albaranes_recibidos,
+         'percep_otros': percep_otros, 'totalAlb': totalAlb, 'total_ingresos': total_ingresos,
+         'subtotal_ingresos': subtotal_ingresos, 'f_r_civa': f_r_civa, 'f_r_siva': f_r_siva})
 
 
 
