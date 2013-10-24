@@ -195,39 +195,41 @@ SUIT_CONFIG = {
     'MENU_OPEN_FIRST_CHILD': False, # Default True
     # 'MENU_EXCLUDE': ('auth.group',),
     'MENU': (
-    {'app': 'facturacion', 'icon':'None', 'models': (
-        {'model': 'facturacion.factura_recibida', 'label': 'Facturas recibidas'},
-        {'model': 'facturacion.factura_emitida', 'label': 'Facturas emitidas'},
-        'facturacion.empresa')},
-    {'app': 'auth', 'icon':'icon-lock', 'models': ('user', 'group')},
-    # {'label': 'Settings', 'icon':'icon-cog', 'models': ('auth.user', 'auth.group')},
-    {'label': 'Support', 'icon':'icon-question-sign', 'url': '/support/'},
-    {'label': 'Custom', 'icon':None, 'models': (
-            'auth.group',
-            {'model': 'auth.user', 'label': 'Staff'}
+    {'app': 'facturacion', 'models': (
+        {'model': 'facturacion.factura_recibida', 'label': 'Facturas recibidas', 'permissions': 'facturacion.add_factura_recibida'},
+        {'model': 'facturacion.factura_emitida', 'label': 'Facturas emitidas', 'permissions': 'facturacion.add_factura_emitida'},
+        {'model': 'facturacion.albaran_recibido', 'label': 'Albaranes recibidos', 'permissions': 'facturacion.add_albaran_recibido'},
+        {'model': 'facturacion.empresa_ente', 'label': 'Empresas', 'permissions': 'facturacion.add_empresa_ente'},
         )},
+    {'label': 'Facturacion Informes', 'icon': 'icon-briefcase', 'url': '/facturacion/informes/', 'permissions': 'facturacion.add_informes'},
+    {'app': 'auth', 'icon':'icon-lock', 'models': ('user', 'group')},
+    # {'label': 'Support', 'icon':'icon-question-sign', 'url': '/support/'},
+    # {'label': 'Custom', 'icon':None, 'models': (
+    #         'auth.group',
+    #         {'model': 'auth.user', 'label': 'Staff'}
+    #     )},
     ),
-    'MENU_ORDER': (
+    # 'MENU_ORDER': (
 
-      (('facturacion', '/administracion/facturacion/factura_recibida/',),
-        (
-            ('Facturas recibidas', '/administracion/facturacion/factura_recibida/', 'facturacion.add_factura_recibida'),
-            ('Facturas emitidas', '/administracion/facturacion/factura_emitida/', 'facturacion.add_factura_emitida'),
+    #   (('facturacion', '/administracion/facturacion/factura_recibida/',),
+    #     (
+    #         ('Facturas recibidas', '/administracion/facturacion/factura_recibida/', 'facturacion.add_factura_recibida'),
+    #         ('Facturas emitidas', '/administracion/facturacion/factura_emitida/', 'facturacion.add_factura_emitida'),
 
-            ('Empresas', '/administracion/facturacion/empresa_ente/', 'facturacion.add_empresa_ente'),
-            ('Informes', '/facturacion/informes/', 'facturacion.add_informes'),
+    #         ('Empresas', '/administracion/facturacion/empresa_ente/', 'facturacion.add_empresa_ente'),
+    #         ('Informes', '/facturacion/informes/', 'facturacion.add_informes'),
 
-        )
-      ),
-      ('auth', ('user', 'group')),
+    #     )
+    #   ),
+    #   ('auth', ('user', 'group')),
       
-      # (('Custom link', '/admin/custom/', 'icon-cog',),
-      # (
-      # ('Child 1', '/admin/child/', 'auth.add_user'),
-      # ('Child 2', '/admin/child2/')
-      # )
-      # )
-    )
+    #   # (('Custom link', '/admin/custom/', 'icon-cog',),
+    #   # (
+    #   # ('Child 1', '/admin/child/', 'auth.add_user'),
+    #   # ('Child 2', '/admin/child2/')
+    #   # )
+    #   # )
+    # )
     # misc
     # 'LIST_PER_PAGE': 15
 }
