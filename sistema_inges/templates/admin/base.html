@@ -19,7 +19,7 @@
       jQuery('#platform-details').html('<code>' + navigator.userAgent + '</code>');
                 
                 var elements = [
-                "esc","f2"];
+                "esc","f2", "ctrl_q", "f4"];
                 
                 // the fetching...
                 $.each(elements, function(i, e) { // i is element index. e is element as text.
@@ -29,6 +29,8 @@
                    $(document).bind('keydown', elements[i], function assets() {
                     if (elements[i] == 'f2'){
                       document.getElementById('add_factura_r').click();
+                    }else if (elements[i] == 'ctrl_q'){
+                        document.getElementsByName("_save")[0].click();
                     }
                      
                      return false;
