@@ -199,6 +199,7 @@ $(function () {
           <th colspan="6" class="text-center">Detalle de facturas recibidas</th>
         </th>
         <tr>
+          <th>N°</th>
           <th>Emisor</th>
           <th>Fecha</th>
           <th>subtotal</th>
@@ -210,6 +211,7 @@ $(function () {
       <tbody>
         {% for item in detalleFacturasR %}
         <tr>
+          <th>{{ forloop.counter }}</th>
           <th>{{item.emisor}}</th>
           <th>{{item.fecha}}</th>
           <th>${{item.subtotal}}</th>
@@ -219,6 +221,7 @@ $(function () {
         </tr>
         {% endfor %}
         <tr>
+          <td></td>
           <td></td>
           <td> </td>
           <td class="table-gastoSI" style="background-color: #EFDFBF">${{f_r_siva|floatformat:"2"}}</td>
@@ -243,6 +246,7 @@ $(function () {
           <th colspan="6" class="text-center">Detalle de remitos recibidos</th>
         </th>
         <tr>
+          <th>N°</th>
           <th>Emisor</th>
           <th>Fecha</th>
           <th>Total</th>
@@ -251,12 +255,14 @@ $(function () {
       <tbody>
         {% for item in detalleAlbaranesR %}
         <tr>
+          <th>{{ forloop.counter }}</th>
           <th>{{item.emisor}}</th>
           <th>{{item.fecha}}</th>
           <th>${{item.total}}</th>
         </tr>
         {% endfor %}
         <tr>
+          <td></td>
           <td></td>
           <td> </td>
           <td class="table-gastoCI" style="background-color: #F3C0AF">${{totalAlb|floatformat:"2"}}</td>
@@ -279,6 +285,7 @@ $(function () {
           <th colspan="6" class="text-center">Detalle de facturas emitidas</th>
         </th>
         <tr>
+          <th>N°</th>
           <th>Fecha</th>
           <th>Ente</th>
           <th>Nro factura</th>
@@ -290,6 +297,7 @@ $(function () {
       <tbody>
         {% for item in detalleFacturasE %}
         <tr>
+          <th>{{ forloop.counter }}</th>
           <th>{{item.fecha}}</th>
           <th>{{item.ente}}</th>
           <th>{{item.nro_factura}}</th>
