@@ -42,6 +42,9 @@ class Empresa_Ente(models.Model):
 	ciudad = models.ForeignKey(Ciudad, blank=True, null=True)
 	localidad = models.ForeignKey(Localidad, blank=True, null=True)
 
+	class Meta:
+           ordering = ['nombre']
+
 	def __unicode__(self):
 		return unicode(self.nombre)
 

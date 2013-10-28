@@ -79,6 +79,7 @@ class Albaran_recibido_admin(admin.ModelAdmin):
 class Empresa_Ente_admin(admin.ModelAdmin):
 	list_display = ('nombre', 'cuit','direccion', 'telefono')
 	search_fields = ('nombre',)
+	# ordering = ['nombre']
 	actions = [export_as_csv]
 	inlines = [ Factura_recibida_inline, Albaran_recibido_inline]
 
