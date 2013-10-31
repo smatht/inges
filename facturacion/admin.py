@@ -20,7 +20,7 @@ class Factura_recibida_admin(admin.ModelAdmin):
 	actions = [export_as_csv]
 	fieldsets = (
         (None, {
-            'fields': ('fecha', 'emisor', 'nro_factura', 'subtotal', 'iva', 'percepciones_otros')
+            'fields': ('registrado_el', 'fecha', 'emisor', 'nro_factura', 'subtotal', 'iva', 'percepciones_otros')
         }),
     )
 	
@@ -48,14 +48,14 @@ class Factura_recibida_admin(admin.ModelAdmin):
 
 # Sirve para poder agregar facturas inline cuando se agrega un registro
 # de un campo relacionado por clave foranea #
-class Factura_recibida_inline(admin.StackedInline):
-	model = Factura_recibida
-	extra = 1
+# class Factura_recibida_inline(admin.StackedInline):
+# 	model = Factura_recibida
+# 	extra = 1
 
 
-class Albaran_recibido_inline(admin.StackedInline):
-	model = Albaran_recibido
-	extra = 1
+# class Albaran_recibido_inline(admin.StackedInline):
+# 	model = Albaran_recibido
+# 	extra = 1
 
 
 class Factura_emitida_admin(admin.ModelAdmin):
@@ -71,7 +71,7 @@ class Albaran_recibido_admin(admin.ModelAdmin):
 	actions = [export_as_csv]
 	fieldsets = (
         (None, {
-            'fields': ('fecha', 'emisor', 'nro_albaran', 'total')
+            'fields': ('registrado_el', 'fecha', 'emisor', 'nro_albaran', 'total')
         }),
     )
 
@@ -81,7 +81,7 @@ class Empresa_Ente_admin(admin.ModelAdmin):
 	search_fields = ('nombre',)
 	# ordering = ['nombre']
 	actions = [export_as_csv]
-	inlines = [ Factura_recibida_inline, Albaran_recibido_inline]
+	# inlines = [ Factura_recibida_inline, Albaran_recibido_inline]
 
 # Para facilitar el agregado de Many To Many Field se hace esto...
 # class Campo_many_to_many_admin(admin.ModelAdmin):

@@ -184,6 +184,7 @@
 
         {% if opts.object_name.lower == 'factura_recibida' %}
           <script type="text/javascript">
+          document.getElementById("id_fecha").focus();
           $(".form-row").show();
           var neto = 0;
           var otros = 0;
@@ -219,6 +220,7 @@
         {% endif %}
         {% if opts.object_name.lower == 'factura_emitida' %}
           <script type="text/javascript">
+          document.getElementById("id_fecha").focus();
           $(".form-row").show();
           var neto = 0;
           var otros = 0;
@@ -251,6 +253,11 @@
             document.getElementById("total").value = total;
           });
           </script>
+        {% endif %}
+        {% if opts.object_name.lower == 'albaran_recibido' %}
+        <script>
+        document.getElementById("id_fecha").focus();
+        </script>
         {% endif %}
         {% endif %}
 
