@@ -67,7 +67,7 @@ class Factura_emitida_admin(admin.ModelAdmin):
 class Albaran_recibido_admin(admin.ModelAdmin):
 	list_display = ('emisor', 'fecha', 'total')
 	search_fields = ('emisor__nombre', 'nro_albaran',)
-	list_filter = ('fecha',)
+	list_filter = ('fecha', 'registrado_el')
 	actions = [export_as_csv]
 	fieldsets = (
         (None, {
