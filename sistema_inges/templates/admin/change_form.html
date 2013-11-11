@@ -202,7 +202,10 @@
               porc = parseFloat(this.options[this.selectedIndex].text);
               valorIva = (neto * porc)/100;
               valorIva = Number(valorIva.toFixed(2))
+              total = neto + valorIva + otros;
+              total = Number(total.toFixed(2))
               document.getElementById("valor_iva").value = valorIva;
+              document.getElementById("total").value = total;
           });
           $("#id_percepciones_otros").focus(function(){
             otros = parseFloat(document.getElementById('id_percepciones_otros').value);

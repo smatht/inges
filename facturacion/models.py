@@ -40,6 +40,8 @@ class Empresa_Ente(models.Model):
 	direccion = models.CharField(max_length=140, blank=True)
 	telefono = models.CharField(max_length=50, blank=True)
 	telefono_secundario = models.CharField(max_length=50, blank=True)
+	email = models.EmailField(blank=True)
+	sitio_web = models.CharField(max_length=140, blank=True)
 	pais = models.ForeignKey(Pais, blank=True, null=True)
 	ciudad = models.ForeignKey(Ciudad, blank=True, null=True)
 	localidad = models.ForeignKey(Localidad, blank=True, null=True)
