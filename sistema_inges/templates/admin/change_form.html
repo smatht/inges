@@ -40,6 +40,8 @@
     }(Suit.$))    
   </script>
 
+  
+
 {% endblock %}
 
 {% block extrastyle %}
@@ -174,23 +176,36 @@
         {% if adminform and add %}
           <script type="text/javascript">
           document.getElementById("{{ adminform.first_field.id_for_label }}").focus();
+          $("#id_nro_factura").attr('autocomplete', 'off');
+          $("#id_subtotal").attr('autocomplete', 'off');
+          $("#id_total").attr('autocomplete', 'off');
+          $("#id_percepciones_otros").attr('autocomplete', 'off');
           </script>
 
         {% if opts.object_name.lower == 'factura_recibida' %}
           <script type="text/javascript">
+          document.getElementById("id_fecha").focus();
           $(".form-row").show();
-          var neto;
-          var otros;
+          var neto = 0;
+          var otros = 0;
+          var porc = 0;
+          var valorIva = 0;
           $("#id_iva").focus(function() {
             neto = parseFloat(document.getElementById('id_subtotal').value);
           });
-          var porc;
-          var valorIva
+          $("#id_subtotal").keyup(function() {
+            neto = parseFloat(this.value);
+            total = neto + valorIva + otros;
+            document.getElementById("total").value = total;
+          });
           $("#id_iva").change(function() {
               porc = parseFloat(this.options[this.selectedIndex].text);
               valorIva = (neto * porc)/100;
               valorIva = Number(valorIva.toFixed(2))
+              total = neto + valorIva + otros;
+              total = Number(total.toFixed(2))
               document.getElementById("valor_iva").value = valorIva;
+              document.getElementById("total").value = total;
           });
           $("#id_percepciones_otros").focus(function(){
             otros = parseFloat(document.getElementById('id_percepciones_otros').value);
@@ -198,7 +213,7 @@
             total = Number(total.toFixed(2))
             document.getElementById("total").value = total;
           });
-          $("#id_percepciones_otros").change(function(){
+          $("#id_percepciones_otros").keyup(function(){
             otros = parseFloat(document.getElementById('id_percepciones_otros').value);
             total = neto + valorIva + otros;
             total = Number(total.toFixed(2))
@@ -208,14 +223,20 @@
         {% endif %}
         {% if opts.object_name.lower == 'factura_emitida' %}
           <script type="text/javascript">
+          document.getElementById("id_fecha").focus();
           $(".form-row").show();
-          var neto;
-          var otros;
+          var neto = 0;
+          var otros = 0;
+          var porc = 0;
+          var valorIva = 0;
           $("#id_iva").focus(function() {
             neto = parseFloat(document.getElementById('id_subtotal').value);
           });
-          var porc;
-          var valorIva
+          $("#id_subtotal").keyup(function() {
+            neto = parseFloat(this.value);
+            total = neto + valorIva + otros;
+            document.getElementById("total").value = total;
+          });
           $("#id_iva").change(function() {
               porc = parseFloat(this.options[this.selectedIndex].text);
               valorIva = (neto * porc)/100;
@@ -228,13 +249,18 @@
             total = Number(total.toFixed(2))
             document.getElementById("total").value = total;
           });
-          $("#id_percepciones_otros").change(function(){
+          $("#id_percepciones_otros").keyup(function(){
             otros = parseFloat(document.getElementById('id_percepciones_otros').value);
             total = neto + valorIva + otros;
             total = Number(total.toFixed(2))
             document.getElementById("total").value = total;
           });
           </script>
+        {% endif %}
+        {% if opts.object_name.lower == 'albaran_recibido' %}
+        <script>
+        document.getElementById("id_fecha").focus();
+        </script>
         {% endif %}
         {% endif %}
 

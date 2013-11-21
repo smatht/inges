@@ -10,14 +10,19 @@ from actions import export_as_csv
 # Tambien con list_filter colocamos un filtro.
 class Factura_recibida_admin(admin.ModelAdmin):
 	list_display = ('emisor', 'fecha', 'nro_factura', 'subtotal', 'valor_iva', 'percepciones_otros', 'total')
-	list_filter = ('iva', 'registrado_el', 'registrado_el')
+	list_filter = ('iva', 'fecha', 'registrado_el')
 	#search_fields = ('iva__porcentaje',)
-	search_fields = ('nro_factura',)
+	search_fields = ('emisor__nombre', 'nro_factura',)
 	# Para editar un campo de forma inline
 	list_editable = ('percepciones_otros',)
 	# Agregar busqueda optimizada
 	# raw_id_fields = ('emisor',)
 	actions = [export_as_csv]
+	fieldsets = (
+        (None, {
+            'fields': ('registrado_el', 'fecha', 'emisor', 'nro_factura', 'subtotal', 'iva', 'percepciones_otros')
+        }),
+    )
 	
 	# Para mostrar una imagen en un campo
 	# def valor_iva(self, obj):
@@ -44,8 +49,14 @@ class Factura_recibida_admin(admin.ModelAdmin):
 # Sirve para poder agregar facturas inline cuando se agrega un registro
 # de un campo relacionado por clave foranea #
 # class Factura_recibida_inline(admin.StackedInline):
-# model = Factura_recibida
-# extra = 1
+# 	model = Factura_recibida
+# 	extra = 1
+
+
+# class Albaran_recibido_inline(admin.StackedInline):
+# 	model = Albaran_recibido
+# 	extra = 1
+
 
 class Factura_emitida_admin(admin.ModelAdmin):
 	list_display = ('ente', 'fecha', 'subtotal', 'impuesto')
@@ -55,14 +66,22 @@ class Factura_emitida_admin(admin.ModelAdmin):
 
 class Albaran_recibido_admin(admin.ModelAdmin):
 	list_display = ('emisor', 'fecha', 'total')
-	list_filter = ('fecha',)
+	search_fields = ('emisor__nombre', 'nro_albaran',)
+	list_filter = ('fecha', 'registrado_el')
 	actions = [export_as_csv]
+	fieldsets = (
+        (None, {
+            'fields': ('registrado_el', 'fecha', 'emisor', 'nro_albaran', 'total')
+        }),
+    )
 
 
 class Empresa_Ente_admin(admin.ModelAdmin):
 	list_display = ('nombre', 'cuit','direccion', 'telefono')
 	search_fields = ('nombre',)
+	# ordering = ['nombre']
 	actions = [export_as_csv]
+	# inlines = [ Factura_recibida_inline, Albaran_recibido_inline]
 
 # Para facilitar el agregado de Many To Many Field se hace esto...
 # class Campo_many_to_many_admin(admin.ModelAdmin):

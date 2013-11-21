@@ -1,5 +1,7 @@
+# encoding:utf-8
 from django.db import models
 #from django.contrib.auth.models import User
+import datetime
 
 ############################################
 #     Clases secundarias Facturacion       #
@@ -38,9 +40,14 @@ class Empresa_Ente(models.Model):
 	direccion = models.CharField(max_length=140, blank=True)
 	telefono = models.CharField(max_length=50, blank=True)
 	telefono_secundario = models.CharField(max_length=50, blank=True)
+	email = models.EmailField(blank=True)
+	sitio_web = models.CharField(max_length=140, blank=True)
 	pais = models.ForeignKey(Pais, blank=True, null=True)
 	ciudad = models.ForeignKey(Ciudad, blank=True, null=True)
 	localidad = models.ForeignKey(Localidad, blank=True, null=True)
+
+	class Meta:
+           ordering = ['nombre']
 
 	def __unicode__(self):
 		return unicode(self.nombre)
@@ -51,8 +58,9 @@ class Empresa_Ente(models.Model):
 #     Clases principales Facturacion       #
 ############################################
 class Factura(models.Model):
+	registrado_el = models.DateField(default=datetime.datetime.now, 
+		help_text="Cambie este campo sólo en caso de registrar una factura para un mes anterior, tenga en cuenta que al registrar para otro mes ésta no se incluirá en los informes del mes actual.")
 	fecha = models.DateField()
-	registrado_el = models.DateTimeField(auto_now_add = True)
 	nro_factura = models.CharField(max_length=15)
 	subtotal = models.DecimalField(max_digits=10, decimal_places=2)
 	iva = models.ForeignKey(Iva)
@@ -79,7 +87,7 @@ class Factura_recibida(Factura):
 	# timestamp = models.DateTimeField(auto_now_add=True)
 
 	def __unicode__(self):
-		return unicode(self.emisor)+" - "+self.nro_factura
+		return unicode(self.fecha)+" - "+self.nro_factura
 
 	# Para enviar una imagen al admin
 	# def valor_iva_imagen(self):
@@ -110,8 +118,9 @@ class Informes(models.Model):
 
 
 class Albaran(models.Model):
+	registrado_el = models.DateField(default=datetime.datetime.now, 
+		help_text="Cambie este campo sólo en caso de registrar una albaran para un mes anterior, tenga en cuenta que al registrar para otro mes éste no se incluirá en los informes del mes actual.")
 	fecha = models.DateField()
-	registrado_el = models.DateTimeField(auto_now_add = True)
 	nro_albaran = models.CharField(max_length=15, blank=True)
 	total = models.DecimalField(max_digits=10, decimal_places=2)
 
