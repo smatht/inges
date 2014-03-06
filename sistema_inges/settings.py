@@ -12,12 +12,22 @@ ADMINS = (
 
 # Parse database configuration from $DATABASE_URL
 import dj_database_url
-DATABASES['default'] =  dj_database_url.config()
 
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 MANAGERS = ADMINS
+
+DATABASES = {
+  'default': {
+    'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    'NAME': 'd3vobr4ece5eqg',
+    'HOST': 'ec2-54-197-241-82.compute-1.amazonaws.com',
+    'PORT': 5432,
+    'USER': 'rvurxlyzmbxmul',
+    'PASSWORD': 'D7-2CMosP-26LfwapnlNHTbZ7r'
+  }
+}
 
 # DATABASES = {
 #     'default': {
