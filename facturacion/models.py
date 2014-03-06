@@ -22,6 +22,7 @@ class Pais(models.Model):
 
 class Ciudad(models.Model):
 	nombre = models.CharField(max_length=50)
+	pais = models.ForeignKey(Pais)
 
 	def __unicode__(self):
 		return unicode(self.nombre)
@@ -29,6 +30,7 @@ class Ciudad(models.Model):
 
 class Localidad(models.Model):
 	nombre = models.CharField(max_length=50)
+	ciudad = models.ForeignKey(Ciudad)
 
 	def __unicode__(self):
 		return unicode(self.nombre)
