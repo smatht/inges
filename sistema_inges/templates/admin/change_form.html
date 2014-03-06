@@ -194,9 +194,9 @@
             neto = parseFloat(document.getElementById('id_subtotal').value);
           });
           $("#id_subtotal").keyup(function() {
-            neto = parseFloat(document.getElementById('id_subtotal').value);
+            neto = parseFloat(this.value);
             total = neto + valorIva + otros;
-            document.getElementById("total").value = total.toFixed(2);
+            document.getElementById("total").value = total;
           });
           $("#id_iva").change(function() {
               porc = parseFloat(this.options[this.selectedIndex].text);
@@ -217,7 +217,7 @@
             otros = parseFloat(document.getElementById('id_percepciones_otros').value);
             total = neto + valorIva + otros;
             total = Number(total.toFixed(2))
-            document.getElementById("total").value = total.toFixed(2);
+            document.getElementById("total").value = total;
           });
           </script>
         {% endif %}
@@ -233,9 +233,9 @@
             neto = parseFloat(document.getElementById('id_subtotal').value);
           });
           $("#id_subtotal").keyup(function() {
-            neto = parseFloat(document.getElementById('id_subtotal').value);
+            neto = parseFloat(this.value);
             total = neto + valorIva + otros;
-            document.getElementById("total").value = total.toFixed(2);
+            document.getElementById("total").value = total;
           });
           $("#id_iva").change(function() {
               porc = parseFloat(this.options[this.selectedIndex].text);
@@ -247,13 +247,13 @@
             otros = parseFloat(document.getElementById('id_percepciones_otros').value);
             total = neto + valorIva + otros;
             total = Number(total.toFixed(2))
-            document.getElementById("total").value = total.toFixed(2);
+            document.getElementById("total").value = total;
           });
           $("#id_percepciones_otros").keyup(function(){
             otros = parseFloat(document.getElementById('id_percepciones_otros').value);
             total = neto + valorIva + otros;
             total = Number(total.toFixed(2))
-            document.getElementById("total").value = total.toFixed(2);
+            document.getElementById("total").value = total;
           });
           </script>
         {% endif %}
