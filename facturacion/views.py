@@ -125,3 +125,12 @@ def addFR(request):
     # ataques en los forms, usar solo para forms.
     return render_to_response(template, context_instance = RequestContext(request,locals()))
 
+
+
+# Conjunto devistas, el del listado y el del objeto como tal.
+from rest_framework import viewsets
+from .serializers import FRSerializer
+
+class FRViewSet(viewsets.ModelViewSet):
+    queryset = Factura_recibida.objects.all()
+    serializer_class = FRSerializer

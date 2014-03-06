@@ -14,7 +14,7 @@ class Factura_recibida_admin(admin.ModelAdmin):
 	#search_fields = ('iva__porcentaje',)
 	search_fields = ('emisor__nombre', 'nro_factura',)
 	# Para editar un campo de forma inline
-	list_editable = ('percepciones_otros',)
+	#list_editable = ('percepciones_otros',)
 	# Agregar busqueda optimizada
 	# raw_id_fields = ('emisor',)
 	actions = [export_as_csv]

@@ -4,7 +4,15 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 admin.autodiscover()
 
+from facturacion.views import FRViewSet
+from rest_framework import routers
+router = routers.DefaultRouter()
+
+router.register(r'links', FRViewSet)
+
 urlpatterns = patterns('',
+    url(r'^api/', include(router.urls)),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 	url(r'^$', 'facturacion.views.inicio', name='inicio'),
     url(r'^facturas_recibidas/$', 'facturacion.views.facturas_recibidas', name='facturas-recibidas'),
 	url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
