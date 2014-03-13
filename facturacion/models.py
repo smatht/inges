@@ -73,7 +73,7 @@ class Factura(models.Model):
 		return resultado
 
 	def total(self):
-		resultado = self.subtotal + self.impuesto() + self.percepciones_otros
+		resultado = (self.subtotal + self.impuesto() + self.percepciones_otros)
 		return resultado
 
 	class Meta:

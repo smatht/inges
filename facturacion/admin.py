@@ -2,6 +2,7 @@ from facturacion.models import *
 from django.contrib.sites.models import Site
 from django.contrib import admin
 from actions import export_as_csv
+import decimal
 
 
 # Esta clase modifica la visualizacion del modelo en el admin, en este caso
@@ -9,7 +10,7 @@ from actions import export_as_csv
 # campos dela tabla (list_display).
 # Tambien con list_filter colocamos un filtro.
 class Factura_recibida_admin(admin.ModelAdmin):
-	list_display = ('emisor', 'fecha', 'nro_factura', 'subtotal', 'valor_iva', 'percepciones_otros', 'total')
+	list_display = ('emisor', 'fecha', 'nro_factura', 'valor_subtotal', 'valor_iva', 'percepciones_otros', 'valor_total')
 	list_filter = ('iva', 'fecha', 'registrado_el')
 	#search_fields = ('iva__porcentaje',)
 	search_fields = ('emisor__nombre', 'nro_factura',)
@@ -35,12 +36,29 @@ class Factura_recibida_admin(admin.ModelAdmin):
 	def valor_iva(self, obj):
 		iva = obj.impuesto()
 		porc = obj.iva.porcentaje
-		badge = 'success'
-		if porc == 0:
-			badge = 'info'
+		badge = 'badge badge-success'
+		if porc == 21:
+			porc = '&nbsp;'+str(decimal.Decimal(round(porc, 1)).normalize())+'&nbsp;&nbsp;'
+		elif porc == 0:
+			badge = 'badge'
+			porc = '&nbsp;'+str(decimal.Decimal(round(porc, 1)).normalize())+'&nbsp;&nbsp;'
+		elif porc == 10.5:
+			badge = 'badge badge-info'
+			porc = decimal.Decimal(round(porc, 1)).normalize()
+		elif porc == 27:
+			porc = '&nbsp;'+str(decimal.Decimal(round(porc, 1)).normalize())+'&nbsp;&nbsp;'
+			badge = 'badge badge-warning'
 		
-		return '$%s <span class="badge badge-%s pull-right">%s%%</span>' % (iva, badge, porc)
+		return '$%s <span class="%s pull-right">%s%%</span>' % (round(iva, 2), badge, porc)
 	valor_iva.allow_tags = True
+
+	def valor_total(self, obj):
+		total = obj.total()
+		return "$"+str(round(total, 2))
+
+	def valor_subtotal(self, obj):
+		subtotal = obj.subtotal
+		return "$"+str(round(subtotal, 2))
 
 	
 
@@ -101,7 +119,7 @@ admin.site.register(Factura_recibida, Factura_recibida_admin)
 admin.site.register(Factura_emitida, Factura_emitida_admin)
 admin.site.register(Albaran_emitido, HideAdmin)
 admin.site.register(Albaran_recibido, Albaran_recibido_admin)
-admin.site.register(Iva, HideAdmin)
+admin.site.register(Iva)
 admin.site.register(Empresa_Ente, Empresa_Ente_admin)
 admin.site.register(Pais, HideAdmin)
 admin.site.register(Ciudad, HideAdmin)
