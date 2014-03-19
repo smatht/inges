@@ -112,6 +112,8 @@ $(function () {
 {% block content-center %}
 <div id="suit-center" class="suit-column">
 
+
+
   {% if not is_popup %}
   {% block breadcrumbs %}
   <ul class="breadcrumb">
@@ -150,11 +152,16 @@ $(function () {
     <!-- ///////////////////////// -->
     <!--       FORM BUSQUEDA       -->
     <!-- ///////////////////////// -->
-    <form class="form-inline" action="" method="get">
-      <input type="month" placeholder="mes" name="fecha">
+    <form style="display: inline;" class="form-inline form-periodo" action="" method="get">
+      <input class="form-control" type="month" placeholder="mes" name="fecha">
       {#{% csrf_token %}#}
-      <button type="submit" class="btn">Mostrar periodo</button>
+      <button type="submit" class="btn btn-default">Mostrar periodo</button>
     </form>
+    <form style="display: inline;" class="form-inline form-botonera" action="" method="post" target="_blank">
+        <button type="submit" class="print btn btn-success pull-right"><i class="icon-download-alt icon-white"></i> Excel</button>
+        <button type="button" class="print btn btn-warning pull-right" onclick="javascript:window.print()"><i class="icon-print icon-white"></i> Imprimir</button>
+      </form>
+    
     <!-- ///////////////////////// -->
     <!--          FIN FORM         -->
     <!-- ///////////////////////// -->
@@ -163,7 +170,7 @@ $(function () {
     <!-- ///////////////////////// -->
     <!--      SECCION GASTOS       -->
     <!-- ///////////////////////// -->
-    <table class="table table-bordered table-condensed table-striped">
+    <table style="margin-top:18px" class="table table-bordered table-condensed table-striped">
       <thead>
         <tr>
           <th style="background-color: #FFF898">Gastos sin IVA</th>
@@ -196,7 +203,7 @@ $(function () {
     <table class="table table-bordered table-condensed table-striped">
       <thead>
         <tr>
-          <th colspan="6" class="text-center">Detalle de facturas recibidas</th>
+          <th colspan="7" class="text-center">Detalle de facturas recibidas</th>
         </th>
         <tr>
           <th>N°</th>
@@ -320,7 +327,10 @@ $(function () {
     <!-- ///////////////////////// -->
     <!--        FIN SECCION        -->
     <!-- ///////////////////////// -->
-    <button type="button" class="print btn btn-warning" onclick="javascript:window.print()">Imprimir</button>
+    <form class="form-inline form-botonera" action="" method="post">
+        <button type="button" class="print btn btn-warning" onclick="javascript:window.print()"><i class="icon-print icon-white"></i> Imprimir</button>
+        <a type="button" class="print btn btn-success" href="{{STATIC_URL}}example.xls"><i class="icon-download-alt icon-white"></i> Excel</a>
+      </form>
 
     {% block object-tools %}{% endblock %}
     {{ content }}
