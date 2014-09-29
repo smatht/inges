@@ -1,3 +1,8 @@
+.tit{
+	background-color: #f5f5f5;
+	border-radius: 4px;
+	padding-left: 8px;
+}
 .header-login{
 	background-color: #373b3d;
 	background-repeat: no-repeat;
@@ -5,4 +10,19 @@
 	border-left: 1px solid #2f3334;
 	height: 45px;
 	padding-left: 10px;
+}
+#column-grafico-iva {
+	display: inline-block;
+	min-width: 400px;
+	margin-left: -150px;
+}
+#pie-grafico-iva {
+	display: inline-block;
+	min-width: 500px;
+}
+
+@media print{
+	form{
+		display: none !important;
+	}
 }

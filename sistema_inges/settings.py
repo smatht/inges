@@ -202,7 +202,7 @@ TEMPLATE_CONTEXT_PROCESSORS = TCP + (
 # Django Suit configuration example
 SUIT_CONFIG = {
     # header
-    'ADMIN_NAME': 'Sistema Inge$',
+    'ADMIN_NAME': 'SISTEMA INGES',
     'HEADER_DATE_FORMAT': 'l, j. F Y',
     'HEADER_TIME_FORMAT': 'H:i',
 
@@ -219,42 +219,16 @@ SUIT_CONFIG = {
     'MENU_OPEN_FIRST_CHILD': False, # Default True
     # 'MENU_EXCLUDE': ('auth.group',),
     'MENU': (
-    {'app': 'facturacion', 'models': (
-        {'model': 'facturacion.factura_recibida', 'label': 'Facturas recibidas', 'permissions': 'facturacion.add_factura_recibida'},
-        {'model': 'facturacion.factura_emitida', 'label': 'Facturas emitidas', 'permissions': 'facturacion.add_factura_emitida'},
-        {'model': 'facturacion.albaran_recibido', 'label': 'Albaranes recibidos', 'permissions': 'facturacion.add_albaran_recibido'},
-        {'model': 'facturacion.empresa_ente', 'label': 'Empresas', 'permissions': 'facturacion.add_empresa_ente'},
+        {'label': 'Empresas', 'url': 'facturacion.empresa_ente', 'icon':'icon-user', 'permissions': 'facturacion.add_empresa_ente'},
+        {'label': 'facturacion', 'models': (
+            {'label': 'Emitir factura', 'icon': 'none', 'url': '/facturacion/emision/', 'permissions': 'facturacion.add_informes'},
+            {'model': 'facturacion.factura_recibida', 'label': 'Facturas recibidas', 'permissions': 'facturacion.add_factura_recibida'},
+            {'model': 'facturacion.factura_emitida', 'label': 'Facturas emitidas', 'permissions': 'facturacion.add_factura_emitida'},
+            {'model': 'facturacion.albaran_recibido', 'label': 'Albaranes recibidos', 'permissions': 'facturacion.add_albaran_recibido'},
+            {'label': 'Facturacion Informe', 'icon': 'icon-briefcase', 'url': 'facturacion.views.informesFacturacion', 'permissions': 'facturacion.add_informes'},
         )},
-    {'label': 'Facturacion Informes', 'icon': 'icon-briefcase', 'url': '/facturacion/informes/', 'permissions': 'facturacion.add_informes'},
-    {'app': 'auth', 'icon':'icon-lock', 'models': ('user', 'group')},
-    # {'label': 'Support', 'icon':'icon-question-sign', 'url': '/support/'},
-    # {'label': 'Custom', 'icon':None, 'models': (
-    #         'auth.group',
-    #         {'model': 'auth.user', 'label': 'Staff'}
-    #     )},
-    ),
-    # 'MENU_ORDER': (
-
-    #   (('facturacion', '/administracion/facturacion/factura_recibida/',),
-    #     (
-    #         ('Facturas recibidas', '/administracion/facturacion/factura_recibida/', 'facturacion.add_factura_recibida'),
-    #         ('Facturas emitidas', '/administracion/facturacion/factura_emitida/', 'facturacion.add_factura_emitida'),
-
-    #         ('Empresas', '/administracion/facturacion/empresa_ente/', 'facturacion.add_empresa_ente'),
-    #         ('Informes', '/facturacion/informes/', 'facturacion.add_informes'),
-
-    #     )
-    #   ),
-    #   ('auth', ('user', 'group')),
-      
-    #   # (('Custom link', '/admin/custom/', 'icon-cog',),
-    #   # (
-    #   # ('Child 1', '/admin/child/', 'auth.add_user'),
-    #   # ('Child 2', '/admin/child2/')
-    #   # )
-    #   # )
-    # )
-    # misc
-    # 'LIST_PER_PAGE': 15
+        {'app': 'auth', 'icon':'icon-lock', 'models': ('user', 'group')},
+        ),
+    
 }
 

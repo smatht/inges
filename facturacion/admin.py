@@ -1,4 +1,5 @@
 from facturacion.models import *
+from facturacion.forms import Factura_recibida
 from django.contrib.sites.models import Site
 from django.contrib import admin
 from actions import export_as_csv
@@ -10,6 +11,7 @@ import decimal
 # campos dela tabla (list_display).
 # Tambien con list_filter colocamos un filtro.
 class Factura_recibida_admin(admin.ModelAdmin):
+	# form = Factura_recibida
 	list_display = ('emisor', 'fecha', 'nro_factura', 'valor_subtotal', 'valor_iva', 'percepciones_otros', 'valor_total')
 	list_filter = ('iva', 'fecha', 'registrado_el')
 	#search_fields = ('iva__porcentaje',)
@@ -77,12 +79,20 @@ class Factura_recibida_admin(admin.ModelAdmin):
 
 
 class Factura_emitida_admin(admin.ModelAdmin):
-	list_display = ('ente', 'fecha', 'subtotal', 'impuesto')
+	# form = Factura
+	# list_display = ('ente', 'fecha', 'total', 'impuesto')
+
 	list_filter = ('fecha',)
+	fieldsets = (
+        (None, {
+            'fields': ('registrado_el', 'fecha', 'nro_factura', 'ente', 'iva', 'total','percepciones_otros')
+        }),
+        )
 	actions = [export_as_csv]
 
 
 class Albaran_recibido_admin(admin.ModelAdmin):
+	# form = Factura
 	list_display = ('emisor', 'fecha', 'total')
 	search_fields = ('emisor__nombre', 'nro_albaran',)
 	list_filter = ('fecha', 'registrado_el')

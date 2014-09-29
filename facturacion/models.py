@@ -2,6 +2,8 @@
 from django.db import models
 #from django.contrib.auth.models import User
 import datetime
+from suit.widgets import SuitDateWidget
+
 
 ############################################
 #     Clases secundarias Facturacion       #
@@ -64,29 +66,33 @@ class Factura(models.Model):
 		help_text="Cambie este campo sólo en caso de registrar una factura para un mes anterior, tenga en cuenta que al registrar para otro mes ésta no se incluirá en los informes del mes actual.")
 	fecha = models.DateField()
 	nro_factura = models.CharField(max_length=15)
-	subtotal = models.DecimalField(max_digits=10, decimal_places=2)
 	iva = models.ForeignKey(Iva)
 	percepciones_otros = models.DecimalField(max_digits=6, decimal_places=2, default=0)
 
-	def impuesto(self):
-		resultado = (self.iva.porcentaje * self.subtotal)/100
-		return resultado
-
-	def total(self):
-		resultado = (self.subtotal + self.impuesto() + self.percepciones_otros)
-		return resultado
-
+	
+	
 	class Meta:
 		abstract = True
+		
 
 
 class Factura_recibida(Factura):
 	emisor = models.ForeignKey(Empresa_Ente)
+	subtotal = models.DecimalField(max_digits=10, decimal_places=2)
+	
+	def total(self):
+		resultado = (self.subtotal + self.impuesto() + self.percepciones_otros)
+		return resultado
+	def impuesto(self):
+		resultado = (self.iva.porcentaje * self.subtotal)/100
+		return resultado
+	
 	# Para registrar al usuario que agrega el registro
 	# usuario = models.ForeignKey(User)
 
 	# Para saberla fecha y hora de ingreso del registro
 	# timestamp = models.DateTimeField(auto_now_add=True)
+	
 
 	def __unicode__(self):
 		return unicode(self.fecha)+" - "+self.nro_factura
@@ -109,6 +115,11 @@ class Factura_recibida(Factura):
 
 class Factura_emitida(Factura):
 	ente = models.ForeignKey(Empresa_Ente)
+	total = models.DecimalField(max_digits=10, decimal_places=2)
+
+	def impuesto(self):
+		resultado = self.total - (self.total / ((self.iva.porcentaje /100) + 1))
+		return resultado
 
 	def __unicode__(self):
 		return "para: " + unicode(self.ente) + " - fecha: "+unicode(self.fecha)
