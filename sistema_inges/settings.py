@@ -159,7 +159,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
-    'facturacion',
+    'gastos',
     # 'south',
     'rest_framework',
 )
@@ -196,7 +196,7 @@ LOGGING = {
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
 TEMPLATE_CONTEXT_PROCESSORS = TCP + (
     'django.core.context_processors.request',
-    'facturacion.context_processors.ejemplo',
+    'gastos.context_processors.ejemplo',
 )
 
 # Django Suit configuration example
@@ -219,7 +219,7 @@ SUIT_CONFIG = {
     'MENU_OPEN_FIRST_CHILD': False, # Default True
     # 'MENU_EXCLUDE': ('auth.group',),
     'MENU': (
-        {'label': 'Empresas', 'url': 'facturacion.empresa_ente', 'icon':'icon-user', 'permissions': 'facturacion.add_empresa_ente'},
+        {'label': 'Empresas', 'url': 'gastos.empresa_ente', 'icon':'icon-user', 'permissions': 'facturacion.add_empresa_ente'},
         {'label': 'facturacion', 'models': (
             {'label': 'Emitir factura', 'icon': 'none', 'url': '/facturacion/emision/', 'permissions': 'facturacion.add_informes'},
             {'model': 'facturacion.factura_recibida', 'label': 'Facturas recibidas', 'permissions': 'facturacion.add_factura_recibida'},

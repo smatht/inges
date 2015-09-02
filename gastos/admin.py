@@ -1,5 +1,5 @@
-from facturacion.models import *
-from facturacion.forms import Factura_recibida
+from gastos.models import *
+from gastos.forms import Factura_recibida
 from django.contrib.sites.models import Site
 from django.contrib import admin
 from actions import export_as_csv
