@@ -38,46 +38,68 @@ class Localidad(models.Model):
 		return unicode(self.nombre)
 
 
-class Empresa_Ente(models.Model):
-	nombre = models.CharField(max_length=75)
-	cuit = models.CharField(max_length=20, blank=True)
+############################################
+#          Clases Empresas                 #
+############################################
+
+class Empresa(models.Model):
 	direccion = models.CharField(max_length=140, blank=True)
 	telefono = models.CharField(max_length=50, blank=True)
 	telefono_secundario = models.CharField(max_length=50, blank=True)
 	email = models.EmailField(blank=True)
-	sitio_web = models.CharField(max_length=140, blank=True)
 	pais = models.ForeignKey(Pais, blank=True, null=True)
 	ciudad = models.ForeignKey(Ciudad, blank=True, null=True)
 	localidad = models.ForeignKey(Localidad, blank=True, null=True)
+
+	# class Meta:
+ #           ordering = ['nombre']
+
+	def __unicode__(self):
+		return unicode(self.nombre)
+
+class Proveedor(Empresa):
+	razon_social = models.CharField(max_length=75)
+	cuit = models.CharField(max_length=20, blank=True)
+	sitio_web = models.CharField(max_length=140, blank=True)
+
+	class Meta:
+           ordering = ['razon_social']
+
+	def __unicode__(self):
+		return unicode(self.razon_social)
+
+
+class Cliente(Empresa):
+	nombre = models.CharField(max_length=75)
+	dni = models.IntegerField(blank=True, null=True)
+	cuil = models.CharField(max_length=20, blank=True)
+	sitio_web = models.CharField(max_length=140, blank=True)
 
 	class Meta:
            ordering = ['nombre']
 
 	def __unicode__(self):
-		return unicode(self.nombre)
-
+		return unicode(self.razon_social)
 
 
 ############################################
 #     Clases principales Facturacion       #
 ############################################
 class Factura(models.Model):
-	registrado_el = models.DateField(default=datetime.datetime.now, 
+	fecha_registro = models.DateField(default=datetime.datetime.now, 
 		help_text="Cambie este campo sólo en caso de registrar una factura para un mes anterior, tenga en cuenta que al registrar para otro mes ésta no se incluirá en los informes del mes actual.")
-	fecha = models.DateField()
-	nro_factura = models.CharField(max_length=15)
+	fecha_factura = models.DateField()
+	nro_factura = models.CharField(max_length=20)
 	iva = models.ForeignKey(Iva)
 	percepciones_otros = models.DecimalField(max_digits=6, decimal_places=2, default=0)
 
-	
-	
 	class Meta:
 		abstract = True
 		
 
 
-class Factura_recibida(Factura):
-	emisor = models.ForeignKey(Empresa_Ente)
+class Registro_factura(Factura):
+	emisor = models.ForeignKey(Proveedor)
 	subtotal = models.DecimalField(max_digits=10, decimal_places=2)
 	
 	def total(self):
@@ -113,8 +135,8 @@ class Factura_recibida(Factura):
 
 
 
-class Factura_emitida(Factura):
-	ente = models.ForeignKey(Empresa_Ente)
+class Emision_factura(Factura):
+	cliente = models.ForeignKey(Cliente)
 	total = models.DecimalField(max_digits=10, decimal_places=2)
 
 	def impuesto(self):
@@ -130,30 +152,13 @@ class Informes(models.Model):
         permissions = (("can_view_informe", "Can view informe"),)
 
 
-class Albaran(models.Model):
-	registrado_el = models.DateField(default=datetime.datetime.now, 
+class Recibo(models.Model):
+	emisor = models.ForeignKey(Proveedor)
+	fecha_registro = models.DateField(default=datetime.datetime.now, 
 		help_text="Cambie este campo sólo en caso de registrar una albaran para un mes anterior, tenga en cuenta que al registrar para otro mes éste no se incluirá en los informes del mes actual.")
-	fecha = models.DateField()
-	nro_albaran = models.CharField(max_length=15, blank=True)
+	fecha_recibo = models.DateField()
+	nro_recibo = models.CharField(max_length=15, blank=True)
+	detalle = models.TextField(blank=True)
 	total = models.DecimalField(max_digits=10, decimal_places=2)
 
 	
-	class Meta:
-		abstract = True
-
-
-
-class Albaran_emitido(Albaran):
-	ente = models.ForeignKey(Empresa_Ente)
-
-	def __unicode__(self):
-		return "para: " + unicode(self.ente) + " - fecha: "+unicode(self.fecha)
-
-
-class Albaran_recibido(Albaran):
-	emisor = models.ForeignKey(Empresa_Ente)
-
-	def __unicode__(self):
-		return "de: " + unicode(self.emisor) + " - fecha: "+unicode(self.fecha)
-
-

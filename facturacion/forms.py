@@ -1,7 +1,7 @@
 #encoding:utf-8
 from django.forms import ModelForm
 from django import forms
-from gastos.models import Factura, Factura_recibida
+from facturacion.models import Factura, Registro_factura
 from suit.widgets import SuitDateWidget
 
 

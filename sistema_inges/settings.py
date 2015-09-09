@@ -18,14 +18,30 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 MANAGERS = ADMINS
 
+# BASE DE DATOS EN PRODUCCION
+# DATABASES = {
+#   'default': {
+#     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#     'NAME': 'd3vobr4ece5eqg',
+#     'HOST': 'ec2-54-197-241-82.compute-1.amazonaws.com',
+#     'PORT': 5432,
+#     'USER': 'rvurxlyzmbxmul',
+#     'PASSWORD': 'D7-2CMosP-26LfwapnlNHTbZ7r'
+#   }
+# }
+
+# Acceso a linea de comando de la base
+# heroku pg:psql --app sistema-inges HEROKU_POSTGRESQL_GREEN
+
+# BASE DE DATOS DE PRUEBAS
 DATABASES = {
   'default': {
     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    'NAME': 'd3vobr4ece5eqg',
-    'HOST': 'ec2-54-197-241-82.compute-1.amazonaws.com',
+    'NAME': 'dc5fe8tcu0b2ns',
+    'HOST': 'ec2-54-204-3-200.compute-1.amazonaws.com',
     'PORT': 5432,
-    'USER': 'rvurxlyzmbxmul',
-    'PASSWORD': 'D7-2CMosP-26LfwapnlNHTbZ7r'
+    'USER': 'kpcykmtlxylgjp',
+    'PASSWORD': 'XXr3IQBHiSApW_gWbI7L1PBA8M'
   }
 }
 
@@ -159,7 +175,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
-    'gastos',
+    'facturacion',
     # 'south',
     'rest_framework',
 )

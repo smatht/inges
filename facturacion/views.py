@@ -1,11 +1,11 @@
-from gastos.models import Factura_recibida, Iva, Empresa_Ente
+from facturacion.models import Registro_factura, Iva, Proveedor, Cliente
 from django.shortcuts import render_to_response, get_object_or_404, HttpResponse, render, HttpResponseRedirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from models import *
 import datetime
 import calendar
-from gastos.forms import *
+from facturacion.forms import *
 from django.template.context import RequestContext
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt

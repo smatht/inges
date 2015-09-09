@@ -1,5 +1,5 @@
-from gastos.models import *
-from gastos.forms import Factura_recibida
+from facturacion.models import *
+from facturacion.forms import Registro_factura
 from django.contrib.sites.models import Site
 from django.contrib import admin
 from actions import export_as_csv
@@ -10,12 +10,12 @@ import decimal
 # muestra los campos emisor, fecha y factura en la visualizacion de los
 # campos dela tabla (list_display).
 # Tambien con list_filter colocamos un filtro.
-class Factura_recibida_admin(admin.ModelAdmin):
-	# form = Factura_recibida
-	list_display = ('emisor', 'fecha', 'nro_factura', 'valor_subtotal', 'valor_iva', 'percepciones_otros', 'valor_total')
-	list_filter = ('iva', 'fecha', 'registrado_el')
+class Registro_factura_admin(admin.ModelAdmin):
+	# form = Registro_factura
+	list_display = ('emisor', 'fecha_factura', 'nro_factura', 'valor_subtotal', 'valor_iva', 'percepciones_otros', 'valor_total')
+	list_filter = ('iva', 'fecha_factura', 'fecha_registro')
 	#search_fields = ('iva__porcentaje',)
-	search_fields = ('emisor__nombre', 'nro_factura',)
+	search_fields = ('emisor__razon_social', 'nro_factura',)
 	# Para editar un campo de forma inline
 	#list_editable = ('percepciones_otros',)
 	# Agregar busqueda optimizada
@@ -68,48 +68,58 @@ class Factura_recibida_admin(admin.ModelAdmin):
 
 # Sirve para poder agregar facturas inline cuando se agrega un registro
 # de un campo relacionado por clave foranea #
-# class Factura_recibida_inline(admin.StackedInline):
-# 	model = Factura_recibida
+# class Registro_factura_inline(admin.StackedInline):
+# 	model = Registro_factura
 # 	extra = 1
 
 
-# class Albaran_recibido_inline(admin.StackedInline):
-# 	model = Albaran_recibido
+# class Recibo_inline(admin.StackedInline):
+# 	model = Recibo
 # 	extra = 1
 
 
-class Factura_emitida_admin(admin.ModelAdmin):
+class Emision_factura_admin(admin.ModelAdmin):
 	# form = Factura
 	# list_display = ('ente', 'fecha', 'total', 'impuesto')
 
-	list_filter = ('fecha',)
+	list_filter = ('fecha_factura',)
 	fieldsets = (
         (None, {
-            'fields': ('registrado_el', 'fecha', 'nro_factura', 'ente', 'iva', 'total','percepciones_otros')
+            'fields': ('fecha_registro', 'fecha_factura', 'nro_factura', 'cliente', 'iva', 'total','percepciones_otros')
         }),
         )
 	actions = [export_as_csv]
 
 
-class Albaran_recibido_admin(admin.ModelAdmin):
+class Recibo_admin(admin.ModelAdmin):
 	# form = Factura
-	list_display = ('emisor', 'fecha', 'total')
-	search_fields = ('emisor__nombre', 'nro_albaran',)
-	list_filter = ('fecha', 'registrado_el')
+	list_display = ('emisor', 'fecha_recibo', 'total')
+	search_fields = ('emisor__razon_social', 'nro_recibo',)
+	list_filter = ('fecha_recibo', 'fecha_registro')
 	actions = [export_as_csv]
 	fieldsets = (
         (None, {
-            'fields': ('registrado_el', 'fecha', 'emisor', 'nro_albaran', 'total')
+            'fields': ('fecha_registro', 'fecha_recibo', 'emisor', 'nro_recibo', 'total')
         }),
     )
 
 
-class Empresa_Ente_admin(admin.ModelAdmin):
-	list_display = ('nombre', 'cuit','direccion', 'telefono')
-	search_fields = ('nombre',)
-	# ordering = ['nombre']
+# class Empresa_Ente_admin(admin.ModelAdmin):
+# 	list_display = ('nombre', 'cuit','direccion', 'telefono')
+# 	search_fields = ('nombre',)
+# 	# ordering = ['nombre']
+# 	actions = [export_as_csv]
+# 	# inlines = [ Registro_factura_inline, Recibo_inline]
+
+class Proveedor_admin(admin.ModelAdmin):
+	list_display = ('razon_social', 'cuit','direccion', 'telefono')
+	search_fields = ('razon_social',)
 	actions = [export_as_csv]
-	# inlines = [ Factura_recibida_inline, Albaran_recibido_inline]
+
+class Cliente_admin(admin.ModelAdmin):
+	list_display = ('nombre', 'dni','direccion', 'telefono')
+	search_fields = ('nombre',)
+	actions = [export_as_csv]
 
 # Para facilitar el agregado de Many To Many Field se hace esto...
 # class Campo_many_to_many_admin(admin.ModelAdmin):
@@ -125,12 +135,14 @@ class HideAdmin(admin.ModelAdmin):
         return {}
 
 
-admin.site.register(Factura_recibida, Factura_recibida_admin)
-admin.site.register(Factura_emitida, Factura_emitida_admin)
-admin.site.register(Albaran_emitido, HideAdmin)
-admin.site.register(Albaran_recibido, Albaran_recibido_admin)
+admin.site.register(Registro_factura, Registro_factura_admin)
+admin.site.register(Emision_factura, Emision_factura_admin)
+# admin.site.register(Albaran_emitido, HideAdmin)
+admin.site.register(Recibo, Recibo_admin)
+admin.site.register(Proveedor, Proveedor_admin)
+admin.site.register(Cliente, Cliente_admin)
 admin.site.register(Iva)
-admin.site.register(Empresa_Ente, Empresa_Ente_admin)
+# admin.site.register(Empresa_Ente, Empresa_Ente_admin)
 admin.site.register(Pais, HideAdmin)
 admin.site.register(Ciudad, HideAdmin)
 admin.site.register(Localidad, HideAdmin)
