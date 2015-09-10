@@ -23,7 +23,7 @@ class Registro_factura_admin(admin.ModelAdmin):
 	actions = [export_as_csv]
 	fieldsets = (
         (None, {
-            'fields': ('registrado_el', 'fecha', 'emisor', 'nro_factura', 'subtotal', 'iva', 'percepciones_otros')
+            'fields': ('fecha_registro', 'fecha_factura', 'emisor', 'nro_factura', 'subtotal', 'iva', 'percepciones_otros')
         }),
     )
 	

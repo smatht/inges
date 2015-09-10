@@ -45,6 +45,9 @@ DATABASES = {
   }
 }
 
+# Acceso a linea de comando de la base
+# heroku pg:psql --app sistema-inges HEROKU_POSTGRESQL_RED
+
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
@@ -212,7 +215,7 @@ LOGGING = {
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
 TEMPLATE_CONTEXT_PROCESSORS = TCP + (
     'django.core.context_processors.request',
-    'gastos.context_processors.ejemplo',
+    'facturacion.context_processors.ejemplo',
 )
 
 # Django Suit configuration example
@@ -235,7 +238,7 @@ SUIT_CONFIG = {
     'MENU_OPEN_FIRST_CHILD': False, # Default True
     # 'MENU_EXCLUDE': ('auth.group',),
     'MENU': (
-        {'label': 'Empresas', 'url': 'gastos.empresa_ente', 'icon':'icon-user', 'permissions': 'facturacion.add_empresa_ente'},
+        {'label': 'Empresas', 'url': 'facturacion.empresa_ente', 'icon':'icon-user', 'permissions': 'facturacion.add_empresa_ente'},
         {'label': 'facturacion', 'models': (
             {'label': 'Emitir factura', 'icon': 'none', 'url': '/facturacion/emision/', 'permissions': 'facturacion.add_informes'},
             {'model': 'facturacion.factura_recibida', 'label': 'Facturas recibidas', 'permissions': 'facturacion.add_factura_recibida'},

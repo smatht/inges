@@ -244,5 +244,5 @@ from rest_framework import viewsets
 from .serializers import FRSerializer
 
 class FRViewSet(viewsets.ModelViewSet):
-    queryset = Factura_recibida.objects.all()
+    queryset = Registro_factura.objects.all()
     serializer_class = FRSerializer
