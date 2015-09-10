@@ -23,7 +23,7 @@ class Registro_factura_admin(admin.ModelAdmin):
 	actions = [export_as_csv]
 	fieldsets = (
         (None, {
-            'fields': ('fecha_registro', 'fecha_factura', 'emisor', 'nro_factura', 'subtotal', 'iva', 'percepciones_otros')
+            'fields': ('fecha_registro', 'fecha_factura', 'emisor', 'nro_factura', 'subtotal', 'iva', 'percepciones_otros', 'detalle')
         }),
     )
 	
@@ -85,7 +85,7 @@ class Emision_factura_admin(admin.ModelAdmin):
 	list_filter = ('fecha_factura',)
 	fieldsets = (
         (None, {
-            'fields': ('fecha_registro', 'fecha_factura', 'nro_factura', 'cliente', 'iva', 'total','percepciones_otros')
+            'fields': ('fecha_registro', 'fecha_factura', 'nro_factura', 'cliente', 'iva', 'total','percepciones_otros', 'detalle')
         }),
         )
 	actions = [export_as_csv]
@@ -99,7 +99,7 @@ class Recibo_admin(admin.ModelAdmin):
 	actions = [export_as_csv]
 	fieldsets = (
         (None, {
-            'fields': ('fecha_registro', 'fecha_recibo', 'emisor', 'nro_recibo', 'total')
+            'fields': ('fecha_registro', 'fecha_recibo', 'emisor', 'nro_recibo', 'total', 'detalle')
         }),
     )
 
@@ -115,11 +115,21 @@ class Proveedor_admin(admin.ModelAdmin):
 	list_display = ('razon_social', 'cuit','direccion', 'telefono')
 	search_fields = ('razon_social',)
 	actions = [export_as_csv]
+	fieldsets = (
+        (None, {
+            'fields': ('razon_social', 'cuit', 'direccion', 'email', 'sitio_web', 'telefono', 'telefono_secundario', 'pais', 'ciudad', 'localidad')
+        }),
+    )
 
 class Cliente_admin(admin.ModelAdmin):
 	list_display = ('nombre', 'dni','direccion', 'telefono')
 	search_fields = ('nombre',)
 	actions = [export_as_csv]
+	fieldsets = (
+        (None, {
+            'fields': ('nombre', 'dni', 'cuil', 'direccion', 'email', 'telefono', 'telefono_secundario', 'pais', 'ciudad', 'localidad')
+        }),
+    )
 
 # Para facilitar el agregado de Many To Many Field se hace esto...
 # class Campo_many_to_many_admin(admin.ModelAdmin):

@@ -175,16 +175,16 @@
 
         {% if adminform and add %}
           <script type="text/javascript">
-          document.getElementById("{{ adminform.first_field.id_for_label }}").focus();
+          // document.getElementById("{{ adminform.first_field.id_for_label }}").focus();
           $("#id_nro_factura").attr('autocomplete', 'off');
           $("#id_subtotal").attr('autocomplete', 'off');
           $("#id_total").attr('autocomplete', 'off');
           $("#id_percepciones_otros").attr('autocomplete', 'off');
           </script>
 
-        {% if opts.object_name.lower == 'factura_recibida' %}
+        {% if opts.object_name.lower == 'registro_factura' %}
           <script type="text/javascript">
-          document.getElementById("id_fecha").focus();
+          document.getElementById("id_fecha_factura").focus();
           $(".form-row").show();
           var neto = 0;
           var otros = 0;
@@ -221,7 +221,7 @@
           });
           </script>
         {% endif %}
-        {% if opts.object_name.lower == 'factura_emitida' %}
+        {% if opts.object_name.lower == 'emision_factura' %}
           <script type="text/javascript">
           document.getElementById("id_fecha").focus();
           $(".form-row").show();

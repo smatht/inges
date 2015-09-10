@@ -73,13 +73,12 @@ class Cliente(Empresa):
 	nombre = models.CharField(max_length=75)
 	dni = models.IntegerField(blank=True, null=True)
 	cuil = models.CharField(max_length=20, blank=True)
-	sitio_web = models.CharField(max_length=140, blank=True)
 
 	class Meta:
            ordering = ['nombre']
 
 	def __unicode__(self):
-		return unicode(self.razon_social)
+		return unicode(self.nombre)
 
 
 ############################################
@@ -92,6 +91,7 @@ class Factura(models.Model):
 	nro_factura = models.CharField(max_length=20)
 	iva = models.ForeignKey(Iva)
 	percepciones_otros = models.DecimalField(max_digits=6, decimal_places=2, default=0)
+	detalle = models.TextField(blank=True)
 
 	class Meta:
 		abstract = True
@@ -101,6 +101,7 @@ class Factura(models.Model):
 class Registro_factura(Factura):
 	emisor = models.ForeignKey(Proveedor)
 	subtotal = models.DecimalField(max_digits=10, decimal_places=2)
+
 	
 	def total(self):
 		resultado = (self.subtotal + self.impuesto() + self.percepciones_otros)
@@ -117,7 +118,7 @@ class Registro_factura(Factura):
 	
 
 	def __unicode__(self):
-		return unicode(self.fecha)+" - "+self.nro_factura
+		return unicode(self.fecha_factura)+" - "+self.nro_factura
 
 	# Para enviar una imagen al admin
 	# def valor_iva_imagen(self):
@@ -144,7 +145,8 @@ class Emision_factura(Factura):
 		return resultado
 
 	def __unicode__(self):
-		return "para: " + unicode(self.ente) + " - fecha: "+unicode(self.fecha)
+		detalleResumen = self.detalle[:50]
+		return "para: " + unicode(self.cliente) + " - fecha: "+unicode(self.fecha_factura) + ' - "' +detalleResumen+ '..."'
 
 
 class Informes(models.Model):
