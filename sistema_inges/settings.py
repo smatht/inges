@@ -235,16 +235,16 @@ SUIT_CONFIG = {
     # 'sites': 'icon-leaf',
     # 'auth': 'icon-lock',
     # },
-    'MENU_OPEN_FIRST_CHILD': False, # Default True
+    'MENU_OPEN_FIRST_CHILD': True, # Default True
     # 'MENU_EXCLUDE': ('auth.group',),
     'MENU': (
-        {'label': 'Empresas', 'url': 'facturacion.empresa_ente', 'icon':'icon-user', 'permissions': 'facturacion.add_empresa_ente'},
-        {'label': 'facturacion', 'models': (
-            {'label': 'Emitir factura', 'icon': 'none', 'url': '/facturacion/emision/', 'permissions': 'facturacion.add_informes'},
-            {'model': 'facturacion.factura_recibida', 'label': 'Facturas recibidas', 'permissions': 'facturacion.add_factura_recibida'},
-            {'model': 'facturacion.factura_emitida', 'label': 'Facturas emitidas', 'permissions': 'facturacion.add_factura_emitida'},
-            {'model': 'facturacion.albaran_recibido', 'label': 'Albaranes recibidos', 'permissions': 'facturacion.add_albaran_recibido'},
-            {'label': 'Facturacion Informe', 'icon': 'icon-briefcase', 'url': 'facturacion.views.informesFacturacion', 'permissions': 'facturacion.add_informes'},
+        {'label': 'Empresas', 'models': ('facturacion.cliente', 'facturacion.proveedor')},
+        {'app': 'facturacion', 'models': (
+            # {'label': 'Emitir factura', 'icon': 'none', 'url': '/facturacion/emision/', 'permissions': 'facturacion.add_informes'},
+            {'model': 'registro_factura', 'label': 'Registrar factura', 'permissions': 'facturacion.add_factura_recibida'},
+            {'model': 'recibo', 'label': 'Registrar recibo', 'permissions': 'facturacion.add_albaran_recibido'},
+            {'model': 'emision_factura', 'label': 'Emitir factura', 'permissions': 'facturacion.add_factura_emitida'},
+            {'label': 'Informe facturacion', 'icon': 'icon-briefcase', 'url': 'facturacion.views.informesFacturacion', 'permissions': 'facturacion.add_informes'},
         )},
         {'app': 'auth', 'icon':'icon-lock', 'models': ('user', 'group')},
         ),
