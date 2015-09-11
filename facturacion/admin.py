@@ -21,12 +21,18 @@ class Registro_factura_admin(admin.ModelAdmin):
 	# Agregar busqueda optimizada
 	# raw_id_fields = ('emisor',)
 	actions = [export_as_csv]
+
 	fieldsets = (
         (None, {
-            'fields': ('fecha_registro', 'fecha_factura', 'emisor', 'nro_factura', 'subtotal', 'iva', 'percepciones_otros', 'detalle')
+            'fields': ('fecha_registro', 'fecha_factura', 'emisor', 'nro_factura', 'subtotal', 'iva', 'percepciones_otros', 'pagado', 'detalle')
         }),
     )
-	
+
+	def suit_row_attributes(self, obj, request):
+		css_class = {1: '', 0: 'error'}.get(obj.pagado)
+		if css_class:
+			return {'class': css_class}
+
 	# Para mostrar una imagen en un campo
 	# def valor_iva(self, obj):
 	# 	url = obj.valor_iva_imagen()

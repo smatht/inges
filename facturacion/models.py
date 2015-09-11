@@ -101,6 +101,7 @@ class Factura(models.Model):
 class Registro_factura(Factura):
 	emisor = models.ForeignKey(Proveedor)
 	subtotal = models.DecimalField(max_digits=10, decimal_places=2)
+	pagado = models.BooleanField(default=True)
 
 	
 	def total(self):
