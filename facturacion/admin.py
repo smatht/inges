@@ -87,7 +87,7 @@ class Registro_factura_admin(admin.ModelAdmin):
 class Emision_factura_admin(admin.ModelAdmin):
 	# form = Factura
 	# list_display = ('ente', 'fecha', 'total', 'impuesto')
-
+	form = FacturaForm
 	list_filter = ('fecha_factura',)
 	fieldsets = (
         (None, {

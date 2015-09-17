@@ -64,6 +64,7 @@ class Proveedor(Empresa):
 
 	class Meta:
            ordering = ['razon_social']
+           verbose_name_plural = "proveedores"
 
 	def __unicode__(self):
 		return unicode(self.razon_social)
@@ -103,6 +104,8 @@ class Registro_factura(Factura):
 	subtotal = models.DecimalField(max_digits=10, decimal_places=2)
 	pagado = models.BooleanField(default=True)
 
+	class Meta:
+		verbose_name_plural = "registro facturas"
 	
 	def total(self):
 		resultado = (self.subtotal + self.impuesto() + self.percepciones_otros)
@@ -140,6 +143,9 @@ class Registro_factura(Factura):
 class Emision_factura(Factura):
 	cliente = models.ForeignKey(Cliente)
 	total = models.DecimalField(max_digits=10, decimal_places=2)
+
+	class Meta:
+		verbose_name_plural = "emisión facturas"
 
 	def impuesto(self):
 		resultado = self.total - (self.total / ((self.iva.porcentaje /100) + 1))
