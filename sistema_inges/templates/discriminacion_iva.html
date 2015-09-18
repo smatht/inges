@@ -109,7 +109,12 @@
     <!-- ///////////////////////// -->
     <h3 class="tit">Discriminacion del iva</h3>
     <h4 class="tit"><small>Periodo: marzo 2014</small></h4>
-    <h4 class="tit"><small>Emision: 26/09/2014</small></h4>
+    <h4 class="tit"><small>Emision: 
+    <script type="text/javascript">
+      var d = new Date();
+      document.write(d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear());
+    </script>
+    </small></h4>
     <!-- ///////////////////////// -->
     <!--      SECCION GASTOS       -->
     <!-- ///////////////////////// -->
@@ -169,10 +174,10 @@
           <th>{{ forloop.counter }}</th>
           <th>{{item.emisor}}</th>
           <th>{{item.fecha}}</th>
-          <th>${{item.subtotal}}</th>
-          <th>${{item.impuesto}}</th>
+          <th>${{item.subtotal|floatformat:"2"}}</th>
+          <th>${{item.impuesto|floatformat:"2"}}</th>
           <th>${{item.percepciones_otros}}</th>
-          <th>${{item.total}}</th>
+          <th>${{item.total|floatformat:"2"}}</th>
         </tr>
         {% endfor %}
         <tr>
@@ -213,7 +218,7 @@
           <th>{{ forloop.counter }}</th>
           <th>{{item.emisor}}</th>
           <th>{{item.fecha}}</th>
-          <th>${{item.total}}</th>
+          <th>${{item.total|floatformat:"2"}}</th>
         </tr>
         {% endfor %}
         <tr>

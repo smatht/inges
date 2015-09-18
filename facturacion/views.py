@@ -143,9 +143,9 @@ def informesFacturacion(request):
         wb.save("sistema_inges/"+settings.STATIC_URL+'/xls/' + fechaXLS)
         return HttpResponseRedirect(settings.STATIC_URL+'/xls/' + fechaXLS)
     
-    facturas_emitidas = Factura_emitida.objects.filter(registrado_el__month = mes)
-    facturas_recibidas = Factura_recibida.objects.filter(registrado_el__month = mes)
-    albaranes_recibidos = Albaran_recibido.objects.filter(registrado_el__month = mes)
+    facturas_emitidas = Emision_factura.objects.filter(fecha_registro__month = mes)
+    facturas_recibidas = Registro_factura.objects.filter(fecha_registro__month = mes)
+    albaranes_recibidos = Recibo.objects.filter(fecha_registro__month = mes)
     facturacion_iva = 0
     descuento_iva = 0
     total_ingresos = 0
