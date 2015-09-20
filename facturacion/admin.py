@@ -24,14 +24,17 @@ class Registro_factura_admin(admin.ModelAdmin):
 
 	fieldsets = (
         (None, {
-            'fields': ('fecha_registro', 'fecha_factura', 'emisor', 'nro_factura', 'subtotal', 'iva', 'percepciones_otros', 'pagado', 'detalle')
+            'fields': ('fecha_registro', 'fecha_factura', 'emisor', 'nro_factura', 'subtotal', 'iva', 'percepciones_otros', 'pagado', 'esCopia', 'detalle')
         }),
     )
 
 	def suit_row_attributes(self, obj, request):
-		css_class = {1: '', 0: 'error'}.get(obj.pagado)
-		if css_class:
-			return {'class': css_class}
+		pagado = {1: '', 0: 'warning'}.get(obj.pagado)
+		copia = {1: 'error', 0: ''}.get(obj.esCopia)
+		if copia:
+			return {'class': copia}
+		if pagado:
+			return {'class': pagado}
 
 	# Para mostrar una imagen en un campo
 	# def valor_iva(self, obj):

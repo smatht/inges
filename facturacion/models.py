@@ -103,6 +103,7 @@ class Registro_factura(Factura):
 	emisor = models.ForeignKey(Proveedor)
 	subtotal = models.DecimalField(max_digits=10, decimal_places=2)
 	pagado = models.BooleanField(default=True)
+	esCopia = models.BooleanField(default=False)
 
 	class Meta:
 		verbose_name_plural = "registro facturas"
