@@ -4,4 +4,5 @@
 db
 local_settings.py
 venv/
+.idea/
 facturacion/migrations/*
