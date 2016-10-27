@@ -8,72 +8,72 @@ import decimal
 
 # Esta clase modifica la visualizacion del modelo en el admin, en este caso
 # muestra los campos emisor, fecha y factura en la visualizacion de los
-# campos dela tabla (list_display).
+# campos de la tabla (list_display).
 # Tambien con list_filter colocamos un filtro.
 class Registro_factura_admin(admin.ModelAdmin):
-	form = FacturaForm
-	list_display = ('emisor', 'fecha_factura', 'nro_factura', 'valor_subtotal', 'valor_iva', 'percepciones_otros', 'valor_total')
-	list_filter = ('iva', 'fecha_factura', 'fecha_registro')
-	#search_fields = ('iva__porcentaje',)
-	search_fields = ('emisor__razon_social', 'nro_factura',)
-	# Para editar un campo de forma inline
-	#list_editable = ('percepciones_otros',)
-	# Agregar busqueda optimizada
-	# raw_id_fields = ('emisor',)
-	actions = [export_as_csv]
+  form = FacturaForm
+  list_display = ('emisor', 'fecha_factura', 'nro_factura', 'valor_subtotal', 'valor_iva', 'percepciones_otros', 'valor_total')
+  list_filter = ('iva', 'fecha_factura', 'fecha_registro')
+  #search_fields = ('iva__porcentaje',)
+  search_fields = ('emisor__razon_social', 'nro_factura',)
+  # Para editar un campo de forma inline
+  #list_editable = ('percepciones_otros',)
+  # Agregar busqueda optimizada
+  # raw_id_fields = ('emisor',)
+  actions = [export_as_csv]
 
-	fieldsets = (
+  fieldsets = (
         (None, {
             'fields': ('fecha_registro', 'fecha_factura', 'emisor', 'nro_factura', 'subtotal', 'iva', 'percepciones_otros', 'pagado', 'esCopia', 'detalle')
         }),
     )
 
-	def suit_row_attributes(self, obj, request):
-		pagado = {1: '', 0: 'warning'}.get(obj.pagado)
-		copia = {1: 'error', 0: ''}.get(obj.esCopia)
-		if copia:
-			return {'class': copia}
-		if pagado:
-			return {'class': pagado}
+  def suit_row_attributes(self, obj, request):
+    pagado = {1: '', 0: 'warning'}.get(obj.pagado)
+    copia = {1: 'error', 0: ''}.get(obj.esCopia)
+    if copia:
+      return {'class': copia}
+    if pagado:
+      return {'class': pagado}
 
-	# Para mostrar una imagen en un campo
-	# def valor_iva(self, obj):
-	# 	url = obj.valor_iva_imagen()
-	# 	# tag = '<img src="%s" />' % url
-	# 	tag = url
-	# 	return tag
-	# valor_iva.allow_tags = True
+  # Para mostrar una imagen en un campo
+  # def valor_iva(self, obj):
+  # 	url = obj.valor_iva_imagen()
+  # 	# tag = '<img src="%s" />' % url
+  # 	tag = url
+  # 	return tag
+  # valor_iva.allow_tags = True
 
-	def valor_iva(self, obj):
-		iva = obj.impuesto()
-		porc = obj.iva.porcentaje
-		badge = 'badge badge-success'
-		if porc == 21:
-			porc = '&nbsp;'+str(decimal.Decimal(round(porc, 1)).normalize())+'&nbsp;&nbsp;'
-		elif porc == 0:
-			badge = 'badge'
-			porc = '&nbsp;'+str(decimal.Decimal(round(porc, 1)).normalize())+'&nbsp;&nbsp;'
-		elif porc == 10.5:
-			badge = 'badge badge-info'
-			porc = decimal.Decimal(round(porc, 1)).normalize()
-		elif porc == 27:
-			porc = '&nbsp;'+str(decimal.Decimal(round(porc, 1)).normalize())+'&nbsp;&nbsp;'
-			badge = 'badge badge-warning'
-		
-		return '$%s <span class="%s pull-right">%s%%</span>' % (round(iva, 2), badge, porc)
-	valor_iva.allow_tags = True
+  def valor_iva(self, obj):
+    iva = obj.impuesto()
+    porc = obj.iva.porcentaje
+    badge = 'badge badge-success'
+    if porc == 21:
+      porc = '&nbsp;'+str(decimal.Decimal(round(porc, 1)).normalize())+'&nbsp;&nbsp;'
+    elif porc == 0:
+      badge = 'badge'
+      porc = '&nbsp;'+str(decimal.Decimal(round(porc, 1)).normalize())+'&nbsp;&nbsp;'
+    elif porc == 10.5:
+      badge = 'badge badge-info'
+      porc = decimal.Decimal(round(porc, 1)).normalize()
+    elif porc == 27:
+      porc = '&nbsp;'+str(decimal.Decimal(round(porc, 1)).normalize())+'&nbsp;&nbsp;'
+      badge = 'badge badge-warning'
 
-	def valor_total(self, obj):
-		total = obj.total()
-		return "$"+str(round(total, 2))
+    return '$%s <span class="%s pull-right">%s%%</span>' % (round(iva, 2), badge, porc)
+  valor_iva.allow_tags = True
 
-	def valor_subtotal(self, obj):
-		subtotal = obj.subtotal
-		return "$"+str(round(subtotal, 2))
+  def valor_total(self, obj):
+    total = obj.total()
+    return "$"+str(round(total, 2))
 
-	
+  def valor_subtotal(self, obj):
+    subtotal = obj.subtotal
+    return "$"+str(round(subtotal, 2))
 
-	
+
+
+
 
 # Sirve para poder agregar facturas inline cuando se agrega un registro
 # de un campo relacionado por clave foranea #
@@ -88,25 +88,25 @@ class Registro_factura_admin(admin.ModelAdmin):
 
 
 class Emision_factura_admin(admin.ModelAdmin):
-	# form = Factura
-	# list_display = ('ente', 'fecha', 'total', 'impuesto')
-	form = FacturaForm
-	list_filter = ('fecha_factura',)
-	fieldsets = (
+  # form = Factura
+  # list_display = ('ente', 'fecha', 'total', 'impuesto')
+  form = FacturaForm
+  list_filter = ('fecha_factura',)
+  fieldsets = (
         (None, {
             'fields': ('fecha_registro', 'fecha_factura', 'nro_factura', 'cliente', 'iva', 'total','percepciones_otros', 'detalle')
         }),
         )
-	actions = [export_as_csv]
+  actions = [export_as_csv]
 
 
 class Recibo_admin(admin.ModelAdmin):
-	# form = Factura
-	list_display = ('emisor', 'fecha_recibo', 'total')
-	search_fields = ('emisor__razon_social', 'nro_recibo',)
-	list_filter = ('fecha_recibo', 'fecha_registro')
-	actions = [export_as_csv]
-	fieldsets = (
+  # form = Factura
+  list_display = ('emisor', 'fecha_recibo', 'total')
+  search_fields = ('emisor__razon_social', 'nro_recibo',)
+  list_filter = ('fecha_recibo', 'fecha_registro')
+  actions = [export_as_csv]
+  fieldsets = (
         (None, {
             'fields': ('fecha_registro', 'fecha_recibo', 'emisor', 'nro_recibo', 'total', 'detalle')
         }),
@@ -121,20 +121,20 @@ class Recibo_admin(admin.ModelAdmin):
 # 	# inlines = [ Registro_factura_inline, Recibo_inline]
 
 class Proveedor_admin(admin.ModelAdmin):
-	list_display = ('razon_social', 'cuit','direccion', 'telefono')
-	search_fields = ('razon_social',)
-	actions = [export_as_csv]
-	fieldsets = (
+  list_display = ('razon_social', 'cuit','direccion', 'telefono')
+  search_fields = ('razon_social',)
+  actions = [export_as_csv]
+  fieldsets = (
         (None, {
             'fields': ('razon_social', 'cuit', 'direccion', 'email', 'sitio_web', 'telefono', 'telefono_secundario', 'pais', 'ciudad', 'localidad')
         }),
     )
 
 class Cliente_admin(admin.ModelAdmin):
-	list_display = ('nombre', 'dni','direccion', 'telefono')
-	search_fields = ('nombre',)
-	actions = [export_as_csv]
-	fieldsets = (
+  list_display = ('nombre', 'dni','direccion', 'telefono')
+  search_fields = ('nombre',)
+  actions = [export_as_csv]
+  fieldsets = (
         (None, {
             'fields': ('nombre', 'dni', 'cuil', 'direccion', 'email', 'telefono', 'telefono_secundario', 'pais', 'ciudad', 'localidad')
         }),

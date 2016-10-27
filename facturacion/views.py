@@ -239,7 +239,7 @@ def xls(request):
     wb.save("sistema_inges/"+settings.STATIC_URL+'example.xls')
     return HttpResponseRedirect("/facturas_recibidas/add/")
 
-# Conjunto devistas, el del listado y el del objeto como tal.
+# Conjunto de vistas, el del listado y el del objeto como tal.
 from rest_framework import viewsets
 from .serializers import FRSerializer
 
