@@ -181,6 +181,8 @@ INSTALLED_APPS = (
     'facturacion',
     # 'south',
     'rest_framework',
+    'pedidos',
+    'proyectos',
 )
 
 # A sample logging configuration. The only tangible logging

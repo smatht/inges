@@ -1,8 +1,8 @@
 # encoding:utf-8
 from django.db import models
-#from django.contrib.auth.models import User
 import datetime
-from suit.widgets import SuitDateWidget
+# from django.contrib.auth.models import User
+# from suit.widgets import SuitDateWidget
 
 
 ############################################
@@ -36,6 +36,13 @@ class Localidad(models.Model):
 
   def __unicode__(self):
     return unicode(self.nombre)
+
+class UnidadMedida(models.Model):
+  descripcion = models.CharField(max_length=20)
+  abrr = models.CharField(max_length=5)
+
+  def __unicode__(self):
+    return unicode(self.abrr)
 
 
 ############################################
@@ -80,6 +87,12 @@ class Cliente(Empresa):
 
   def __unicode__(self):
     return unicode(self.nombre)
+
+
+class Material(models.Model):
+  proveedor = models.ForeignKey(Proveedor)
+  descripcion = models.CharField(max_length=50)
+  unidad_medida = models.ForeignKey(UnidadMedida)
 
 
 ############################################

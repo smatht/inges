@@ -56,7 +56,9 @@ def informesFacturacion(request):
             
 
     if request.method == "POST":
-        facturas_recibidas = Factura_recibida.objects.filter(registrado_el__month = mes)
+        if request.POST.get('fecha'):
+          mes = request.GET.get('fecha')[-2:]
+        facturas_recibidas = Registro_factura.objects.filter(fecha_registro__month = mes)
         xlwt.add_palette_colour("color_neto", 0x21)
         xlwt.add_palette_colour("color_iva", 0x22)
         xlwt.add_palette_colour("color_percepciones", 0x23)
@@ -117,7 +119,7 @@ def informesFacturacion(request):
         ws.write(2, 6, "PERCEPCIONES OTROS", estilo_percepciones)
         ws.write(2, 7, "TOTAL", estilo_total)
 
-        ws.write(0, 3, ARRAY_MESES[now.month - 1]+' '+now.strftime("%Y"), estilo_general)
+        ws.write(0, 3, ARRAY_MESES[mes]+' '+now.strftime("%Y"), estilo_general)
 
         i = 3
         for fr in facturas_recibidas:

@@ -5,4 +5,4 @@ db
 local_settings.py
 venv/
 .idea/
-facturacion/migrations/*
+sistema_inges/static/xls/InformeSI*
