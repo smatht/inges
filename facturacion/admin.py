@@ -154,6 +154,7 @@ class HideAdmin(admin.ModelAdmin):
         return {}
 
 
+admin.site.register(Material)
 admin.site.register(Registro_factura, Registro_factura_admin)
 admin.site.register(Emision_factura, Emision_factura_admin)
 # admin.site.register(Albaran_emitido, HideAdmin)

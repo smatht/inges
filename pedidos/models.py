@@ -11,9 +11,9 @@ from proyectos.models import Obra
 class OrdenRetiro_cabecera(models.Model):
   fecha = models.DateField(default=datetime.datetime.now)
   destino = models.ForeignKey(Proveedor)
-  se_autoriza = models.ForeignKey(User, related_name='toUser')
+  se_autoriza = models.ForeignKey(User, related_name='toUser', verbose_name='Se autoriza a')
   obra = models.ForeignKey(Obra)
-  remitente = models.ForeignKey(User, related_name='fromUser')
+  remitente = models.ForeignKey(User, related_name='fromUser', help_text='Persona que autoriza')
 
 
 class OrdenRetiro_detalle(models.Model):

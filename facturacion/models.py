@@ -37,13 +37,6 @@ class Localidad(models.Model):
   def __unicode__(self):
     return unicode(self.nombre)
 
-class UnidadMedida(models.Model):
-  descripcion = models.CharField(max_length=20)
-  abrr = models.CharField(max_length=5)
-
-  def __unicode__(self):
-    return unicode(self.abrr)
-
 
 ############################################
 #          Clases Empresas                 #
@@ -92,7 +85,26 @@ class Cliente(Empresa):
 class Material(models.Model):
   proveedor = models.ForeignKey(Proveedor)
   descripcion = models.CharField(max_length=50)
-  unidad_medida = models.ForeignKey(UnidadMedida)
+
+  # Unidades de medida
+  #////////////////////////////////////////////
+  UNIDADES = 'un'
+  METROS = 'mts'
+  CENTIMETROS = 'cm'
+  LITRO = 'lts'
+  KILO = 'kg'
+  METRO_CUBICO = 'm3'
+  UNIDADES_MEDIDA = (
+    (UNIDADES, 'Unidades'),
+    (METROS, 'Metros'),
+    (CENTIMETROS, 'Centimetros'),
+    (LITRO, 'Litro'),
+    (KILO, 'Kilo'),
+    (METRO_CUBICO, 'Metro Cubico'),
+  )
+  #//////////////////////////////////////////
+
+  unidad_medida = models.CharField(max_length=3, choices=UNIDADES_MEDIDA, default=UNIDADES)
 
 
 ############################################
