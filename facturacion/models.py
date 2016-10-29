@@ -82,29 +82,29 @@ class Cliente(Empresa):
     return unicode(self.nombre)
 
 
-class Material(models.Model):
-  proveedor = models.ForeignKey(Proveedor)
-  descripcion = models.CharField(max_length=50)
-
-  # Unidades de medida
-  #////////////////////////////////////////////
-  UNIDADES = 'un'
-  METROS = 'mts'
-  CENTIMETROS = 'cm'
-  LITRO = 'lts'
-  KILO = 'kg'
-  METRO_CUBICO = 'm3'
-  UNIDADES_MEDIDA = (
-    (UNIDADES, 'Unidades'),
-    (METROS, 'Metros'),
-    (CENTIMETROS, 'Centimetros'),
-    (LITRO, 'Litro'),
-    (KILO, 'Kilo'),
-    (METRO_CUBICO, 'Metro Cubico'),
-  )
-  #//////////////////////////////////////////
-
-  unidad_medida = models.CharField(max_length=3, choices=UNIDADES_MEDIDA, default=UNIDADES)
+# class Material(models.Model):
+#   proveedor = models.ForeignKey(Proveedor)
+#   descripcion = models.CharField(max_length=50)
+#
+#   # Unidades de medida
+#   #////////////////////////////////////////////
+#   UNIDADES = 'un'
+#   METROS = 'mts'
+#   CENTIMETROS = 'cm'
+#   LITRO = 'lts'
+#   KILO = 'kg'
+#   METRO_CUBICO = 'm3'
+#   UNIDADES_MEDIDA = (
+#     (UNIDADES, 'Unidades'),
+#     (METROS, 'Metros'),
+#     (CENTIMETROS, 'Centimetros'),
+#     (LITRO, 'Litro'),
+#     (KILO, 'Kilo'),
+#     (METRO_CUBICO, 'Metro Cubico'),
+#   )
+#   #//////////////////////////////////////////
+#
+#   unidad_medida = models.CharField(max_length=3, choices=UNIDADES_MEDIDA, default=UNIDADES)
 
 
 ############################################

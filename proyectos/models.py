@@ -11,4 +11,7 @@ class Obra(models.Model):
   pais = models.ForeignKey(Pais, blank=True, null=True)
   ciudad = models.ForeignKey(Ciudad, blank=True, null=True)
   localidad = models.ForeignKey(Localidad, blank=True, null=True)
-  cliente = models.ForeignKey(Cliente, blank=False, null=False)
+  cliente = models.ForeignKey(Cliente, blank=True, null=True)
+
+  def __unicode__(self):
+    return unicode(self.descripcion)
