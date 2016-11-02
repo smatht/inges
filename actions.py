@@ -12,11 +12,15 @@ from reportlab.lib.units import cm
 from reportlab.pdfgen import canvas
 from io import BytesIO
 
+from reportlab.platypus import Frame
 from reportlab.platypus import Table
 from reportlab.platypus import TableStyle
+from reportlab.platypus.para import Paragraph
+from reportlab.lib.styles import getSampleStyleSheet
 
 from sistema_inges import settings
 
+stylesheet=getSampleStyleSheet()
 
 def get_csv_from_dict_list(field_list, data):
     csv_line = ";".join(['{{ row.%s|addslashes }}' % field for field in field_list])
@@ -66,11 +70,11 @@ def export_as_csv(modeladmin, request, queryset):
     return response
 
 
-def tabla(pdf, y, qs):
+def frameCabecera(pdf, qs):
     # Creamos una tupla de encabezados para neustra tabla
     encabezados = ('fecha', 'Proveedor', 'Autorizado', 'Destino', 'Remitente')
     # Creamos una lista de tuplas que van a contener a las personas
-    detalles = [(qs.fecha, qs.proveedor, qs.se_autoriza, qs.destino, qs.remitente)]
+    detalles = [(qs.fecha, qs.proveedor.cuit, qs.se_autoriza, qs.destino, qs.remitente)]
     # Establecemos el tamaño de cada una de las columnas de la tabla
     detalle_orden = Table([encabezados] + detalles, colWidths=[2 * cm, 5 * cm, 5 * cm, 5 * cm])
     # Aplicamos estilos a las celdas de la tabla
@@ -87,7 +91,93 @@ def tabla(pdf, y, qs):
     # Establecemos el tamaño de la hoja que ocupará la tabla
     detalle_orden.wrapOn(pdf, 800, 600)
     # Definimos la coordenada donde se dibujará la tabla
-    detalle_orden.drawOn(pdf, 10, y)
+    detalle_orden.drawOn(pdf, 10, 600)
+
+
+def fc(pdf, qs):
+  pdf.setStrokeColorRGB(0,0,0)
+  f = Frame(10,500, 570, 150)
+  f.drawBoundary(pdf)
+
+  # Tabla proveedor y domicilio
+  p0 = Paragraph('''<b>Senor(es):</b>''', stylesheet['Normal'])
+  p1 = Paragraph('''<b>Domicilio:</b>''', stylesheet['Normal'])
+  data = [[p0, qs.proveedor],[p1, qs.proveedor.direccion]]
+  t1 = Table(data, colWidths=[3 * cm, 5 * cm])
+  t1.setStyle(TableStyle(
+    [
+      # La primera fila(encabezados) va a estar centrada
+      # ('ALIGN', (0, 0), (3, 0), 'CENTER'),
+      # Los bordes de todas las celdas serán de color negro y con un grosor de 1
+      ('LINEBELOW', (1, 0), (1, 1), 1, colors.black),
+      # El tamaño de las letras de cada una de las celdas será de 10
+      # ('FONTSIZE', (0, 0), (-1, -1), 10),
+    ]
+  ))
+
+  # Tabla telefono y localidad
+  p0 = Paragraph('''<b>Telefono:</b>''', stylesheet['Normal'])
+  p1 = Paragraph('''<b>Localidad:</b>''', stylesheet['Normal'])
+  data = [[p0, qs.proveedor.telefono], [p1, qs.proveedor.localidad]]
+  t2 = Table(data, colWidths=[3 * cm, 5 * cm])
+  t2.setStyle(TableStyle(
+    [
+      # La primera fila(encabezados) va a estar centrada
+      # ('ALIGN', (0, 0), (3, 0), 'CENTER'),
+      # Los bordes de todas las celdas serán de color negro y con un grosor de 1
+      ('LINEBELOW', (1, 0), (1, 1), 1, colors.black),
+      # El tamaño de las letras de cada una de las celdas será de 10
+      # ('FONTSIZE', (0, 0), (-1, -1), 10),
+    ]
+  ))
+
+  # Tabla autorizado
+  p0 = Paragraph('''<b>Se autoriza a:</b>''', stylesheet['Normal'])
+  p1 = Paragraph('''<b>DNI:</b>''', stylesheet['Normal'])
+  data = [[p0, qs.se_autoriza], [p1, '90.179.320']]
+  t3 = Table(data, colWidths=[3 * cm, 5 * cm])
+  t3.setStyle(TableStyle(
+    [
+      # La primera fila(encabezados) va a estar centrada
+      # ('ALIGN', (0, 0), (3, 0), 'CENTER'),
+      # Los bordes de todas las celdas serán de color negro y con un grosor de 1
+      ('LINEBELOW', (1, 0), (1, 1), 1, colors.black),
+      # El tamaño de las letras de cada una de las celdas será de 10
+      # ('FONTSIZE', (0, 0), (-1, -1), 10),
+    ]
+  ))
+
+  # Tabla obra
+  p0 = Paragraph('''<b>Obra:</b>''', stylesheet['Normal'])
+  p1 = Paragraph(''' ''', stylesheet['Normal'])
+  data = [[p0, qs.destino], [p1, '']]
+  t4 = Table(data, colWidths=[3 * cm, 5 * cm])
+  t4.setStyle(TableStyle(
+    [
+      # La primera fila(encabezados) va a estar centrada
+      # ('ALIGN', (0, 0), (3, 0), 'CENTER'),
+      # Los bordes de todas las celdas serán de color negro y con un grosor de 1
+      ('LINEBELOW', (1, 0), (1, 1), 1, colors.black),
+      # El tamaño de las letras de cada una de las celdas será de 10
+      # ('FONTSIZE', (0, 0), (-1, -1), 10),
+    ]
+  ))
+
+  t1.wrapOn(pdf, 800, 600)
+  t2.wrapOn(pdf, 800, 600)
+  t3.wrapOn(pdf, 800, 600)
+  t4.wrapOn(pdf, 800, 600)
+
+  t1.drawOn(pdf, 20, 600)
+  t2.drawOn(pdf, 320, 600)
+  t3.drawOn(pdf, 20, 540)
+  t4.drawOn(pdf, 320, 540)
+
+
+def fd(pdf, qs):
+  f = Frame(10,320, 570, 300)
+  f.drawBoundary(pdf)
+
 
 
 def tablaFecha(pdf, f):
@@ -137,12 +227,14 @@ def export_OR_as_pdf(modeladmin, request, queryset):
   p.setFont("Helvetica", 14)
   p.drawString(265, 665, u"ORIGINAL Nº ")
   p.drawString(355, 665, n)
+
   # Draw things on the PDF. Here's where the PDF generation happens.
   # See the ReportLab documentation for the full list of functionality.
-  y = 600
-  tabla(p, y, queryset[0])
   f = queryset[0].fecha
   tablaFecha(p, f)
+  fc(p, queryset[0])
+  # fd(p, queryset[0])
+
   # Close the PDF object cleanly, and we're done.
   p.showPage()
   p.save()
