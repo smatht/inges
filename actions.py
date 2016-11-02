@@ -134,7 +134,7 @@ def fc(pdf, qs):
   # Tabla autorizado
   p0 = Paragraph('''<b>Se autoriza a:</b>''', stylesheet['Normal'])
   p1 = Paragraph('''<b>DNI:</b>''', stylesheet['Normal'])
-  data = [[p0, qs.se_autoriza], [p1, '90.179.320']]
+  data = [[p0, qs.se_autoriza.get_full_name()], [p1, qs.se_autoriza.extenduser.dni]]
   t3 = Table(data, colWidths=[3 * cm, 5 * cm])
   t3.setStyle(TableStyle(
     [
@@ -175,7 +175,7 @@ def fc(pdf, qs):
 
 
 def fd(pdf, qs):
-  f = Frame(10,320, 570, 300)
+  f = Frame(10,110, 570, 380)
   f.drawBoundary(pdf)
 
 
@@ -233,7 +233,7 @@ def export_OR_as_pdf(modeladmin, request, queryset):
   f = queryset[0].fecha
   tablaFecha(p, f)
   fc(p, queryset[0])
-  # fd(p, queryset[0])
+  fd(p, queryset[0])
 
   # Close the PDF object cleanly, and we're done.
   p.showPage()

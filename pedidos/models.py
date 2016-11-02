@@ -8,6 +8,11 @@ from facturacion.models import Proveedor
 from proyectos.models import Obra
 
 
+class ExtendUser(models.Model):
+  user = models.OneToOneField(User, on_delete=models.CASCADE)
+  dni = models.IntegerField(blank=True, null=True)
+
+
 class OrdenRetiro_cabecera(models.Model):
   fecha = models.DateField(default=datetime.datetime.now)
   proveedor = models.ForeignKey(Proveedor)
