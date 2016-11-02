@@ -1,8 +1,9 @@
-# -*- coding: utf-8 -*-
+# encoding: utf-8
 # taken from http://weitlandt.com/theme/2010/05/wir-djangonauten-csv-export-nach-excel-mit-umlauten/
-# + mucho amor de @julian_amaya y @votaguz
 
 import csv
+
+import cStringIO
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
 from django.template import Context, Template
@@ -13,6 +14,8 @@ from io import BytesIO
 
 from reportlab.platypus import Table
 from reportlab.platypus import TableStyle
+
+from sistema_inges import settings
 
 
 def get_csv_from_dict_list(field_list, data):
@@ -84,36 +87,69 @@ def tabla(pdf, y, qs):
     # Establecemos el tamaño de la hoja que ocupará la tabla
     detalle_orden.wrapOn(pdf, 800, 600)
     # Definimos la coordenada donde se dibujará la tabla
-    detalle_orden.drawOn(pdf, 60, y)
+    detalle_orden.drawOn(pdf, 10, y)
+
+
+def tablaFecha(pdf, f):
+  t = Table([(f.day, f.month, f.year)], colWidths=[1.4 * cm, 1.4 * cm, 1.4 * cm])
+  # Aplicamos estilos a las celdas de la tabla
+  t.setStyle(TableStyle(
+    [
+      # La primera fila(encabezados) va a estar centrada
+      ('ALIGN', (0, 0), (2, 0), 'CENTER'),
+      # Los bordes de todas las celdas serán de color negro y con un grosor de 1
+      ('GRID', (0, 0), (-1, -1), 1, colors.black),
+      # El tamaño de las letras de cada una de las celdas será de 10
+      ('FONTSIZE', (0, 0), (-1, -1), 10),
+    ]
+  ))
+  # Establecemos el tamaño de la hoja que ocupará la tabla
+  t.wrapOn(pdf, 800, 600)
+  # Definimos la coordenada donde se dibujará la tabla
+  t.drawOn(pdf, 450, 685)
 
 
 def export_OR_as_pdf(modeladmin, request, queryset):
-    if not request.user.is_staff:
+  if not request.user.is_staff:
         raise PermissionDenied
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
-    buffer = BytesIO()
-    n = str(queryset[0].id)
-    # Create the PDF object, using the response object as its "file."
-    p = canvas.Canvas(buffer)
-    # Establecemos el tamaño de letra en 16 y el tipo de letra Helvetica
-    p.setFont("Helvetica", 16)
-    # Dibujamos una cadena en la ubicación X,Y especificada
-    p.drawString(230, 790, u"ORDEN DE RETIRO")
-    p.setFont("Helvetica", 14)
-    p.drawString(265, 770, u"ORIGINAL N ")
-    p.drawString(350, 770, n)
-    # Draw things on the PDF. Here's where the PDF generation happens.
-    # See the ReportLab documentation for the full list of functionality.
-    y = 600
-    tabla(p, y, queryset[0])
-    # Close the PDF object cleanly, and we're done.
-    p.showPage()
-    p.save()
-    p = buffer.getvalue()
-    buffer.close()
-    response.write(p)
-    return response
+
+  response = HttpResponse(content_type='application/pdf')
+  response['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
+  buffer = BytesIO()
+  n = str(queryset[0].id)
+  # Creacion objeto PDF
+  p = canvas.Canvas(buffer)
+
+  # Colocacion imagen membrete
+  archivo_imagen = settings.MEDIA_ROOT + '/img/memIng.png'
+  p.drawImage(archivo_imagen, 30, 640, 700, 300, preserveAspectRatio=True)
+
+  p.setStrokeColorRGB(0.2, 0.3, 0.5)
+  p.setFillColorRGB(0.2, 0.3, 0.5)
+  # p.setLineWidth(3)
+  p.rect(0,715,842,2,1,1)
+  # Establecemos el tamaño de letra en 16 y el tipo de letra Helvetica
+  p.setFillColorRGB(0, 0, 0)
+  p.setFont("Helvetica-Bold", 18)
+
+  # Dibujamos una cadena en la ubicación X,Y especificada
+  p.drawString(230, 685, u"ORDEN DE RETIRO")
+  p.setFont("Helvetica", 14)
+  p.drawString(265, 665, u"ORIGINAL Nº ")
+  p.drawString(355, 665, n)
+  # Draw things on the PDF. Here's where the PDF generation happens.
+  # See the ReportLab documentation for the full list of functionality.
+  y = 600
+  tabla(p, y, queryset[0])
+  f = queryset[0].fecha
+  tablaFecha(p, f)
+  # Close the PDF object cleanly, and we're done.
+  p.showPage()
+  p.save()
+  p = buffer.getvalue()
+  buffer.close()
+  response.write(p)
+  return response
 
 
 def save_then_pdf(request, queryset):

@@ -19,7 +19,7 @@ class ORCabAdmin(admin.ModelAdmin):
     if getattr(obj, 'remitente', None) is None:
       obj.remitente = request.user
     obj.save()
-    save_then_pdf(request, obj)
+    # save_then_pdf(request, obj)
 
 
 admin.site.register(OrdenRetiro_cabecera, ORCabAdmin)
