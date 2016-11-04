@@ -4,5 +4,9 @@
 db
 local_settings.py
 venv/
-facturacion/migrations/*
+
 .idea/
+sistema_inges/static/xls/InformeSI*
+facturacion/migrations
+pedidos/migrations
+proyectos/migrations

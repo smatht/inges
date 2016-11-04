@@ -37,11 +37,11 @@ MANAGERS = ADMINS
 DATABASES = {
   'default': {
     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    'NAME': 'dc5fe8tcu0b2ns',
-    'HOST': 'ec2-54-204-3-200.compute-1.amazonaws.com',
+    'NAME': 'd3vobr4ece5eqg',
+    'HOST': 'ec2-54-197-241-82.compute-1.amazonaws.com',
     'PORT': 5432,
-    'USER': 'kpcykmtlxylgjp',
-    'PASSWORD': 'XXr3IQBHiSApW_gWbI7L1PBA8M'
+    'USER': 'rvurxlyzmbxmul',
+    'PASSWORD': 'D7-2CMosP-26LfwapnlNHTbZ7r'
   }
 }
 
@@ -96,7 +96,7 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
-MEDIA_ROOT = os.path.join(RUTA_PROYECTO,'carga')
+MEDIA_ROOT = os.path.join(RUTA_PROYECTO,'static')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -181,6 +181,8 @@ INSTALLED_APPS = (
     'facturacion',
     # 'south',
     'rest_framework',
+    'pedidos',
+    'proyectos',
 )
 
 # A sample logging configuration. The only tangible logging

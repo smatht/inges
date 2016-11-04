@@ -4,8 +4,10 @@ Django==1.8.4
 django-suit==0.2.14
 djangorestframework==3.2.3
 gunicorn==19.3.0
+Pillow==3.4.2
 psycopg2==2.6.1
 pystache==0.5.4
+reportlab==3.3.0
 simplejson==3.8.0
 static==1.1.1
 static3==0.6.1
