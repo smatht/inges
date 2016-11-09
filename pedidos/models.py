@@ -20,6 +20,11 @@ class OrdenRetiro_cabecera(models.Model):
   destino = models.ForeignKey(Obra, blank=True, null=True)
   remitente = models.ForeignKey(User, related_name='fromUser', help_text='Persona que autoriza')
 
+  class Meta:
+    verbose_name = 'Orden de retiro'
+    verbose_name_plural = 'Ordenes de retiro'
+
+
 
 class OrdenRetiro_detalle(models.Model):
   orden_retiro = models.ForeignKey(OrdenRetiro_cabecera)

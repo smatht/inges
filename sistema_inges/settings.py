@@ -111,7 +111,8 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
-STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+STATIC_ROOT = 'staticfiles'
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
@@ -120,7 +121,7 @@ STATIC_URL = '/static/'
 # Additional locations of static files
 STATICFILES_DIRS = (
     #os.path.join(RUTA_PROYECTO,'static'),
-    # os.path.join(BASE_DIR, 'static/'),
+    os.path.join(BASE_DIR, 'static'),
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -247,6 +248,9 @@ SUIT_CONFIG = {
             {'model': 'recibo', 'label': 'Registrar recibo', 'permissions': 'facturacion.add_albaran_recibido'},
             {'model': 'emision_factura', 'label': 'Emitir factura', 'permissions': 'facturacion.add_factura_emitida'},
             {'label': 'Informe facturacion', 'icon': 'icon-briefcase', 'url': 'facturacion.views.informesFacturacion', 'permissions': 'facturacion.add_informes'},
+        )},
+        {'app': 'pedidos', 'models': (
+            {'model': 'OrdenRetiro_cabecera', 'label': 'Orden retiro', 'permissions': 'pedidos.add_ordenretiro_cabecera'},
         )},
         {'app': 'auth', 'icon':'icon-lock', 'models': ('user', 'group')},
         ),
