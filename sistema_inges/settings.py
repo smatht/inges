@@ -1,6 +1,7 @@
 #encoding:utf-8
-
 # Django settings for sistema_inges project.
+
+import os
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -18,49 +19,29 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 MANAGERS = ADMINS
 
-# BASE DE DATOS EN PRODUCCION
-# DATABASES = {
-#   'default': {
-#     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#     'NAME': 'd3vobr4ece5eqg',
-#     'HOST': 'ec2-54-197-241-82.compute-1.amazonaws.com',
-#     'PORT': 5432,
-#     'USER': 'rvurxlyzmbxmul',
-#     'PASSWORD': 'D7-2CMosP-26LfwapnlNHTbZ7r'
-#   }
-# }
-
 # Acceso a linea de comando de la base
 # heroku pg:psql --app sistema-inges HEROKU_POSTGRESQL_GREEN
 
-# BASE DE DATOS DE PRUEBAS
+# SETTING DATA BASE
+# Configurar las variables de entorno en /etc/profile
+NAME = os.environ['INGESDB_NAME']
+HOST = os.environ['INGESDB_HOST']
+PORT = os.environ['INGESDB_PORT'] if os.environ['INGESDB_PORT'] else 5432
+USER = os.environ['INGESDB_USER']
+PASSWORD = os.environ['INGESDB_PASSWORD']
 DATABASES = {
   'default': {
     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    'NAME': 'd3vobr4ece5eqg',
-    'HOST': 'ec2-54-197-241-82.compute-1.amazonaws.com',
-    'PORT': 5432,
-    'USER': 'rvurxlyzmbxmul',
-    'PASSWORD': 'D7-2CMosP-26LfwapnlNHTbZ7r'
+    'NAME': NAME,
+    'HOST': HOST,
+    'PORT': PORT,
+    'USER': USER,
+    'PASSWORD': PASSWORD
   }
 }
-
 # Acceso a linea de comando de la base
 # heroku pg:psql --app sistema-inges HEROKU_POSTGRESQL_RED
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-#         'NAME': 'db', # Or path to database file if using sqlite3.
-#         # The following settings are not used with sqlite3:
-#         'USER': '',
-#         'PASSWORD': '',
-#         'HOST': '', # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-#         'PORT': '', # Set to empty string for default.
-#     }
-# }
-
-import os
 RUTA_PROYECTO = os.path.dirname(os.path.realpath(__file__))
 
 LOGIN_URL = '/accounts/login/'
@@ -111,8 +92,8 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
-STATIC_ROOT = 'staticfiles'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+# STATIC_ROOT = 'staticfiles'
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
@@ -120,8 +101,8 @@ STATIC_URL = '/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    #os.path.join(RUTA_PROYECTO,'static'),
-    os.path.join(BASE_DIR, 'static'),
+    # os.path.join(RUTA_PROYECTO,'static'),
+    # os.path.join(BASE_DIR, 'static'),
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
