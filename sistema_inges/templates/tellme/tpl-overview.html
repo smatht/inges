@@ -1,0 +1,20 @@
+{% load i18n %}
+<div id="feedback-overview">
+    <div class="feedback-logo">{% trans 'Feedback' %}</div>
+    <div id="feedback-overview-description">
+        <div id="feedback-overview-description-text"><h3>{% trans 'Description' %}</h3>
+            <h3 class="feedback-additional">Información adicional</h3>
+            <div id="feedback-additional-none"><span>{% trans 'None' %}</span></div>
+            <div id="feedback-browser-info"><span>Explorador info</span></div>
+            <div id="feedback-page-info"><span>Página info</span></div>
+            <div id="feedback-page-structure"><span>Estructura de la página</span></div>
+        </div>
+    </div>
+    <div id="feedback-overview-screenshot"><h3>Captura</h3></div>
+    <div class="feedback-buttons">
+        <button id="feedback-submit" class="feedback-submit-btn feedback-btn-blue">Enviar</button>
+        <button id="feedback-overview-back" class="feedback-back-btn feedback-btn-gray">Atras</button>
+    </div>
+    <div id="feedback-overview-error">Ingrese una descripción del problema</div>
+    <div class="feedback-wizard-close"></div>
+</div>

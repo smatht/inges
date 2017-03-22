@@ -1,0 +1,22 @@
+{% load i18n %}
+<div id="feedback-highlighter">
+    <div class="feedback-logo">{% trans 'Feedback' %}</div>
+    <p>Haga clic y arrastre en la página para ayudarnos a comprender mejor sus comentarios. Puede mover este cuadro si es necesario.</p>
+    <button class="feedback-sethighlight feedback-active">
+        <span class="ico"></span>
+        <span>Resaltar</span></button>
+    <label>Resalte áreas relevantes en la imagen</label>
+    <button class="feedback-setblackout">
+        <span class="ico"></span>
+        <span>Censurar</span></button>
+    <label class="lower">Censure cualquier información personal</label>
+    <div class="feedback-buttons">
+        <button id="feedback-highlighter-next" class="feedback-next-btn feedback-btn-gray">
+            Siguiente
+        </button>
+        <button id="feedback-highlighter-back" class="feedback-back-btn feedback-btn-gray">
+            Atras
+        </button>
+    </div>
+    <div class="feedback-wizard-close"></div>
+</div>

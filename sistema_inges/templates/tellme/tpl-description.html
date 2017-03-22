@@ -1,0 +1,10 @@
+{% load i18n %}
+<div id="feedback-welcome">
+    <div class="feedback-logo">{% trans 'Feedback' %}</div>
+    <p>La retroalimentación le permite enviar sugerencias sobre este sitio. Damos la bienvenida a los informes de problemas, a las ideas sobre nuevas características y a los comentarios generales.</p>
+    <p>{% trans 'Empiece describiendo una breve descripción:' %}</p><textarea id="feedback-note-tmp"></textarea>
+    <p>A continuación se le permitirá identificar áreas de la página relacionadas con su descripción</p>
+    <button id="feedback-welcome-next" class="feedback-next-btn feedback-btn-gray">Siguiente</button>
+    <div id="feedback-welcome-error">Ingrese una descripción del problema</div>
+    <div class="feedback-wizard-close"></div>
+</div>

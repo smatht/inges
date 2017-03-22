@@ -1,4 +1,6 @@
+from django.conf import settings
 from django.conf.urls import patterns, include, url
+from django.conf.urls.static import static
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -22,6 +24,7 @@ urlpatterns = patterns('',
     url(r'^facturas_recibidas/add/$', 'facturacion.views.addFR', name='add'),
     url(r'^facturacion/informes/$', 'facturacion.views.informesFacturacion', name='informe'),
     url(r'^xls/$', 'facturacion.views.xls', name='export'),
+    url(r'^tellme/', include("tellme.urls")),
 
 
 
@@ -34,4 +37,4 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     # url(r'^admin/', include(admin.site.urls)),
-)
+) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
