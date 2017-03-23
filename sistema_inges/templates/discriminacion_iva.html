@@ -157,7 +157,7 @@
       <thead>
         <tr>
           <th colspan="7" class="text-center">Detalle de facturas recibidas</th>
-        </th>
+        </tr>
         <tr>
           <th>N°</th>
           <th>Emisor</th>
@@ -204,7 +204,7 @@
       <thead>
         <tr>
           <th colspan="6" class="text-center">Detalle de remitos recibidos</th>
-        </th>
+        </tr>
         <tr>
           <th>N°</th>
           <th>Emisor</th>
@@ -313,6 +313,10 @@ $(function () {
   var meses = new Array ("ENERO","FEBRERO","MARZO","ABRIL","MAYO","JUNIO","JULIO","AGOSTO","SEPTIEMBRE","OCTUBRE","NOVIEMBRE","DICIEMBRE");
   a = "{{fact_iva}}";
   b = "{{desc_iva}}";
+  c = "{{f_r_civa|floatformat:'2'}}"
+  d = "{{total_ingresos|floatformat:'2'}}"
+  gastoTotal = Number(parseFloat(c.replace(",",".")).toFixed(2));
+  ingresoTotal = Number(parseFloat(d.replace(",",".")).toFixed(2));
   ivaFact = Number(parseFloat(a.replace(",",".")).toFixed(2));
   descuento = Number(parseFloat(b.replace(",",".")).toFixed(2));
   diferencia = Number((descuento - ivaFact).toFixed(2));
@@ -341,10 +345,10 @@ $(function () {
       plotShadow: false
     },
     title: {
-      text: 'DISCRIMINACION DEL IVA DE '+mes
+      text: 'COMPARATIVA INGRESO / GASTO DE '+mes
     },
     xAxis: {
-            categories: ['Torta', 'Barras']
+            categories: ['', 'Barras']
         },
     tooltip: {
       pointFormat: 'porcentaje: <b>{point.percentage:.1f} %</b>'
@@ -372,19 +376,15 @@ $(function () {
     },
     series: [{
             type: 'column',
-            name: 'Iva a favor',
-            data: [ivaFact]           
+            name: 'INGRESOS',
+            data: [ingresoTotal]
         }, {
             type: 'column',
-            name: 'Diferencia',
-            data: [diferencia]           
-        }, {
-            type: 'column',
-            name: 'Iva facturado',
-            data: [descuento],
+            name: 'GASTOS',
+            data: [gastoTotal],
             dataLabels: {
                 verticalAlign: "top",
-                
+
             }
         }]
   });
