@@ -1,3 +1,4 @@
+from django.conf.urls import url
 from django.contrib import admin
 
 from actions import export_OR_as_pdf, save_then_pdf
@@ -22,7 +23,7 @@ class ORDetInline(admin.TabularInline):
 
 
 class ORCabAdmin(admin.ModelAdmin):
-  list_display = ('id', 'fecha', 'proveedor', 'destino', 'remitente')
+  list_display = ('id', 'fecha', 'proveedor', 'destino', 'remitente', 'account_actions')
   exclude = ('remitente', )
   inlines = [ORDetInline]
   actions = [export_OR_as_pdf]
@@ -32,6 +33,21 @@ class ORCabAdmin(admin.ModelAdmin):
       obj.remitente = request.user
     obj.save()
     # save_then_pdf(request, obj)
+
+  def process_deposit(self, request, account_id, *args, **kwargs):
+    qs = OrdenRetiro_cabecera.objects.get(pk=account_id)
+    return export_OR_as_pdf(self, request, qs)
+
+  def get_urls(self):
+    urls = super(ORCabAdmin, self).get_urls()
+    custom_urls = [
+      url(
+        r'^(?P<account_id>.+)/deposit/$',
+        self.admin_site.admin_view(self.process_deposit),
+        name='account-deposit',
+      ),
+    ]
+    return custom_urls + urls
 
 
 admin.site.unregister(User)

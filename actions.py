@@ -254,16 +254,16 @@ def tablaFecha(pdf, f):
   t.drawOn(pdf, 450, 685)
 
 
-def export_OR_as_pdf(modeladmin, request, queryset):
+def export_OR_as_pdf(modeladmin, request, obj):
   if not request.user.is_staff:
         raise PermissionDenied
 
   # det = OrdenRetiro_detalle.objects.get(orden_retiro=queryset[0].id)
 
   response = HttpResponse(content_type='application/pdf')
-  response['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
+  response['Content-Disposition'] = 'filename="somefilename.pdf"'
   buffer = BytesIO()
-  n = str(queryset[0].id)
+  n = str(obj.id)
   # Creacion objeto PDF
   p = canvas.Canvas(buffer)
 
@@ -287,11 +287,11 @@ def export_OR_as_pdf(modeladmin, request, queryset):
 
   # Draw things on the PDF. Here's where the PDF generation happens.
   # See the ReportLab documentation for the full list of functionality.
-  f = queryset[0].fecha
+  f = obj.fecha
   tablaFecha(p, f)
-  frameCabecera(p, queryset[0])
-  frameDetalle(p, queryset[0].id)
-  framePie(p, queryset[0].remitente)
+  frameCabecera(p, obj)
+  frameDetalle(p, obj.id)
+  framePie(p, obj.remitente)
 
   # Close the PDF object cleanly, and we're done.
   p.showPage()

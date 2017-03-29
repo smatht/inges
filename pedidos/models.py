@@ -2,7 +2,9 @@
 import datetime
 
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 from django.db import models
+from django.utils.html import format_html
 
 from facturacion.models import Proveedor
 from proyectos.models import Obra
@@ -23,6 +25,15 @@ class OrdenRetiro_cabecera(models.Model):
   class Meta:
     verbose_name = 'Orden de retiro'
     verbose_name_plural = 'Ordenes de retiro'
+
+  def account_actions(self):
+    return format_html(
+      '<a class="button" href="{}" target="_blank">Imprimir</a>',
+      reverse('admin:account-deposit', args=[self.pk]),
+    )
+
+  account_actions.short_description = 'Account Actions'
+  account_actions.allow_tags = True
 
 
 
