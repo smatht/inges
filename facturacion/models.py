@@ -43,7 +43,7 @@ class Localidad(models.Model):
 ############################################
 
 class Empresa(models.Model):
-  direccion = models.CharField(max_length=140, blank=True)
+  domicilio_fiscal = models.CharField(max_length=140, blank=True)
   telefono = models.CharField(max_length=50, blank=True)
   telefono_secundario = models.CharField(max_length=50, blank=True)
   email = models.EmailField(blank=True)
@@ -59,6 +59,7 @@ class Empresa(models.Model):
 
 class Proveedor(Empresa):
   razon_social = models.CharField(max_length=75)
+  domicilio_comercial = models.CharField(max_length=140, blank=True)
   cuit = models.CharField(max_length=20, blank=True)
   sitio_web = models.CharField(max_length=140, blank=True)
 
@@ -80,6 +81,25 @@ class Cliente(Empresa):
 
   def __unicode__(self):
     return unicode(self.nombre)
+
+class Registro(Empresa):
+  nombre_fantasia = models.CharField(max_length=50)
+  razon_social = models.CharField(max_length=50)
+  cuit = models.CharField(max_length=20, blank=True)
+  domicilio_comercial = models.CharField(max_length=140, blank=True)
+  iva = (
+    ('RI', 'IVA RESPONSABLE INSCRIPTO'),
+    ('RNI', 'IVA RESPONSABLE NO INSCRIPTO'),
+    ('RM', 'IVA RESPONSABLE MONOTRIBUTO'),
+    ('EX', 'IVA EXENTO'),
+    ('NR', 'IVA NO RESPONSABLE'),
+  )
+
+  class Meta:
+    ordering = ['nombre_fantasia']
+
+  def __unicode__(self):
+    return unicode(self.nombre_fantasia)
 
 
 # class Material(models.Model):
