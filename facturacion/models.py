@@ -94,6 +94,9 @@ class Registro(Empresa):
     ('EX', 'IVA EXENTO'),
     ('NR', 'IVA NO RESPONSABLE'),
   )
+  fecha_inicio_actividad = models.DateField()
+  membrete = models.ImageField(upload_to='user_img/', blank=True, null=True)
+  logo = models.ImageField(upload_to='user_img/', blank=True, null=True)
 
   class Meta:
     ordering = ['nombre_fantasia']

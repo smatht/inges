@@ -7,6 +7,7 @@ from django.db import models
 from django.utils.html import format_html
 
 from facturacion.models import Proveedor
+from facturacion.models import Registro
 from proyectos.models import Obra
 
 
@@ -16,6 +17,8 @@ class ExtendUser(models.Model):
 
 
 class OrdenRetiro_cabecera(models.Model):
+  # registro_default = Registro.objects.filter(cuit='23144591119')
+  registro = models.ForeignKey(Registro, default=4)
   fecha = models.DateField(default=datetime.datetime.now)
   proveedor = models.ForeignKey(Proveedor)
   se_autoriza = models.ForeignKey(User, related_name='toUser', verbose_name='Se autoriza a')
@@ -31,7 +34,6 @@ class OrdenRetiro_cabecera(models.Model):
       '<a class="button" href="{}" target="_blank">Imprimir</a>',
       reverse('admin:account-deposit', args=[self.pk]),
     )
-
   account_actions.short_description = 'Account Actions'
   account_actions.allow_tags = True
 

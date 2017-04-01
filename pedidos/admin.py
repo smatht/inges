@@ -23,7 +23,7 @@ class ORDetInline(admin.TabularInline):
 
 
 class ORCabAdmin(admin.ModelAdmin):
-  list_display = ('id', 'fecha', 'proveedor', 'destino', 'remitente', 'account_actions')
+  list_display = ('id', 'fecha', 'registro', 'proveedor', 'destino', 'remitente', 'account_actions')
   exclude = ('remitente', )
   inlines = [ORDetInline]
   actions = [export_OR_as_pdf]

@@ -225,7 +225,7 @@ SUIT_CONFIG = {
     'MENU_OPEN_FIRST_CHILD': True, # Default True
     # 'MENU_EXCLUDE': ('auth.group',),
     'MENU': (
-        {'label': 'Empresas', 'models': ('facturacion.cliente', 'facturacion.proveedor')},
+        {'label': 'Empresas', 'models': ('facturacion.registro', 'facturacion.cliente', 'facturacion.proveedor')},
         {'app': 'facturacion', 'models': (
             # {'label': 'Emitir factura', 'icon': 'none', 'url': '/facturacion/emision/', 'permissions': 'facturacion.add_informes'},
             {'model': 'registro_factura', 'label': 'Registrar factura', 'permissions': 'facturacion.add_factura_recibida'},

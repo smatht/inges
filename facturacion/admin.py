@@ -6,6 +6,9 @@ from actions import export_as_csv
 import decimal
 
 
+class Registro_admin(admin.ModelAdmin):
+    list_display = ('cuit', 'razon_social', 'membrete')
+
 # Esta clase modifica la visualizacion del modelo en el admin, en este caso
 # muestra los campos emisor, fecha y factura en la visualizacion de los
 # campos de la tabla (list_display).
@@ -121,22 +124,22 @@ class Recibo_admin(admin.ModelAdmin):
 # 	# inlines = [ Registro_factura_inline, Recibo_inline]
 
 class Proveedor_admin(admin.ModelAdmin):
-  list_display = ('razon_social', 'cuit','direccion', 'telefono')
+  list_display = ('razon_social', 'cuit','domicilio_comercial', 'telefono')
   search_fields = ('razon_social',)
   actions = [export_as_csv]
   fieldsets = (
         (None, {
-            'fields': ('razon_social', 'cuit', 'direccion', 'email', 'sitio_web', 'telefono', 'telefono_secundario', 'pais', 'ciudad', 'localidad')
+            'fields': ('razon_social', 'cuit', 'domicilio_comercial', 'email', 'sitio_web', 'telefono', 'telefono_secundario', 'pais', 'ciudad', 'localidad')
         }),
     )
 
 class Cliente_admin(admin.ModelAdmin):
-  list_display = ('nombre', 'dni','direccion', 'telefono')
+  list_display = ('nombre', 'dni','domicilio_fiscal', 'telefono')
   search_fields = ('nombre',)
   actions = [export_as_csv]
   fieldsets = (
         (None, {
-            'fields': ('nombre', 'dni', 'cuil', 'direccion', 'email', 'telefono', 'telefono_secundario', 'pais', 'ciudad', 'localidad')
+            'fields': ('nombre', 'dni', 'cuil', 'domicilio_fiscal', 'email', 'telefono', 'telefono_secundario', 'pais', 'ciudad', 'localidad')
         }),
     )
 
@@ -154,6 +157,7 @@ class HideAdmin(admin.ModelAdmin):
         return {}
 
 
+admin.site.register(Registro, Registro_admin)
 admin.site.register(Registro_factura, Registro_factura_admin)
 admin.site.register(Emision_factura, Emision_factura_admin)
 # admin.site.register(Albaran_emitido, HideAdmin)

@@ -105,7 +105,7 @@ def frameCabecera(pdf, qs):
   # Tabla proveedor y domicilio
   p0 = Paragraph('''<b>Senor(es):</b>''', stylesheet['Normal'])
   p1 = Paragraph('''<b>Domicilio:</b>''', stylesheet['Normal'])
-  data = [[p0, qs.proveedor],[p1, qs.proveedor.direccion]]
+  data = [[p0, qs.proveedor],[p1, qs.proveedor.domicilio_comercial]]
   t1 = Table(data, colWidths=[3 * cm, 5 * cm])
   t1.setStyle(TableStyle(
     [
@@ -268,7 +268,8 @@ def export_OR_as_pdf(modeladmin, request, obj):
   p = canvas.Canvas(buffer)
 
   # Colocacion imagen membrete
-  archivo_imagen = settings.MEDIA_ROOT + '/img/memIng.png'
+  # archivo_imagen = settings.MEDIA_ROOT + '/img/memIng.png'
+  archivo_imagen = obj.registro.membrete.path
   p.drawImage(archivo_imagen, 30, 640, 700, 300, preserveAspectRatio=True)
 
   p.setStrokeColorRGB(0.2, 0.3, 0.5)
