@@ -7,7 +7,12 @@ import decimal
 
 
 class Registro_admin(admin.ModelAdmin):
-    list_display = ('cuit', 'razon_social', 'membrete')
+    list_display = ('cuit', 'razon_social')
+    fieldsets = (
+        (None, {
+            'fields': ('cuit', 'razon_social', 'nombre_fantasia', 'domicilio_comercial', 'domicilio_fiscal', 'telefono', 'telefono_secundario', 'email', 'iva', 'fecha_inicio_actividad', 'membrete', 'logo', 'pais', 'ciudad', 'localidad')
+        }),
+    )
 
 # Esta clase modifica la visualizacion del modelo en el admin, en este caso
 # muestra los campos emisor, fecha y factura en la visualizacion de los

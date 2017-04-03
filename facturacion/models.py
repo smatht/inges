@@ -83,26 +83,37 @@ class Cliente(Empresa):
     return unicode(self.nombre)
 
 class Registro(Empresa):
-  nombre_fantasia = models.CharField(max_length=50)
+  nombre_fantasia = models.CharField(max_length=50, blank=True, null=True)
   razon_social = models.CharField(max_length=50)
-  cuit = models.CharField(max_length=20, blank=True)
-  domicilio_comercial = models.CharField(max_length=140, blank=True)
-  iva = (
+  cuit = models.CharField(max_length=20)
+  domicilio_comercial = models.CharField(max_length=140)
+  IVA = (
     ('RI', 'IVA RESPONSABLE INSCRIPTO'),
     ('RNI', 'IVA RESPONSABLE NO INSCRIPTO'),
     ('RM', 'IVA RESPONSABLE MONOTRIBUTO'),
-    ('EX', 'IVA EXENTO'),
+    ('EX', 'IVA SUJETO EXENTO'),
     ('NR', 'IVA NO RESPONSABLE'),
   )
-  fecha_inicio_actividad = models.DateField()
+  iva = models.CharField(
+    max_length=2,
+    choices=IVA,
+    default='RI',
+  )
+  fecha_inicio_actividad = models.DateField(blank=True, null=True)
   membrete = models.ImageField(upload_to='user_img/', blank=True, null=True)
   logo = models.ImageField(upload_to='user_img/', blank=True, null=True)
 
   class Meta:
     ordering = ['nombre_fantasia']
+    verbose_name_plural = "Registro empresa"
+    verbose_name = "Empresa"
+
 
   def __unicode__(self):
-    return unicode(self.nombre_fantasia)
+    if (self.nombre_fantasia):
+      return unicode(self.nombre_fantasia)
+    else:
+      return unicode(self.razon_social)
 
 
 # class Material(models.Model):
