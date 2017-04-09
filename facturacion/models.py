@@ -150,6 +150,16 @@ class Factura(models.Model):
   fecha_factura = models.DateField()
   nro_factura = models.CharField(max_length=20)
   iva = models.ForeignKey(Iva)
+  TIPO = (
+    ('a', 'A'),
+    ('b', 'B'),
+    ('c', 'C'),
+  )
+  tipo = models.CharField(
+    max_length=1,
+    choices=TIPO,
+    default='a',
+  )
   percepciones_otros = models.DecimalField(max_digits=6, decimal_places=2, default=0)
   detalle = models.TextField(blank=True)
 

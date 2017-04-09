@@ -32,7 +32,7 @@ class Registro_factura_admin(admin.ModelAdmin):
 
   fieldsets = (
         (None, {
-            'fields': ('fecha_registro', 'fecha_factura', 'emisor', 'nro_factura', 'subtotal', 'iva', 'percepciones_otros', 'pagado', 'esCopia', 'detalle')
+            'fields': ('fecha_registro', 'fecha_factura', 'emisor', 'nro_factura', 'tipo', 'subtotal', 'iva', 'percepciones_otros', 'pagado', 'esCopia', 'detalle')
         }),
     )
 
