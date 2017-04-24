@@ -12,7 +12,6 @@ ADMINS = (
 )
 
 # TELLME_FEEDBACK_EMAIL = 'matgs656@gmail.com'
-
 # Parse database configuration from $DATABASE_URL
 import dj_database_url
 

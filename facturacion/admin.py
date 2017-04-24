@@ -1,5 +1,5 @@
 from facturacion.models import *
-from facturacion.forms import FacturaForm
+from facturacion.forms import FacturaForm, FacturaDetalleForm
 from django.contrib.sites.models import Site
 from django.contrib import admin
 from actions import export_as_csv
@@ -14,27 +14,44 @@ class Registro_admin(admin.ModelAdmin):
         }),
     )
 
+# Mediante esta clase podremos mostrar el formulario de detalle de factura
+# al momento de generar la factura
+class FacturaDetalleInline(admin.TabularInline):
+  model = Factura_detalle
+  form = FacturaDetalleForm
+  extra = 2
+
+class FacturaDetalleAdmin(admin.ModelAdmin):
+    form = FacturaDetalleForm
+
 # Esta clase modifica la visualizacion del modelo en el admin, en este caso
 # muestra los campos emisor, fecha y factura en la visualizacion de los
 # campos de la tabla (list_display).
 # Tambien con list_filter colocamos un filtro.
 class Registro_factura_admin(admin.ModelAdmin):
   form = FacturaForm
-  list_display = ('emisor', 'fecha_factura', 'nro_factura', 'valor_subtotal', 'valor_iva', 'percepciones_otros', 'valor_total')
-  list_filter = ('iva', 'fecha_factura', 'fecha_registro')
+  list_display = ('emisor', 'fecha_factura', 'nro_factura', 'valor_subtotal', 'valor_iva', 'valor_total')
+  exclude = ('usuario',)
+  list_filter = ('fecha_factura', 'fecha_registro')
   #search_fields = ('iva__porcentaje',)
   search_fields = ('emisor__razon_social', 'nro_factura',)
   # Para editar un campo de forma inline
   #list_editable = ('percepciones_otros',)
   # Agregar busqueda optimizada
   # raw_id_fields = ('emisor',)
+  inlines = [FacturaDetalleInline]
   actions = [export_as_csv]
 
   fieldsets = (
         (None, {
-            'fields': ('fecha_registro', 'fecha_factura', 'emisor', 'nro_factura', 'tipo', 'subtotal', 'iva', 'percepciones_otros', 'pagado', 'esCopia', 'detalle')
+            'fields': ('fecha_registro', 'fecha_factura', 'registro', 'emisor', 'nro_factura', 'tipo', 'pagado', 'esCopia', 'observaciones')
         }),
     )
+
+  def save_model(self, request, obj, form, change):
+    if getattr(obj, 'usuario', None) is None:
+      obj.usuario = request.user
+    obj.save()
 
   def suit_row_attributes(self, obj, request):
     pagado = {1: '', 0: 'warning'}.get(obj.pagado)
@@ -53,22 +70,23 @@ class Registro_factura_admin(admin.ModelAdmin):
   # valor_iva.allow_tags = True
 
   def valor_iva(self, obj):
-    iva = obj.impuesto()
-    porc = obj.iva.porcentaje
-    badge = 'badge badge-success'
-    if porc == 21:
-      porc = '&nbsp;'+str(decimal.Decimal(round(porc, 1)).normalize())+'&nbsp;&nbsp;'
-    elif porc == 0:
-      badge = 'badge'
-      porc = '&nbsp;'+str(decimal.Decimal(round(porc, 1)).normalize())+'&nbsp;&nbsp;'
-    elif porc == 10.5:
-      badge = 'badge badge-info'
-      porc = decimal.Decimal(round(porc, 1)).normalize()
-    elif porc == 27:
-      porc = '&nbsp;'+str(decimal.Decimal(round(porc, 1)).normalize())+'&nbsp;&nbsp;'
-      badge = 'badge badge-warning'
 
-    return '$%s <span class="%s pull-right">%s%%</span>' % (round(iva, 2), badge, porc)
+    iva = obj.impuesto()
+    # porc = obj.iva.porcentaje
+    # badge = 'badge badge-success'
+    # if porc == 21:
+    #   porc = '&nbsp;'+str(decimal.Decimal(round(porc, 1)).normalize())+'&nbsp;&nbsp;'
+    # elif porc == 0:
+    #   badge = 'badge'
+    #   porc = '&nbsp;'+str(decimal.Decimal(round(porc, 1)).normalize())+'&nbsp;&nbsp;'
+    # elif porc == 10.5:
+    #   badge = 'badge badge-info'
+    #   porc = decimal.Decimal(round(porc, 1)).normalize()
+    # elif porc == 27:
+    #   porc = '&nbsp;'+str(decimal.Decimal(round(porc, 1)).normalize())+'&nbsp;&nbsp;'
+    #   badge = 'badge badge-warning'
+    # return '$%s <span class="%s pull-right">%s%%</span>' % (round(iva, 2), badge, porc)
+    return '$%s' % round(iva, 2)
   valor_iva.allow_tags = True
 
   def valor_total(self, obj):
@@ -76,7 +94,7 @@ class Registro_factura_admin(admin.ModelAdmin):
     return "$"+str(round(total, 2))
 
   def valor_subtotal(self, obj):
-    subtotal = obj.subtotal
+    subtotal = obj.subtotal()
     return "$"+str(round(subtotal, 2))
 
 
@@ -162,6 +180,7 @@ class HideAdmin(admin.ModelAdmin):
         return {}
 
 
+admin.site.register(Factura_detalle, FacturaDetalleAdmin)
 admin.site.register(Registro, Registro_admin)
 admin.site.register(Registro_factura, Registro_factura_admin)
 admin.site.register(Emision_factura, Emision_factura_admin)
