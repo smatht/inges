@@ -26,4 +26,5 @@ class FacturaDetalleForm(ModelForm):
       'cantidad': NumberInput(attrs={'style': 'width: 50px'}),
       'alicuota': Select(attrs={'style': 'width: 70px'}),
       'precio_unitario': NumberInput(attrs={'step': 0.10, 'style': 'width: 60px'}),
+      'total': NumberInput(attrs={'step': 0.10, 'style': 'width: 60px'})
     }

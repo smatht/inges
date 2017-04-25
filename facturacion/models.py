@@ -229,18 +229,40 @@ class Factura_detalle(models.Model):
 
 class Emision_factura(Factura):
   cliente = models.ForeignKey(Cliente)
-  total = models.DecimalField(max_digits=10, decimal_places=2)
+  # Para registrar al usuario que agrega el registro
+  usuario = models.ForeignKey(User, null=True)
 
   class Meta:
     verbose_name_plural = "emisión facturas"
 
   def impuesto(self):
-    resultado = self.total - (self.total / ((self.iva.porcentaje /100) + 1))
+    resultado = 0
+    detalles = Emision_detalle.objects.filter(factura=self)
+    for d in detalles:
+      resultado += d.total - (d.total / ((d.alicuota.porcentaje / 100) + 1))
+    return resultado
+
+  def total(self):
+    resultado = 0
+    detalles = Emision_detalle.objects.filter(factura=self)
+    for d in detalles:
+      resultado += d.total
     return resultado
 
   def __unicode__(self):
-    detalleResumen = self.detalle[:50]
+    detalles = Emision_detalle.objects.filter(factura=self)
+    if (detalles.count() > 0):
+      detalleResumen = detalles.first().descripcion[:50]
+    else:
+      detalleResumen = ''
     return "para: " + unicode(self.cliente) + " - fecha: "+unicode(self.fecha_factura) + ' - "' +detalleResumen+ '..."'
+
+class Emision_detalle(models.Model):
+  factura = models.ForeignKey(Emision_factura)
+  descripcion = models.CharField(max_length=140)
+  cantidad = models.PositiveSmallIntegerField()
+  alicuota = models.ForeignKey(Iva)
+  total = models.DecimalField(max_digits=10, decimal_places=2)
 
 
 class Informes(models.Model):

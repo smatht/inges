@@ -158,14 +158,14 @@ def informesFacturacion(request):
     totalAlb = 0
     for f in facturas_emitidas:
         descuento_iva = descuento_iva + f.impuesto()
-        total_ingresos = total_ingresos + f.total
+        total_ingresos = total_ingresos + f.total()
         # subtotal_ingresos = subtotal_ingresos + f.subtotal
-        subtotal_ingresos = subtotal_ingresos + 0
+        subtotal_ingresos = subtotal_ingresos + (total_ingresos - descuento_iva)
     for fr in facturas_recibidas:
         facturacion_iva = facturacion_iva + fr.impuesto()
         f_r_civa = f_r_civa + fr.total()
-        f_r_siva = f_r_siva + fr.subtotal
-        percep_otros = percep_otros + fr.percepciones_otros
+        f_r_siva = f_r_siva + fr.subtotal()
+        # percep_otros = percep_otros + fr.percepciones_otros
     for ar in albaranes_recibidos:
         totalAlb = totalAlb + ar.total
         

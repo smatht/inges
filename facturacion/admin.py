@@ -21,6 +21,11 @@ class FacturaDetalleInline(admin.TabularInline):
   form = FacturaDetalleForm
   extra = 2
 
+class EmisionDetalleInline(admin.TabularInline):
+  model = Emision_detalle
+  form = FacturaDetalleForm
+
+
 class FacturaDetalleAdmin(admin.ModelAdmin):
     form = FacturaDetalleForm
 
@@ -115,15 +120,24 @@ class Registro_factura_admin(admin.ModelAdmin):
 
 class Emision_factura_admin(admin.ModelAdmin):
   # form = Factura
-  # list_display = ('ente', 'fecha', 'total', 'impuesto')
+  list_display = ('cliente', 'fecha_factura', 'impuesto', 'total')
   form = FacturaForm
   list_filter = ('fecha_factura',)
+  inlines = [EmisionDetalleInline]
   fieldsets = (
         (None, {
-            'fields': ('fecha_registro', 'fecha_factura', 'nro_factura', 'cliente', 'iva', 'total','percepciones_otros', 'detalle')
+            'fields': ('fecha_registro', 'fecha_factura', 'nro_factura', 'cliente', 'observaciones')
         }),
         )
   actions = [export_as_csv]
+
+  def impuesto(self, obj):
+    impuesto = obj.impuesto()
+    return "$"+str(round(impuesto, 2))
+
+  def total(self, obj):
+    total = obj.total()
+    return "$"+str(round(total, 2))
 
 
 class Recibo_admin(admin.ModelAdmin):
