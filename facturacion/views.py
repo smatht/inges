@@ -193,10 +193,10 @@ def facturas_recibidas(request, desde=0, hasta=0):
         #facturas = facturas1 | facturas2
         dsd = datetime.date(now.year, int(desde), 1).strftime("%Y-%m-%d")
         hst = datetime.date(now.year, int(hasta), calendar.monthrange(now.year, int(hasta))[1]).strftime("%Y-%m-%d")
-        facturas = Factura_recibida.objects.all().filter(fecha__range = [dsd,hst])
+        facturas = Registro_factura.objects.all().filter(fecha_factura__range = [dsd,hst])
         return render(request, template,{'request': request, 'facturas': facturas})
     else:
-        facturas = Factura_recibida.objects.all().filter(fecha__month = now.month)
+        facturas = Registro_factura.objects.all().filter(fecha_factura__month = now.month)
         return render(request, template,{'request': request, 'facturas': facturas})
 
 @login_required
