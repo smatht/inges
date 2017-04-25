@@ -9,6 +9,8 @@ import datetime
 ############################################
 #     Clases secundarias Facturacion       #
 ############################################
+
+
 class Iva(models.Model):
   porcentaje = models.DecimalField(max_digits=5, decimal_places=2)
 
@@ -228,7 +230,9 @@ class Factura_detalle(models.Model):
 
 
 class Emision_factura(Factura):
+  from proyectos.models import Obra
   cliente = models.ForeignKey(Cliente)
+  obra = models.ForeignKey(Obra, blank=True, null=True)
   # Para registrar al usuario que agrega el registro
   usuario = models.ForeignKey(User, null=True)
 

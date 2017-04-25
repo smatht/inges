@@ -117,7 +117,7 @@ class Registro_factura_admin(admin.ModelAdmin):
 # 	model = Recibo
 # 	extra = 1
 
-
+@admin.register(Emision_factura)
 class Emision_factura_admin(admin.ModelAdmin):
   # form = Factura
   list_display = ('cliente', 'fecha_factura', 'impuesto', 'total')
@@ -126,7 +126,7 @@ class Emision_factura_admin(admin.ModelAdmin):
   inlines = [EmisionDetalleInline]
   fieldsets = (
         (None, {
-            'fields': ('fecha_registro', 'fecha_factura', 'nro_factura', 'cliente', 'observaciones')
+            'fields': ('fecha_registro', 'fecha_factura', 'nro_factura', 'cliente', 'obra', 'observaciones')
         }),
         )
   actions = [export_as_csv]
@@ -160,6 +160,7 @@ class Recibo_admin(admin.ModelAdmin):
 # 	actions = [export_as_csv]
 # 	# inlines = [ Registro_factura_inline, Recibo_inline]
 
+@admin.register(Proveedor)
 class Proveedor_admin(admin.ModelAdmin):
   list_display = ('razon_social', 'cuit','domicilio_comercial', 'telefono')
   search_fields = ('razon_social',)
@@ -170,6 +171,7 @@ class Proveedor_admin(admin.ModelAdmin):
         }),
     )
 
+@admin.register(Cliente)
 class Cliente_admin(admin.ModelAdmin):
   list_display = ('nombre', 'dni','domicilio_fiscal', 'telefono')
   search_fields = ('nombre',)
@@ -186,6 +188,7 @@ class Cliente_admin(admin.ModelAdmin):
 # Otra forma
 # filter_vertical = ('campo_de_la_relacion',)
 
+
 class HideAdmin(admin.ModelAdmin):
     def get_model_perms(self, request):
         """
@@ -197,11 +200,11 @@ class HideAdmin(admin.ModelAdmin):
 admin.site.register(Factura_detalle, FacturaDetalleAdmin)
 admin.site.register(Registro, Registro_admin)
 admin.site.register(Registro_factura, Registro_factura_admin)
-admin.site.register(Emision_factura, Emision_factura_admin)
+# admin.site.register(Emision_factura, Emision_factura_admin)
 # admin.site.register(Albaran_emitido, HideAdmin)
 admin.site.register(Recibo, Recibo_admin)
-admin.site.register(Proveedor, Proveedor_admin)
-admin.site.register(Cliente, Cliente_admin)
+# admin.site.register(Proveedor, Proveedor_admin)
+# admin.site.register(Cliente, Cliente_admin)
 admin.site.register(Iva)
 # admin.site.register(Empresa_Ente, Empresa_Ente_admin)
 admin.site.register(Pais, HideAdmin)
