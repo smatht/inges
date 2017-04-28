@@ -7,6 +7,3 @@ venv/
 
 .idea/
 sistema_inges/static/xls/InformeSI*
-facturacion/migrations
-pedidos/migrations
-proyectos/migrations
