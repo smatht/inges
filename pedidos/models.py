@@ -6,8 +6,7 @@ from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.html import format_html
 
-from facturacion.models import Proveedor
-from facturacion.models import Registro
+from facturacion.models import Proveedor, Registro
 from proyectos.models import Obra
 
 
@@ -17,7 +16,8 @@ class ExtendUser(models.Model):
 
 
 class OrdenRetiro_cabecera(models.Model):
-  registro = models.ForeignKey(Registro, default=4, verbose_name='Empresa')
+  cuit = lambda: Registro.objects.get(cuit='23144591119')
+  registro = models.ForeignKey(Registro, default=cuit, verbose_name='Empresa')
   fecha = models.DateField(default=datetime.datetime.now)
   proveedor = models.ForeignKey(Proveedor)
   se_autoriza = models.ForeignKey(User, related_name='toUser', verbose_name='Se autoriza a')
@@ -35,7 +35,6 @@ class OrdenRetiro_cabecera(models.Model):
     )
   account_actions.short_description = 'Account Actions'
   account_actions.allow_tags = True
-
 
 
 class OrdenRetiro_detalle(models.Model):
