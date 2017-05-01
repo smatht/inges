@@ -198,7 +198,8 @@ class Registro_factura(Factura):
     subtotal = 0
     detalles = Factura_detalle.objects.filter(factura=self)
     for d in detalles:
-      subtotal += d.cantidad * d.precio_unitario
+      if (d.impuesto == False):
+        subtotal += d.cantidad * d.precio_unitario
     return subtotal
 
 # Para saberla fecha y hora de ingreso del registro
@@ -225,6 +226,7 @@ class Registro_factura(Factura):
 class Factura_detalle(models.Model):
   factura = models.ForeignKey(Registro_factura)
   descripcion = models.CharField(max_length=140)
+  impuesto = models.BooleanField(default=False)
   cantidad = models.PositiveSmallIntegerField()
   alicuota = models.ForeignKey(Iva)
   precio_unitario = models.DecimalField(max_digits=10, decimal_places=2)
