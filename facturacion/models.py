@@ -62,6 +62,7 @@ class Empresa(models.Model):
 
 class Proveedor(Empresa):
   razon_social = models.CharField(max_length=75)
+  nombre_fantasia = models.CharField(max_length=50, blank=True, null=True)
   domicilio_comercial = models.CharField(max_length=140, blank=True)
   cuit = models.CharField(max_length=20, blank=True)
   sitio_web = models.CharField(max_length=140, blank=True)
@@ -182,7 +183,7 @@ class Registro_factura(Factura):
     verbose_name_plural = "registro facturas"
 	
   def total(self):
-    resultado = self.subtotal() + self.impuesto()
+    resultado = self.subtotal() + self.impuesto() + self.otros()
     return resultado
 
 
@@ -201,6 +202,14 @@ class Registro_factura(Factura):
       if (d.impuesto == False):
         subtotal += d.cantidad * d.precio_unitario
     return subtotal
+
+  def otros(self):
+    otros = 0
+    detalles = Factura_detalle.objects.filter(factura=self)
+    for d in detalles:
+      if (d.impuesto == True):
+        otros += d.precio_unitario
+    return otros
 
 # Para saberla fecha y hora de ingreso del registro
 # timestamp = models.DateTimeField(auto_now_add=True)

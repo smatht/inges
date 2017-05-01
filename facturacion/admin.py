@@ -49,7 +49,7 @@ class Registro_factura_admin(admin.ModelAdmin):
 
   fieldsets = (
         (None, {
-            'fields': ('fecha_registro', 'fecha_factura', 'registro', 'emisor', 'nro_factura', 'tipo', 'pagado', 'esCopia', 'observaciones')
+            'fields': ('fecha_registro', 'registro', 'fecha_factura', 'emisor', 'nro_factura', 'tipo', 'pagado', 'esCopia', 'observaciones')
         }),
     )
 
@@ -167,7 +167,7 @@ class Proveedor_admin(admin.ModelAdmin):
   actions = [export_as_csv]
   fieldsets = (
         (None, {
-            'fields': ('razon_social', 'cuit', 'domicilio_comercial', 'email', 'sitio_web', 'telefono', 'telefono_secundario', 'pais', 'ciudad', 'localidad')
+            'fields': ('razon_social', 'nombre_fantasia', 'cuit', 'domicilio_comercial', 'email', 'sitio_web', 'telefono', 'telefono_secundario', 'pais', 'ciudad', 'localidad')
         }),
     )
 
