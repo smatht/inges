@@ -23,8 +23,8 @@ class FacturaDetalleForm(ModelForm):
     # model = Registro_factura
     widgets = {
       'descripcion': Textarea(attrs={'rows': 1, 'style': 'width: 370px'}),
-      'cantidad': NumberInput(attrs={'style': 'width: 50px'}),
+      'cantidad': NumberInput(attrs={'step': 0.1, 'style': 'width: 50px'}),
       'alicuota': Select(attrs={'style': 'width: 70px'}),
-      'precio_unitario': NumberInput(attrs={'step': 0.10, 'style': 'width: 60px'}),
+      'precio_unitario': NumberInput(attrs={'step': 0.01, 'style': 'width: 60px'}),
       'total': NumberInput(attrs={'step': 0.10, 'style': 'width: 60px'})
     }
