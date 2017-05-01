@@ -17,7 +17,7 @@ class ExtendUser(models.Model):
 
 class OrdenRetiro_cabecera(models.Model):
   # cuit = lambda: Registro.objects.get(cuit='23144591119')
-  registro = models.ForeignKey(Registro, verbose_name='Empresa')
+  registro = models.ForeignKey(Registro, default=1, verbose_name='Empresa')
   fecha = models.DateField(default=datetime.datetime.now)
   proveedor = models.ForeignKey(Proveedor)
   se_autoriza = models.ForeignKey(User, related_name='toUser', verbose_name='Se autoriza a')

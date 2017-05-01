@@ -172,7 +172,7 @@ class Factura(models.Model):
 class Registro_factura(Factura):
   # cuit = lambda: Registro.objects.get(cuit='23144591119')
   emisor = models.ForeignKey(Proveedor)
-  registro = models.ForeignKey(Registro, verbose_name='Empresa')
+  registro = models.ForeignKey(Registro, default=1, verbose_name='Empresa')
   pagado = models.BooleanField(default=True)
   esCopia = models.BooleanField(default=False)
   # Para registrar al usuario que agrega el registro
