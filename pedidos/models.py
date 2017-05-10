@@ -15,7 +15,7 @@ class ExtendUser(models.Model):
   dni = models.IntegerField(blank=True, null=True)
 
 
-class OrdenRetiro_cabecera(models.Model):
+class PedidoCabecera(models.Model):
   # cuit = lambda: Registro.objects.get(cuit='23144591119')
   registro = models.ForeignKey(Registro, default=1, verbose_name='Empresa')
   fecha = models.DateField(default=datetime.datetime.now)
@@ -25,8 +25,8 @@ class OrdenRetiro_cabecera(models.Model):
   remitente = models.ForeignKey(User, related_name='fromUser', help_text='Persona que autoriza')
 
   class Meta:
-    verbose_name = 'Orden de retiro'
-    verbose_name_plural = 'Ordenes de retiro'
+    verbose_name = 'Pedido'
+    verbose_name_plural = 'Pedidos'
 
   def account_actions(self):
     return format_html(
@@ -37,7 +37,7 @@ class OrdenRetiro_cabecera(models.Model):
   account_actions.allow_tags = True
 
 
-class OrdenRetiro_detalle(models.Model):
-  orden_retiro = models.ForeignKey(OrdenRetiro_cabecera)
+class PedidoDetalle(models.Model):
+  orden_retiro = models.ForeignKey(PedidoCabecera)
   cantidad = models.CharField(max_length=10)
   descripcion = models.CharField(max_length=140)

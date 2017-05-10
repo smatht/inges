@@ -72,7 +72,10 @@ class Proveedor(Empresa):
     verbose_name_plural = "proveedores"
 
   def __unicode__(self):
-    return unicode(self.razon_social)
+    if (self.nombre_fantasia):
+      return unicode(self.nombre_fantasia)
+    else:
+      return unicode(self.razon_social)
 
 
 class Cliente(Empresa):

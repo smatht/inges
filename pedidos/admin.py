@@ -2,7 +2,7 @@ from django.conf.urls import url
 from django.contrib import admin
 
 from actions import export_OR_as_pdf, save_then_pdf
-from pedidos.models import OrdenRetiro_detalle, OrdenRetiro_cabecera, ExtendUser
+from pedidos.models import PedidoDetalle, PedidoCabecera, ExtendUser
 
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
@@ -18,7 +18,7 @@ class UserAdmin(BaseUserAdmin):
   inlines = (UserInline,)
 
 class ORDetInline(admin.TabularInline):
-  model = OrdenRetiro_detalle
+  model = PedidoDetalle
   extra = 1
 
 
@@ -35,7 +35,7 @@ class ORCabAdmin(admin.ModelAdmin):
     # save_then_pdf(request, obj)
 
   def process_deposit(self, request, account_id, *args, **kwargs):
-    qs = OrdenRetiro_cabecera.objects.get(pk=account_id)
+    qs = PedidoCabecera.objects.get(pk=account_id)
     return export_OR_as_pdf(self, request, qs)
 
   def get_urls(self):
@@ -52,4 +52,4 @@ class ORCabAdmin(admin.ModelAdmin):
 
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
-admin.site.register(OrdenRetiro_cabecera, ORCabAdmin)
+admin.site.register(PedidoCabecera, ORCabAdmin)

@@ -4,7 +4,7 @@
 import csv
 
 import cStringIO
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.http import HttpResponse
 from django.template import Context, Template
 from reportlab.lib import colors
@@ -18,7 +18,7 @@ from reportlab.platypus import TableStyle
 from reportlab.platypus.para import Paragraph
 from reportlab.lib.styles import getSampleStyleSheet
 
-from pedidos.models import OrdenRetiro_detalle
+from pedidos.models import PedidoDetalle
 from sistema_inges import settings
 
 stylesheet=getSampleStyleSheet()
@@ -137,7 +137,11 @@ def frameCabecera(pdf, qs):
   # Tabla autorizado
   p0 = Paragraph('''<b>Se autoriza a:</b>''', stylesheet['Normal'])
   p1 = Paragraph('''<b>DNI:</b>''', stylesheet['Normal'])
-  data = [[p0, qs.se_autoriza.get_full_name()], [p1, qs.se_autoriza.extenduser.dni]]
+  try:
+      dni = qs.se_autoriza.extenduser.dni
+  except ObjectDoesNotExist:
+      dni = ''
+  data = [[p0, qs.se_autoriza.get_full_name()], [p1, dni]]
   t3 = Table(data, colWidths=[3 * cm, 5 * cm])
   t3.setStyle(TableStyle(
     [
@@ -183,7 +187,7 @@ def frameDetalle(pdf, idOrden):
 
   encabezado = ('CANT.', 'DESCRIPCION')
   # Detalle de tabla con 20 renglones
-  detalle = [(qs.cantidad, qs.descripcion) for qs in OrdenRetiro_detalle.objects.filter(orden_retiro=idOrden)]
+  detalle = [(qs.cantidad, qs.descripcion) for qs in PedidoDetalle.objects.filter(orden_retiro=idOrden)]
   while len(detalle) < 23:
     detalle = detalle + [('', '')]
   # d = [('2', 'Bombillas'), ('3', 'churros'), ('', ''), ('', ''), ('', ''),
@@ -269,8 +273,12 @@ def export_OR_as_pdf(modeladmin, request, obj):
 
   # Colocacion imagen membrete
   # archivo_imagen = settings.MEDIA_ROOT + '/img/memIng.png'
-  archivo_imagen = obj.registro.membrete.path
-  p.drawImage(archivo_imagen, 30, 640, 700, 300, preserveAspectRatio=True)
+  try:
+      archivo_imagen = obj.registro.membrete.path
+  except ValueError:
+      archivo_imagen = ""
+  if (archivo_imagen <> ""):
+      p.drawImage(archivo_imagen, 30, 640, 700, 300, preserveAspectRatio=True)
 
   p.setStrokeColorRGB(0.2, 0.3, 0.5)
   p.setFillColorRGB(0.2, 0.3, 0.5)

@@ -233,7 +233,7 @@ SUIT_CONFIG = {
             {'label': 'Informe facturacion', 'icon': 'icon-briefcase', 'url': 'facturacion.views.informesFacturacion', 'permissions': 'facturacion.add_informes'},
         )},
         {'app': 'pedidos', 'models': (
-            {'model': 'OrdenRetiro_cabecera', 'label': 'Orden retiro', 'permissions': 'pedidos.add_ordenretiro_cabecera'},
+            {'model': 'PedidoCabecera', 'label': 'Pedido', 'permissions': 'pedidos.add_pedidocabecera'},
         )},
         {'app': 'auth', 'icon':'icon-lock', 'models': ('user', 'group')},
         ),
