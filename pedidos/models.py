@@ -21,7 +21,7 @@ class PedidoCabecera(models.Model):
   fecha = models.DateField(default=datetime.datetime.now)
   proveedor = models.ForeignKey(Proveedor)
   se_autoriza = models.ForeignKey(User, related_name='toUser', verbose_name='Se autoriza a', blank=True, null=True)
-  destino = models.ForeignKey(Obra, verbose_name='Obra / Destino')
+  destino = models.ForeignKey(Obra, verbose_name='Obra')
   remitente = models.ForeignKey(User, related_name='fromUser', help_text='Persona que autoriza')
 
   class Meta:
@@ -59,3 +59,10 @@ class PedidoDetalle(models.Model):
     choices=UNIDAD_MEDIDA,
     default='un',
   )
+
+class RemitoCabecera(models.Model):
+  # cuit = lambda: Registro.objects.get(cuit='23144591119')
+  pedido = models.ForeignKey(PedidoCabecera, blank=True, null=True)
+  numeroRemito = models.CharField(max_length=20)
+  fecha = models.DateField(default=datetime.datetime.now)
+  destino = models.CharField(max_length=30)
