@@ -2,6 +2,7 @@ from django.conf.urls import url
 from django.contrib import admin
 
 from actions import export_OR_as_pdf, save_then_pdf
+from pedidos.forms import PedidoForm
 from pedidos.models import PedidoDetalle, PedidoCabecera, ExtendUser
 
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
@@ -23,6 +24,7 @@ class ORDetInline(admin.TabularInline):
 
 
 class ORCabAdmin(admin.ModelAdmin):
+  form = PedidoForm
   list_display = ('id', 'fecha', 'registro', 'proveedor', 'destino', 'remitente', 'account_actions')
   exclude = ('remitente', )
   inlines = [ORDetInline]

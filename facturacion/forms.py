@@ -7,7 +7,7 @@ from django.forms import ModelForm
 from django.forms import Select
 from django.forms import TextInput
 from django.forms import Textarea
-from suit.widgets import AutosizedTextarea, NumberInput
+from suit.widgets import AutosizedTextarea, NumberInput, SuitDateWidget
 
 
 class FacturaForm(ModelForm):
@@ -16,6 +16,8 @@ class FacturaForm(ModelForm):
     widgets = {
       # You can also specify html attributes
       'observaciones': AutosizedTextarea(attrs={'rows': 3, 'class': 'input-xlarge'}),
+      'fecha_registro': SuitDateWidget,
+      'fecha_factura': SuitDateWidget,
     }
 
 class FacturaDetalleForm(ModelForm):
