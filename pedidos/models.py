@@ -20,8 +20,8 @@ class PedidoCabecera(models.Model):
   registro = models.ForeignKey(Registro, default=1, verbose_name='Empresa')
   fecha = models.DateField(default=datetime.datetime.now)
   proveedor = models.ForeignKey(Proveedor)
-  se_autoriza = models.ForeignKey(User, related_name='toUser', verbose_name='Se autoriza a')
-  destino = models.ForeignKey(Obra, blank=True, null=True)
+  se_autoriza = models.ForeignKey(User, related_name='toUser', verbose_name='Se autoriza a', blank=True, null=True)
+  destino = models.ForeignKey(Obra, verbose_name='Obra / Destino')
   remitente = models.ForeignKey(User, related_name='fromUser', help_text='Persona que autoriza')
 
   class Meta:
@@ -39,5 +39,23 @@ class PedidoCabecera(models.Model):
 
 class PedidoDetalle(models.Model):
   orden_retiro = models.ForeignKey(PedidoCabecera)
-  cantidad = models.CharField(max_length=10)
   descripcion = models.CharField(max_length=140)
+  cantidad = models.CharField(max_length=10)
+  UNIDAD_MEDIDA = (
+    ('un', 'unidades'),
+    ('mt', 'metros'),
+    ('m2', 'metros cuadrados'),
+    ('m3', 'metros cubicos'),
+    ('gr', 'gramos'),
+    ('kg', 'kilogramos'),
+    ('lt', 'litros'),
+    ('ml', 'milimetros'),
+    ('km', 'kilómetros'),
+    ('tn', 'toneladas'),
+    ('om', 'otras medidas'),
+  )
+  medida = models.CharField(
+    max_length=2,
+    choices=UNIDAD_MEDIDA,
+    default='un',
+  )

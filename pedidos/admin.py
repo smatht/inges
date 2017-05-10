@@ -2,7 +2,7 @@ from django.conf.urls import url
 from django.contrib import admin
 
 from actions import export_OR_as_pdf, save_then_pdf
-from pedidos.forms import PedidoForm
+from pedidos.forms import PedidoForm, PedidoDetalleForm
 from pedidos.models import PedidoDetalle, PedidoCabecera, ExtendUser
 
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
@@ -19,16 +19,23 @@ class UserAdmin(BaseUserAdmin):
   inlines = (UserInline,)
 
 class ORDetInline(admin.TabularInline):
+  form = PedidoDetalleForm
   model = PedidoDetalle
   extra = 1
 
 
 class ORCabAdmin(admin.ModelAdmin):
   form = PedidoForm
-  list_display = ('id', 'fecha', 'registro', 'proveedor', 'destino', 'remitente', 'account_actions')
+  list_display = ('fecha', 'registro', 'proveedor', 'destino', 'account_actions')
   exclude = ('remitente', )
   inlines = [ORDetInline]
   actions = [export_OR_as_pdf]
+  fieldsets = [
+    (None, {'fields': ['registro', 'fecha', 'proveedor','destino']}),
+    ('Orden de retiro', {
+      'description': 'Para extender una orden de retiro complete este campo',
+      'fields': ['se_autoriza']}),
+    ]
 
   def save_model(self, request, obj, form, change):
     if getattr(obj, 'remitente', None) is None:
