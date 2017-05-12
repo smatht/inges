@@ -33,7 +33,7 @@ class PedidoCabecera(models.Model):
       '<a class="button" href="{}" target="_blank">Imprimir</a>',
       reverse('admin:account-deposit', args=[self.pk]),
     )
-  account_actions.short_description = 'Account Actions'
+  account_actions.short_description = 'Acciones'
   account_actions.allow_tags = True
 
 
@@ -66,3 +66,28 @@ class RemitoCabecera(models.Model):
   numeroRemito = models.CharField(max_length=20)
   fecha = models.DateField(default=datetime.datetime.now)
   destino = models.CharField(max_length=30)
+
+
+class RemitoDetalle(models.Model):
+  remito = models.ForeignKey(RemitoCabecera)
+  descripcion = models.CharField(max_length=140)
+  cantidad = models.CharField(max_length=10)
+  UNIDAD_MEDIDA = (
+    ('un', 'unidades'),
+    ('mt', 'metros'),
+    ('m2', 'metros cuadrados'),
+    ('m3', 'metros cubicos'),
+    ('gr', 'gramos'),
+    ('kg', 'kilogramos'),
+    ('lt', 'litros'),
+    ('ml', 'milimetros'),
+    ('km', 'kilómetros'),
+    ('tn', 'toneladas'),
+    ('om', 'otras medidas'),
+  )
+  medida = models.CharField(
+    max_length=2,
+    choices=UNIDAD_MEDIDA,
+    default='un',
+  )
+  importe = models.DecimalField(max_digits=10, decimal_places=2)

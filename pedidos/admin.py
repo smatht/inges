@@ -2,8 +2,8 @@ from django.conf.urls import url
 from django.contrib import admin
 
 from actions import export_OR_as_pdf, save_then_pdf
-from pedidos.forms import PedidoForm, PedidoDetalleForm
-from pedidos.models import PedidoDetalle, PedidoCabecera, ExtendUser
+from pedidos.forms import PedidoForm, PedidoDetalleForm, RemitoForm
+from pedidos.models import PedidoDetalle, PedidoCabecera, ExtendUser, RemitoCabecera, RemitoDetalle
 
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
@@ -59,6 +59,18 @@ class ORCabAdmin(admin.ModelAdmin):
     return custom_urls + urls
 
 
+class RemitoDetalleInline(admin.TabularInline):
+  form = PedidoDetalleForm
+  model = RemitoDetalle
+  extra = 1
+
+
+class RemitoAdmin(admin.ModelAdmin):
+  form = RemitoForm
+  inlines = [RemitoDetalleInline]
+
+
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 admin.site.register(PedidoCabecera, ORCabAdmin)
+admin.site.register(RemitoCabecera, RemitoAdmin)
