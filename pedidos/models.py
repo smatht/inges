@@ -25,8 +25,13 @@ class PedidoCabecera(models.Model):
   remitente = models.ForeignKey(User, related_name='fromUser', help_text='Persona que autoriza')
 
   class Meta:
+    ordering = ['-fecha']
     verbose_name = 'Pedido'
     verbose_name_plural = 'Pedidos'
+
+  def __unicode__(self):
+    return unicode(self.fecha.strftime('%d/%m/%Y') + ' - ' + str(self.proveedor) + ' (' + str(self.destino) + ')')
+    # return unicode(self.fecha.strftime('%d/%m/%Y'))
 
   def account_actions(self):
     return format_html(
@@ -67,9 +72,14 @@ class RemitoCabecera(models.Model):
   fecha = models.DateField(default=datetime.datetime.now)
   destino = models.CharField(max_length=30)
 
+  class Meta:
+    verbose_name = 'Remito'
+    verbose_name_plural = 'Remitos'
+
 
 class RemitoDetalle(models.Model):
   remito = models.ForeignKey(RemitoCabecera)
+  confirmacion = models.BooleanField(default=True)
   descripcion = models.CharField(max_length=140)
   cantidad = models.CharField(max_length=10)
   UNIDAD_MEDIDA = (
@@ -90,4 +100,8 @@ class RemitoDetalle(models.Model):
     choices=UNIDAD_MEDIDA,
     default='un',
   )
-  importe = models.DecimalField(max_digits=10, decimal_places=2)
+  importe = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+
+  class Meta:
+    verbose_name = 'Detalle'
+    verbose_name_plural = 'Detalle'

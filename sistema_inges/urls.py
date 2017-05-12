@@ -22,13 +22,6 @@ urlpatterns = patterns('',
     (r'^logout/$', 'django.contrib.auth.views.logout', {'next_page': '/'}),
     url(r'^tellme/', include("tellme.urls")),
     url(r'^', include(facturacion.urls))
-    # url(r'^$', 'facturacion.views.inicio', name='inicio'),
-    # url(r'^facturas_recibidas/$', 'facturacion.views.facturas_recibidas', name='facturas-recibidas'),
-    # url(r'^facturas_recibidas/(\d+)/(\d+)$', 'facturacion.views.facturas_recibidas', name='facturas'),
-    # url(r'^facturas_recibidas/add/$', 'facturacion.views.addFR', name='add'),
-    # url(r'^facturacion/informes/$', 'facturacion.views.informesFacturacion', name='informe'),
-    # url(r'^xls/$', 'facturacion.views.xls', name='export'),
-
 
 
     # Examples:

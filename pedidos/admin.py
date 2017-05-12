@@ -61,8 +61,9 @@ class ORCabAdmin(admin.ModelAdmin):
 
 class RemitoDetalleInline(admin.TabularInline):
   form = PedidoDetalleForm
+  # template = 'admin/edit_inline/stacked.html'
   model = RemitoDetalle
-  extra = 1
+  extra = 5
 
 
 class RemitoAdmin(admin.ModelAdmin):

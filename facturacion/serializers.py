@@ -8,7 +8,7 @@ from rest_framework import serializers
 class FRSerializer(serializers.HyperlinkedModelSerializer):
   class Meta:
     model = Registro_factura
-    fields = ('url', 'fecha_factura', 'nro_factura', 'subtotal', 'percepciones_otros')
+    fields = ('url', 'fecha_factura', 'nro_factura', 'subtotal')
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):

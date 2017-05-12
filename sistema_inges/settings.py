@@ -169,6 +169,16 @@ INSTALLED_APPS = (
     'proyectos',
 )
 
+# Any global settings for a REST framework API are kept in a single configuration dictionary named REST_FRAMEWORK.
+# Start off by adding the following to your settings.py module:
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
+
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
