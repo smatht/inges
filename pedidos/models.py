@@ -69,7 +69,7 @@ class RemitoCabecera(models.Model):
   # cuit = lambda: Registro.objects.get(cuit='23144591119')
   pedido = models.ForeignKey(PedidoCabecera, blank=True, null=True)
   numeroRemito = models.CharField(max_length=20)
-  fecha = models.DateField(default=datetime.datetime.now)
+  fecha = models.DateTimeField(default=datetime.datetime.now)
   destino = models.CharField(max_length=30)
 
   class Meta:

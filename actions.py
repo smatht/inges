@@ -139,9 +139,12 @@ def frameCabecera(pdf, qs):
   p1 = Paragraph('''<b>DNI:</b>''', stylesheet['Normal'])
   try:
       dni = qs.se_autoriza.extenduser.dni
-  except ObjectDoesNotExist:
+  except (ObjectDoesNotExist, AttributeError):
       dni = ''
-  data = [[p0, qs.se_autoriza.get_full_name()], [p1, dni]]
+  try:
+    data = [[p0, qs.se_autoriza.get_full_name()], [p1, dni]]
+  except (ObjectDoesNotExist, AttributeError):
+      data = [[p0, " "], [p1, dni]]
   t3 = Table(data, colWidths=[3 * cm, 5 * cm])
   t3.setStyle(TableStyle(
     [
@@ -278,7 +281,7 @@ def export_OR_as_pdf(modeladmin, request, obj):
   except ValueError:
       archivo_imagen = ""
   if (archivo_imagen <> ""):
-      p.drawImage(archivo_imagen, 30, 640, 700, 300, preserveAspectRatio=True)
+      p.drawImage(archivo_imagen, 30, 625, 500, 300, preserveAspectRatio=True)
 
   p.setStrokeColorRGB(0.2, 0.3, 0.5)
   p.setFillColorRGB(0.2, 0.3, 0.5)

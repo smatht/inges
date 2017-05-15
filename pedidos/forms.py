@@ -25,5 +25,5 @@ class RemitoForm(ModelForm):
   class Meta:
     # model = Registro_factura
     widgets = {
-      'fecha': SuitDateWidget,
+      'fecha': SuitSplitDateTimeWidget,
     }
