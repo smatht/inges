@@ -70,6 +70,9 @@ class RemitoAdmin(admin.ModelAdmin):
   form = RemitoForm
   inlines = [RemitoDetalleInline]
 
+  def save_formset(self, request, form, formset, change):
+    pass
+
 
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)

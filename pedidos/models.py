@@ -44,7 +44,7 @@ class PedidoCabecera(models.Model):
 
 class PedidoDetalle(models.Model):
   orden_retiro = models.ForeignKey(PedidoCabecera)
-  descripcion = models.CharField(max_length=140)
+  descripcion = models.CharField(max_length=300)
   cantidad = models.CharField(max_length=10)
   UNIDAD_MEDIDA = (
     ('un', 'unidades'),
@@ -80,7 +80,7 @@ class RemitoCabecera(models.Model):
 class RemitoDetalle(models.Model):
   remito = models.ForeignKey(RemitoCabecera)
   confirmacion = models.BooleanField(default=True)
-  descripcion = models.CharField(max_length=140)
+  descripcion = models.CharField(max_length=300)
   cantidad = models.CharField(max_length=10)
   UNIDAD_MEDIDA = (
     ('un', 'unidades'),

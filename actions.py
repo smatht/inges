@@ -190,7 +190,18 @@ def frameDetalle(pdf, idOrden):
 
   encabezado = ('CANT.', 'DESCRIPCION')
   # Detalle de tabla con 20 renglones
-  detalle = [(qs.cantidad, qs.descripcion) for qs in PedidoDetalle.objects.filter(orden_retiro=idOrden).order_by('pk')]
+  # detalle = [(qs.cantidad, qs.descripcion) for qs in PedidoDetalle.objects.filter(orden_retiro=idOrden).order_by('pk')]
+  detalle = []
+  for qs in PedidoDetalle.objects.filter(orden_retiro=idOrden).order_by('pk'):
+      if (len(qs.descripcion) <= 102):
+          detalle += [(qs.cantidad, qs.descripcion)]
+      else:
+          detalle += [(qs.cantidad, qs.descripcion[:102])]
+          if (len(qs.descripcion[102:240]) <= 102):
+              detalle += [('', qs.descripcion[102:240])]
+          else:
+              detalle += [('', qs.descripcion[102:240])]
+              detalle += [('', qs.descripcion[240:300])]
   while len(detalle) < 23:
     detalle = detalle + [('', '')]
   # d = [('2', 'Bombillas'), ('3', 'churros'), ('', ''), ('', ''), ('', ''),
