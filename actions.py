@@ -314,7 +314,7 @@ def export_OR_as_pdf(modeladmin, request, obj):
   tablaFecha(p, f)
   frameCabecera(p, obj)
   frameDetalle(p, obj.id)
-  framePie(p, obj.remitente)
+  framePie(p, obj.firmante)
 
   # Close the PDF object cleanly, and we're done.
   p.showPage()

@@ -34,14 +34,21 @@ class ORCabAdmin(admin.ModelAdmin):
     (None, {'fields': ['registro', 'fecha', 'proveedor','destino']}),
     ('Orden de retiro', {
       'description': 'Para extender una orden de retiro complete este campo',
-      'fields': ['se_autoriza']}),
+      'fields': ['se_autoriza', 'firmante']}),
     ]
 
   def save_model(self, request, obj, form, change):
     if getattr(obj, 'remitente', None) is None:
       obj.remitente = request.user
+    if getattr(obj, 'firmante', None) is None:
+      obj.firmante = request.user
     obj.save()
     # save_then_pdf(request, obj)
+
+  def render_change_form(self, request, context, *args, **kwargs):
+    context['adminform'].form.fields['firmante'].queryset = User.objects.filter(extenduser__habilitarPedido=True)
+    context['adminform'].form.fields['firmante'].initial = request.user
+    return super(ORCabAdmin, self).render_change_form(request, context, args, kwargs)
 
   def process_deposit(self, request, account_id, *args, **kwargs):
     qs = PedidoCabecera.objects.get(pk=account_id)
@@ -69,9 +76,6 @@ class RemitoDetalleInline(admin.TabularInline):
 class RemitoAdmin(admin.ModelAdmin):
   form = RemitoForm
   inlines = [RemitoDetalleInline]
-
-  def save_formset(self, request, form, formset, change):
-    pass
 
 
 admin.site.unregister(User)
