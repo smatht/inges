@@ -194,9 +194,9 @@ def frameDetalle(pdf, idOrden):
   detalle = []
   for qs in PedidoDetalle.objects.filter(orden_retiro=idOrden).order_by('pk'):
       if (len(qs.descripcion) <= 102):
-          detalle += [(qs.cantidad, qs.descripcion)]
+          detalle += [(qs.cantidad +' '+ qs.medida, qs.descripcion)]
       else:
-          detalle += [(qs.cantidad, qs.descripcion[:102])]
+          detalle += [(qs.cantidad +' '+ qs.medida, qs.descripcion[:102])]
           if (len(qs.descripcion[102:240]) <= 102):
               detalle += [('', qs.descripcion[102:240])]
           else:
