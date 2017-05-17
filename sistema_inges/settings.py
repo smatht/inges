@@ -183,6 +183,41 @@ REST_FRAMEWORK = {
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
 # See http://docs.djangoproject.com/en/dev/topics/logging for
+SUIT_CONFIG = {
+    # header
+    'ADMIN_NAME': 'SISTEMA INGES',
+    'HEADER_DATE_FORMAT': 'l, j. F Y',
+    'HEADER_TIME_FORMAT': 'H:i',
+
+    # forms
+    'SHOW_REQUIRED_ASTERISK': True, # Default True
+    # 'CONFIRM_UNSAVED_CHANGES': True, # Default True
+
+    # menu
+    # 'SEARCH_URL': '/admin/auth/user/',
+    # 'MENU_ICONS': {
+    # 'sites': 'icon-leaf',
+    # 'auth': 'icon-lock',
+    # },
+    'MENU_OPEN_FIRST_CHILD': True, # Default True
+    # 'MENU_EXCLUDE': ('auth.group',),
+    'MENU': (
+        {'label': 'Empresas', 'models': ('facturacion.registro', 'facturacion.cliente', 'facturacion.proveedor')},
+        {'app': 'facturacion', 'models': (
+            # {'label': 'Emitir factura', 'icon': 'none', 'url': '/facturacion/emision/', 'permissions': 'facturacion.add_informes'},
+            {'model': 'registro_factura', 'label': 'Registrar factura', 'permissions': 'facturacion.add_factura_recibida'},
+            {'model': 'recibo', 'label': 'Registrar recibo', 'permissions': 'facturacion.add_albaran_recibido'},
+            {'model': 'emision_factura', 'label': 'Emitir factura', 'permissions': 'facturacion.add_factura_emitida'},
+            {'label': 'Informe facturacion', 'icon': 'icon-briefcase', 'url': 'facturacion.views.informesFacturacion', 'permissions': 'facturacion.add_informes'},
+        )},
+        {'app': 'pedidos', 'models': (
+            {'model': 'PedidoCabecera', 'label': 'Pedido', 'permissions': 'pedidos.add_pedidocabecera'},
+            {'model': 'RemitoCabecera', 'label': 'Remito', 'permissions': 'pedidos.add_remitocabecera'},
+        )},
+        {'app': 'auth', 'icon':'icon-lock', 'models': ('user', 'group')},
+        ),
+
+}
 # more details on how to customize your logging configuration.
 LOGGING = {
     'version': 1,
@@ -215,38 +250,4 @@ TEMPLATE_CONTEXT_PROCESSORS = TCP + (
 )
 
 # Django Suit configuration example
-SUIT_CONFIG = {
-    # header
-    'ADMIN_NAME': 'SISTEMA INGES',
-    'HEADER_DATE_FORMAT': 'l, j. F Y',
-    'HEADER_TIME_FORMAT': 'H:i',
-
-    # forms
-    'SHOW_REQUIRED_ASTERISK': True, # Default True
-    # 'CONFIRM_UNSAVED_CHANGES': True, # Default True
-
-    # menu
-    # 'SEARCH_URL': '/admin/auth/user/',
-    # 'MENU_ICONS': {
-    # 'sites': 'icon-leaf',
-    # 'auth': 'icon-lock',
-    # },
-    'MENU_OPEN_FIRST_CHILD': True, # Default True
-    # 'MENU_EXCLUDE': ('auth.group',),
-    'MENU': (
-        {'label': 'Empresas', 'models': ('facturacion.registro', 'facturacion.cliente', 'facturacion.proveedor')},
-        {'app': 'facturacion', 'models': (
-            # {'label': 'Emitir factura', 'icon': 'none', 'url': '/facturacion/emision/', 'permissions': 'facturacion.add_informes'},
-            {'model': 'registro_factura', 'label': 'Registrar factura', 'permissions': 'facturacion.add_factura_recibida'},
-            {'model': 'recibo', 'label': 'Registrar recibo', 'permissions': 'facturacion.add_albaran_recibido'},
-            {'model': 'emision_factura', 'label': 'Emitir factura', 'permissions': 'facturacion.add_factura_emitida'},
-            {'label': 'Informe facturacion', 'icon': 'icon-briefcase', 'url': 'facturacion.views.informesFacturacion', 'permissions': 'facturacion.add_informes'},
-        )},
-        {'app': 'pedidos', 'models': (
-            {'model': 'PedidoCabecera', 'label': 'Pedido', 'permissions': 'pedidos.add_pedidocabecera'},
-        )},
-        {'app': 'auth', 'icon':'icon-lock', 'models': ('user', 'group')},
-        ),
-    
-}
 
