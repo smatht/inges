@@ -56,7 +56,11 @@
       <h4 class="italic-title">{% trans 'My Actions' %}</h4>
 
       {% load log %}
-      {% get_admin_log 10 as admin_log for_user user %}
+      {% if user.is_superuser %}
+        {% get_admin_log 30 as admin_log %}
+      {% else %}
+        {% get_admin_log 10 as admin_log for_user user %}
+      {% endif %}
       {% if not admin_log %}
         <p>{% trans 'None available' %}</p>
       {% else %}
@@ -83,6 +87,9 @@
                 <span class="color-grey">{{ entry.object_repr }}</span>
               {% else %}
                 <a href="{{ entry.get_admin_url }}">{{ entry.object_repr }}</a>
+                {% if user.is_superuser %}
+                  <span> ({{ entry.user }})</span>
+                {% endif %}
               {% endif %}
             </li>
           {% endfor %}
