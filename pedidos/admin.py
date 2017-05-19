@@ -1,5 +1,6 @@
 from django.conf.urls import url
 from django.contrib import admin
+from django.contrib.admin import DateFieldListFilter
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
@@ -29,7 +30,8 @@ class ORDetInline(admin.TabularInline):
 
 class ORCabAdmin(admin.ModelAdmin):
   form = PedidoForm
-  list_display = ('id', 'fecha', 'registro', 'proveedor', 'destino', 'account_actions')
+  list_display = ('id', 'fecha', 'registro', 'proveedor', 'destino', 'remito', 'account_actions')
+  list_filter = ('fecha',)
   exclude = ('remitente', )
   inlines = [ORDetInline]
   actions = [export_OR_as_pdf]
@@ -39,6 +41,14 @@ class ORCabAdmin(admin.ModelAdmin):
       'description': 'Para extender una orden de retiro complete este campo',
       'fields': ['se_autoriza', 'firmante']}),
     ]
+
+  def remito(self, obj):
+    rem = RemitoCabecera.objects.filter(pedido=obj)
+    if (rem):
+      return '<img src="/static/admin/img/icon-yes.gif" alt="True">'
+    else:
+      return '<img src="/static/admin/img/icon-no.gif" alt="False">'
+  remito.allow_tags = True
 
   def save_model(self, request, obj, form, change):
     if getattr(obj, 'remitente', None) is None:
@@ -91,7 +101,15 @@ class RemitoDetalleInline(admin.TabularInline):
 
 class RemitoAdmin(admin.ModelAdmin):
   form = RemitoForm
+  list_display = ('fecha', 'pedido_ID')
   inlines = [RemitoDetalleInline]
+
+  def pedido_ID(self, obj):
+    if (obj.pedido):
+      return '<a href="../%s/%d">%d</a>' % ('pedidocabecera', obj.pedido.id, obj.pedido.id)
+    else:
+      return '<img src="/static/admin/img/icon-no.gif" alt="False">'
+  pedido_ID.allow_tags = True
 
 
 admin.site.unregister(User)

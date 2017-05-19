@@ -85,6 +85,9 @@
 
               {% if entry.is_deletion or not entry.get_admin_url %}
                 <span class="color-grey">{{ entry.object_repr }}</span>
+                {% if user.is_superuser %}
+                  <span> ({{ entry.user }})</span>
+                {% endif %}
               {% else %}
                 <a href="{{ entry.get_admin_url }}">{{ entry.object_repr }}</a>
                 {% if user.is_superuser %}
