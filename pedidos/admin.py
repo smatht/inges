@@ -1,5 +1,8 @@
 from django.conf.urls import url
 from django.contrib import admin
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
+from django.shortcuts import redirect
 
 from actions import export_OR_as_pdf, save_then_pdf
 from pedidos.forms import PedidoForm, PedidoDetalleForm, RemitoForm
@@ -26,7 +29,7 @@ class ORDetInline(admin.TabularInline):
 
 class ORCabAdmin(admin.ModelAdmin):
   form = PedidoForm
-  list_display = ('fecha', 'registro', 'proveedor', 'destino', 'account_actions')
+  list_display = ('id', 'fecha', 'registro', 'proveedor', 'destino', 'account_actions')
   exclude = ('remitente', )
   inlines = [ORDetInline]
   actions = [export_OR_as_pdf]
@@ -50,17 +53,31 @@ class ORCabAdmin(admin.ModelAdmin):
     context['adminform'].form.fields['firmante'].initial = request.user
     return super(ORCabAdmin, self).render_change_form(request, context, args, kwargs)
 
-  def process_deposit(self, request, account_id, *args, **kwargs):
-    qs = PedidoCabecera.objects.get(pk=account_id)
+  def process_print(self, request, pedido_id, *args, **kwargs):
+    qs = PedidoCabecera.objects.get(pk=pedido_id)
     return export_OR_as_pdf(self, request, qs)
+
+  def process_remito(self, request, pedido_id, *args, **kwargs):
+    pedido = PedidoCabecera.objects.get(pk=pedido_id)
+    rem = RemitoCabecera(pedido=pedido)
+    rem.save()
+    for qs in PedidoDetalle.objects.filter(orden_retiro=pedido_id).order_by('pk'):
+      det = RemitoDetalle(remito=rem, descripcion=qs.descripcion, cantidad=qs.cantidad, medida=qs.medida)
+      det.save()
+    return HttpResponseRedirect("../../../remitocabecera/%s" % rem.id)
 
   def get_urls(self):
     urls = super(ORCabAdmin, self).get_urls()
     custom_urls = [
       url(
-        r'^(?P<account_id>.+)/deposit/$',
-        self.admin_site.admin_view(self.process_deposit),
-        name='account-deposit',
+        r'^(?P<pedido_id>.+)/deposit/$',
+        self.admin_site.admin_view(self.process_print),
+        name='process-print',
+      ),
+      url(
+        r'^(?P<pedido_id>.+)/remito/$',
+        self.admin_site.admin_view(self.process_remito),
+        name='process-remito',
       ),
     ]
     return custom_urls + urls
@@ -70,7 +87,6 @@ class RemitoDetalleInline(admin.TabularInline):
   form = PedidoDetalleForm
   # template = 'admin/edit_inline/stacked.html'
   model = RemitoDetalle
-  extra = 5
 
 
 class RemitoAdmin(admin.ModelAdmin):

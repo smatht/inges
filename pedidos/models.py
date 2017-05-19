@@ -34,13 +34,21 @@ class PedidoCabecera(models.Model):
         verbose_name_plural = 'Pedidos'
 
     def __unicode__(self):
-        return unicode(self.fecha.strftime('%d/%m/%Y') + ' - ' + str(self.proveedor) + ' (' + str(self.destino) + ')')
+        return unicode('[' + str(self.pk) + '] ' + self.fecha.strftime('%d/%m/%Y') + ' - ' + str(self.proveedor) +
+                       ' (' + str(self.destino) + ')')
         # return unicode(self.fecha.strftime('%d/%m/%Y'))
 
+    # def account_actions(self):
+    #     return format_html(
+    #         '<a class="icon-print" href="{}" target="_blank"></a>',
+    #         reverse('admin:account-deposit', args=[self.pk]),
+    #     )
     def account_actions(self):
         return format_html(
-            '<a class="button" href="{}" target="_blank">Imprimir</a>',
-            reverse('admin:account-deposit', args=[self.pk]),
+            '<a class="btn" href="{}" target="_blank" title="Mostrar pdf"><i class="icon-print"></i></a>'
+            '<a class="btn" href="{}" title="Agregar remito"><i class="icon-check"></i></a>',
+            reverse('admin:process-print', args=[self.pk]),
+            reverse('admin:process-remito', args=[self.pk]),
         )
 
     account_actions.short_description = 'Acciones'
@@ -78,9 +86,9 @@ class PedidoDetalle(models.Model):
 class RemitoCabecera(models.Model):
     # cuit = lambda: Registro.objects.get(cuit='23144591119')
     pedido = models.ForeignKey(PedidoCabecera, blank=True, null=True)
-    numeroRemito = models.CharField(max_length=20)
+    numeroRemito = models.CharField(max_length=20, blank=True, null=True, verbose_name='Numero remito')
     fecha = models.DateTimeField(default=datetime.datetime.now)
-    destino = models.CharField(max_length=30)
+    destino = models.ForeignKey(Obra, blank=True, null=True)
 
     class Meta:
         verbose_name = 'Remito'
@@ -113,5 +121,5 @@ class RemitoDetalle(models.Model):
     importe = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
     class Meta:
-        verbose_name = 'Detalle'
-        verbose_name_plural = 'Detalle'
+        verbose_name = 'Detalle de remito'
+        verbose_name_plural = 'Detalle de remito'
