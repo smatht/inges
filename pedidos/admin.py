@@ -1,9 +1,7 @@
+from daterange_filter.filter import DateRangeFilter
 from django.conf.urls import url
 from django.contrib import admin
-from django.contrib.admin import DateFieldListFilter
-from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from django.shortcuts import redirect
 
 from actions import export_OR_as_pdf, save_then_pdf
 from pedidos.forms import PedidoForm, PedidoDetalleForm, RemitoForm
@@ -32,6 +30,7 @@ class ORCabAdmin(admin.ModelAdmin):
   form = PedidoForm
   list_display = ('id', 'fecha', 'registro', 'proveedor', 'destino', 'remito', 'account_actions')
   list_filter = ('fecha',)
+  search_fields = ('pedidodetalle__descripcion',)
   exclude = ('remitente', )
   inlines = [ORDetInline]
   actions = [export_OR_as_pdf]
@@ -41,6 +40,10 @@ class ORCabAdmin(admin.ModelAdmin):
       'description': 'Para extender una orden de retiro complete este campo',
       'fields': ['se_autoriza', 'firmante']}),
     ]
+
+  def detalles(self, obj):
+    dets = PedidoDetalle.objects.filter(orden_retiro=obj)
+    return dets
 
   def remito(self, obj):
     rem = RemitoCabecera.objects.filter(pedido=obj)
@@ -103,6 +106,8 @@ class RemitoAdmin(admin.ModelAdmin):
   form = RemitoForm
   list_display = ('fecha', 'pedido_ID')
   inlines = [RemitoDetalleInline]
+  list_filter = ('fecha',)
+  search_fields = ('remitodetalle__descripcion',)
 
   def pedido_ID(self, obj):
     if (obj.pedido):
