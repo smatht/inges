@@ -1,4 +1,3 @@
-from daterange_filter.filter import DateRangeFilter
 from django.conf.urls import url
 from django.contrib import admin
 from django.http import HttpResponseRedirect

@@ -167,7 +167,6 @@ INSTALLED_APPS = (
     'rest_framework',
     'pedidos',
     'proyectos',
-    'daterange_filter',
 )
 
 # Any global settings for a REST framework API are kept in a single configuration dictionary named REST_FRAMEWORK.
