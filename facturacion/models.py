@@ -157,16 +157,18 @@ class Factura(models.Model):
   fecha_factura = models.DateField()
   nro_factura = models.CharField(max_length=20)
   TIPO = (
-    ('a', 'A'),
-    ('b', 'B'),
-    ('c', 'C'),
+    ('a', 'Factura A'),
+    ('b', 'Factura B'),
+    ('c', 'Factura C'),
+    ('nca', 'Nota de crédito A'),
+    ('ncb', 'Nota de crédito B'),
   )
   tipo = models.CharField(
-    max_length=1,
+    max_length=3,
     choices=TIPO,
     default='a',
   )
-  # percepciones_otros = models.DecimalField(max_digits=6, decimal_places=2, default=0)
+  percepciones_otros = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True, verbose_name='Percepciones de otros')
   observaciones = models.TextField(blank=True)
 
   class Meta:
@@ -177,7 +179,7 @@ class Registro_factura(Factura):
   # cuit = lambda: Registro.objects.get(cuit='23144591119')
   emisor = models.ForeignKey(Proveedor)
   registro = models.ForeignKey(Registro, default=1, verbose_name='Empresa')
-  pagado = models.BooleanField(default=True)
+  pagado = models.BooleanField(default=False)
   esCopia = models.BooleanField(default=False)
   # Para registrar al usuario que agrega el registro
   usuario = models.ForeignKey(User, null=True)
@@ -243,6 +245,10 @@ class Factura_detalle(models.Model):
   alicuota = models.ForeignKey(Iva)
   precio_unitario = models.DecimalField(max_digits=10, decimal_places=2)
 
+  class Meta:
+      verbose_name = 'Detalle de factura'
+      verbose_name_plural = 'Detalle de factura'
+
 
 class Emision_factura(Factura):
   from proyectos.models import Obra
@@ -289,11 +295,21 @@ class Informes(models.Model):
     permissions = (("can_view_informe", "Can view informe"),)
 
 
-class Recibo(models.Model):
-  emisor = models.ForeignKey(Proveedor)
-  fecha_registro = models.DateField(default=datetime.datetime.now,
-		help_text="Cambie este campo sólo en caso de registrar una albaran para un mes anterior, tenga en cuenta que al registrar para otro mes éste no se incluirá en los informes del mes actual.")
+class Pago(models.Model):
   fecha_recibo = models.DateField()
+  receptor = models.ForeignKey(Proveedor)
   nro_recibo = models.CharField(max_length=15, blank=True)
-  detalle = models.TextField(blank=True)
+  comprobantes = models.ManyToManyField(Registro_factura, blank=True)
+  TIPO = (
+      ('e', 'Efectivo'),
+      ('c', 'Cheque'),
+      ('t', 'Tarjeta'),
+  )
+  tipo = models.CharField(
+      max_length=1,
+      choices=TIPO,
+      default='e',
+  )
+  numero_serie = models.IntegerField(verbose_name='Numero de serie', null=True, blank=True)
   total = models.DecimalField(max_digits=10, decimal_places=2)
+  observaciones = models.TextField(blank=True)

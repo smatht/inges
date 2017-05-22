@@ -5,7 +5,7 @@ from django.contrib import admin
 from actions import export_as_csv
 import decimal
 
-
+@admin.register(Registro)
 class Registro_admin(admin.ModelAdmin):
     list_display = ('cuit', 'razon_social')
     fieldsets = (
@@ -26,13 +26,11 @@ class EmisionDetalleInline(admin.TabularInline):
   form = FacturaDetalleForm
 
 
-class FacturaDetalleAdmin(admin.ModelAdmin):
-    form = FacturaDetalleForm
-
 # Esta clase modifica la visualizacion del modelo en el admin, en este caso
 # muestra los campos emisor, fecha y factura en la visualizacion de los
 # campos de la tabla (list_display).
 # Tambien con list_filter colocamos un filtro.
+@admin.register(Registro_factura)
 class Registro_factura_admin(admin.ModelAdmin):
   form = FacturaForm
   list_display = ('emisor', 'fecha_factura', 'nro_factura', 'valor_subtotal', 'valor_iva', 'valor_total')
@@ -49,7 +47,8 @@ class Registro_factura_admin(admin.ModelAdmin):
 
   fieldsets = (
         (None, {
-            'fields': ('fecha_registro', 'registro', 'fecha_factura', 'emisor', 'nro_factura', 'tipo', 'pagado', 'esCopia', 'observaciones')
+            'fields': ('fecha_registro', 'registro', 'fecha_factura', 'emisor', 'nro_factura', 'tipo', 'pagado',
+                       'esCopia', 'percepciones_otros', 'observaciones')
         }),
     )
 
@@ -197,17 +196,16 @@ class HideAdmin(admin.ModelAdmin):
         return {}
 
 
-admin.site.register(Factura_detalle, FacturaDetalleAdmin)
-admin.site.register(Registro, Registro_admin)
-admin.site.register(Registro_factura, Registro_factura_admin)
+admin.site.register(Factura_detalle, HideAdmin)
+# admin.site.register(Registro, Registro_admin)
+# admin.site.register(Registro_factura, Registro_factura_admin)
 # admin.site.register(Emision_factura, Emision_factura_admin)
 # admin.site.register(Albaran_emitido, HideAdmin)
-admin.site.register(Recibo, Recibo_admin)
 # admin.site.register(Proveedor, Proveedor_admin)
 # admin.site.register(Cliente, Cliente_admin)
-admin.site.register(Iva)
-# admin.site.register(Empresa_Ente, Empresa_Ente_admin)
+admin.site.register(Pago)
+admin.site.register(Iva, HideAdmin)
 admin.site.register(Pais, HideAdmin)
 admin.site.register(Ciudad, HideAdmin)
 admin.site.register(Localidad, HideAdmin)
-# admin.site.unregister(Site)
+admin.site.unregister(Site)

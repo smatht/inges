@@ -206,7 +206,7 @@ SUIT_CONFIG = {
         {'app': 'facturacion', 'models': (
             # {'label': 'Emitir factura', 'icon': 'none', 'url': '/facturacion/emision/', 'permissions': 'facturacion.add_informes'},
             {'model': 'facturacion.registro_factura', 'label': 'Registrar factura', 'permissions': 'facturacion.add_registro_factura'},
-            {'model': 'facturacion.recibo', 'label': 'Registrar recibo', 'permissions': 'facturacion.add_recibo'},
+            {'model': 'facturacion.pago', 'label': 'Pagos', 'permissions': 'facturacion.add_pago'},
             {'model': 'facturacion.emision_factura', 'label': 'Emitir factura', 'permissions': 'facturacion.add_emision_factura'},
             {'label': 'Informe facturacion', 'icon': 'icon-briefcase', 'url': 'facturacion.views.informesFacturacion', 'permissions': 'facturacion.add_informes'},
         )},
