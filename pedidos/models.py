@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.html import format_html
 
-from facturacion.models import Proveedor, Registro
+from facturacion.models import Proveedor, Registro, Registro_factura
 from proyectos.models import Obra
 
 
@@ -85,6 +85,7 @@ class PedidoDetalle(models.Model):
 
 class RemitoCabecera(models.Model):
     # cuit = lambda: Registro.objects.get(cuit='23144591119')
+    factura = models.ForeignKey(Registro_factura, blank=True, null=True)
     pedido = models.ForeignKey(PedidoCabecera, blank=True, null=True)
     numeroRemito = models.CharField(max_length=20, blank=True, null=True, verbose_name='Numero remito')
     fecha = models.DateTimeField(default=datetime.datetime.now)

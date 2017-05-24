@@ -107,6 +107,7 @@ class RemitoAdmin(admin.ModelAdmin):
   inlines = [RemitoDetalleInline]
   list_filter = ('fecha',)
   search_fields = ('remitodetalle__descripcion',)
+  exclude = ('pedido', 'factura')
 
   def pedido_ID(self, obj):
     if (obj.pedido):

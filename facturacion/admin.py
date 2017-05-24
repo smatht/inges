@@ -19,12 +19,24 @@ class Registro_admin(admin.ModelAdmin):
 class FacturaDetalleInline(admin.TabularInline):
   model = Factura_detalle
   form = FacturaDetalleForm
+  suit_classes = 'suit-tab suit-tab-factura'
   extra = 2
 
 class EmisionDetalleInline(admin.TabularInline):
   model = Emision_detalle
   form = FacturaDetalleForm
 
+class PagoInline(admin.TabularInline):
+    model = Pago.comprobantes.through
+    suit_classes = 'suit-tab suit-tab-pagos'
+    extra = 0
+
+
+class PagoAdmin(admin.ModelAdmin):
+    inlines = [
+        PagoInline,
+    ]
+    exclude = ('comprobantes',)
 
 # Esta clase modifica la visualizacion del modelo en el admin, en este caso
 # muestra los campos emisor, fecha y factura en la visualizacion de los
@@ -42,15 +54,17 @@ class Registro_factura_admin(admin.ModelAdmin):
   #list_editable = ('percepciones_otros',)
   # Agregar busqueda optimizada
   # raw_id_fields = ('emisor',)
-  inlines = [FacturaDetalleInline]
+  inlines = [PagoInline, FacturaDetalleInline]
   actions = [export_as_csv]
 
   fieldsets = (
         (None, {
+            'classes': ('suit-tab', 'suit-tab-factura',),
             'fields': ('fecha_registro', 'registro', 'fecha_factura', 'emisor', 'nro_factura', 'tipo', 'pagado',
                        'esCopia', 'percepciones_otros', 'observaciones')
         }),
     )
+  suit_form_tabs = (('factura', 'Factura'), ('pagos', 'Pagos'))
 
   def save_model(self, request, obj, form, change):
     if getattr(obj, 'usuario', None) is None:
@@ -203,7 +217,7 @@ admin.site.register(Factura_detalle, HideAdmin)
 # admin.site.register(Albaran_emitido, HideAdmin)
 # admin.site.register(Proveedor, Proveedor_admin)
 # admin.site.register(Cliente, Cliente_admin)
-admin.site.register(Pago)
+admin.site.register(Pago, PagoAdmin)
 admin.site.register(Iva, HideAdmin)
 admin.site.register(Pais, HideAdmin)
 admin.site.register(Ciudad, HideAdmin)

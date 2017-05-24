@@ -296,7 +296,7 @@ class Informes(models.Model):
 
 
 class Pago(models.Model):
-  fecha_recibo = models.DateField()
+  fecha_pago = models.DateField()
   receptor = models.ForeignKey(Proveedor)
   nro_recibo = models.CharField(max_length=15, blank=True)
   comprobantes = models.ManyToManyField(Registro_factura, blank=True)
