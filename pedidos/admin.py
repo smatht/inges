@@ -76,7 +76,7 @@ class ORCabAdmin(admin.ModelAdmin):
     for qs in PedidoDetalle.objects.filter(orden_retiro=pedido_id).order_by('pk'):
       det = RemitoDetalle(remito=rem, descripcion=qs.descripcion, cantidad=qs.cantidad, medida=qs.medida)
       det.save()
-    return HttpResponseRedirect("../../../remitocabecera/%s" % rem.id)
+    return HttpResponseRedirect("../../../remitocabecera/%s?_popup=1" % rem.id)
 
   def get_urls(self):
     urls = super(ORCabAdmin, self).get_urls()

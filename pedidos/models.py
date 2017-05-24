@@ -46,7 +46,7 @@ class PedidoCabecera(models.Model):
     def account_actions(self):
         return format_html(
             '<a class="btn" href="{}" target="_blank" title="Mostrar pdf"><i class="icon-print"></i></a>'
-            '<a class="btn" href="{}" title="Agregar remito"><i class="icon-check"></i></a>',
+            '<a class="btn" id="add_id_remito" href="{}" title="Agregar remito" onclick="return showRelatedObjectLookupPopup(this);"><i class="icon-check"></i></a>',
             reverse('admin:process-print', args=[self.pk]),
             reverse('admin:process-remito', args=[self.pk]),
         )
