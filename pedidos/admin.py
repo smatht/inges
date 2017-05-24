@@ -28,7 +28,7 @@ class ORDetInline(admin.TabularInline):
 class ORCabAdmin(admin.ModelAdmin):
   form = PedidoForm
   list_display = ('id', 'fecha', 'registro', 'proveedor', 'destino', 'remito', 'account_actions')
-  list_filter = ('fecha',)
+  list_filter = ('proveedor__nombre_fantasia', 'destino__descripcion_corta')
   search_fields = ('pedidodetalle__descripcion',)
   exclude = ('remitente', )
   inlines = [ORDetInline]
