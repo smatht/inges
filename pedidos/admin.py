@@ -121,11 +121,11 @@ class RemitoDetalleInline(admin.TabularInline):
 
 class RemitoAdmin(admin.ModelAdmin):
   form = RemitoForm
-  list_display = ('fecha', 'pedido_ID')
+  list_display = ('fecha', 'proveedor', 'pedido_ID')
   inlines = [RemitoDetalleInline]
   list_filter = ('fecha', 'pedido__id')
   search_fields = ('remitodetalle__descripcion',)
-  exclude = ('pedido', 'factura')
+  exclude = ('factura',)
 
   def pedido_ID(self, obj):
     if (obj.pedido):
