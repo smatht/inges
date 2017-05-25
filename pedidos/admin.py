@@ -1,5 +1,6 @@
 from django.conf.urls import url
 from django.contrib import admin
+from django.db.models import Sum
 from django.http import HttpResponseRedirect
 
 from actions import export_OR_as_pdf, save_then_pdf
@@ -46,8 +47,24 @@ class ORCabAdmin(admin.ModelAdmin):
 
   def remito(self, obj):
     rem = RemitoCabecera.objects.filter(pedido=obj)
+    ped_det = PedidoDetalle.objects.filter(orden_retiro=obj)
+    rem_det = RemitoDetalle.objects.filter(remito=rem)
+    cant_ped_det = 0
+    cant_rem_det = 0
+
+    filas_ped_det = ped_det.count()
+    filas_rem_det = rem_det.count()
+    rem_det_is_false = RemitoDetalle.objects.filter(remito=rem, confirmacion=False)
+    for d in ped_det:
+      cant_ped_det += float(d.cantidad)
+    for d in rem_det:
+      cant_rem_det += float(d.cantidad)
+
     if (rem):
-      return '<img src="/static/admin/img/icon-yes.gif" alt="True">'
+      if ((filas_ped_det != filas_rem_det) | (cant_ped_det != cant_rem_det) | (len(rem_det_is_false) >= 1)):
+        return '<img src="/static/admin/img/icon_alert.gif" alt="True">'
+      else:
+        return '<img src="/static/admin/img/icon-yes.gif" alt="True">'
     else:
       return '<img src="/static/admin/img/icon-no.gif" alt="False">'
   remito.allow_tags = True
@@ -71,7 +88,7 @@ class ORCabAdmin(admin.ModelAdmin):
 
   def process_remito(self, request, pedido_id, *args, **kwargs):
     pedido = PedidoCabecera.objects.get(pk=pedido_id)
-    rem = RemitoCabecera(pedido=pedido)
+    rem = RemitoCabecera(pedido=pedido, proveedor=pedido.proveedor, destino=pedido.destino)
     rem.save()
     for qs in PedidoDetalle.objects.filter(orden_retiro=pedido_id).order_by('pk'):
       det = RemitoDetalle(remito=rem, descripcion=qs.descripcion, cantidad=qs.cantidad, medida=qs.medida)
@@ -99,13 +116,14 @@ class RemitoDetalleInline(admin.TabularInline):
   form = PedidoDetalleForm
   # template = 'admin/edit_inline/stacked.html'
   model = RemitoDetalle
+  extra = 0
 
 
 class RemitoAdmin(admin.ModelAdmin):
   form = RemitoForm
   list_display = ('fecha', 'pedido_ID')
   inlines = [RemitoDetalleInline]
-  list_filter = ('fecha',)
+  list_filter = ('fecha', 'pedido__id')
   search_fields = ('remitodetalle__descripcion',)
   exclude = ('pedido', 'factura')
 

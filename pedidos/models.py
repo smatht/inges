@@ -46,7 +46,7 @@ class PedidoCabecera(models.Model):
     def account_actions(self):
         return format_html(
             '<a class="btn" href="{}" target="_blank" title="Mostrar pdf"><i class="icon-print"></i></a>'
-            '<a class="btn" id="add_id_remito" href="{}" title="Agregar remito" onclick="return showRelatedObjectLookupPopup(this);"><i class="icon-check"></i></a>',
+            '<a class="btn" id="add_id_remito" href="{}" title="Agregar remito" onclick="return showRelatedObjectPopup(this, 1100, 500);"><i class="icon-check"></i></a>',
             reverse('admin:process-print', args=[self.pk]),
             reverse('admin:process-remito', args=[self.pk]),
         )
@@ -87,6 +87,7 @@ class RemitoCabecera(models.Model):
     # cuit = lambda: Registro.objects.get(cuit='23144591119')
     factura = models.ForeignKey(Registro_factura, blank=True, null=True)
     pedido = models.ForeignKey(PedidoCabecera, blank=True, null=True)
+    proveedor = models.ForeignKey(Proveedor, blank=True, null=True)
     numeroRemito = models.CharField(max_length=20, blank=True, null=True, verbose_name='Numero remito')
     fecha = models.DateTimeField(default=datetime.datetime.now)
     destino = models.ForeignKey(Obra, blank=True, null=True)
@@ -94,6 +95,10 @@ class RemitoCabecera(models.Model):
     class Meta:
         verbose_name = 'Remito'
         verbose_name_plural = 'Remitos'
+
+    def __unicode__(self):
+        return unicode(self.fecha.strftime('%d/%m/%Y') + ' - ' + str(self.proveedor) + ' - ' + str(self.destino))
+
 
 
 class RemitoDetalle(models.Model):

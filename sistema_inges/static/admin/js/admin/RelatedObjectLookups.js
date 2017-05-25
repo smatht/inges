@@ -56,11 +56,11 @@ function dismissRelatedLookupPopup(win, chosenId) {
     win.close();
 }
 
-function showRelatedObjectPopup(triggeringLink) {
+function showRelatedObjectPopup(triggeringLink, width='800', height='500') {
     var name = triggeringLink.id.replace(/^(change|add|delete)_/, '');
     name = id_to_windowname(name);
     var href = triggeringLink.href;
-    var win = window.open(href, name, 'height=500,width=800,resizable=yes,scrollbars=yes');
+    var win = window.open(href, name, 'height='+height+',width='+width+',resizable=yes,scrollbars=yes');
     win.focus();
     return false;
 }
