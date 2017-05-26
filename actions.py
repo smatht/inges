@@ -306,7 +306,7 @@ def export_OR_as_pdf(modeladmin, request, obj):
   p.drawString(230, 685, u"ORDEN DE RETIRO")
   p.setFont("Helvetica", 14)
   p.drawString(265, 665, u"ORIGINAL Nº ")
-  p.drawString(355, 665, n)
+  p.drawString(355, 665, n.zfill(5))
 
   # Draw things on the PDF. Here's where the PDF generation happens.
   # See the ReportLab documentation for the full list of functionality.

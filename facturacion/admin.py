@@ -3,7 +3,6 @@ from facturacion.forms import FacturaForm, FacturaDetalleForm
 from django.contrib.sites.models import Site
 from django.contrib import admin
 from actions import export_as_csv
-import decimal
 
 @admin.register(Registro)
 class Registro_admin(admin.ModelAdmin):
