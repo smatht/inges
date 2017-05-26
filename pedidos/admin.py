@@ -48,20 +48,18 @@ class ORCabAdmin(admin.ModelAdmin):
   def remito(self, obj):
     rem = RemitoCabecera.objects.filter(pedido=obj)
     ped_det = PedidoDetalle.objects.filter(orden_retiro=obj)
-    rem_det = RemitoDetalle.objects.filter(remito=rem)
     cant_ped_det = 0
     cant_rem_det = 0
 
-    filas_ped_det = ped_det.count()
-    filas_rem_det = rem_det.count()
     rem_det_is_false = RemitoDetalle.objects.filter(remito=rem, confirmacion=False)
     for d in ped_det:
       cant_ped_det += float(d.cantidad)
-    for d in rem_det:
-      cant_rem_det += float(d.cantidad)
+    for r in rem:
+      for d in RemitoDetalle.objects.filter(remito=r):
+        cant_rem_det += float(d.cantidad)
 
     if (rem):
-      if ((filas_ped_det != filas_rem_det) | (cant_ped_det != cant_rem_det) | (len(rem_det_is_false) >= 1)):
+      if ((cant_ped_det != cant_rem_det) | (len(rem_det_is_false) >= 1)):
         return '<img src="/static/admin/img/icon_alert.gif" alt="True">'
       else:
         return '<img src="/static/admin/img/icon-yes.gif" alt="True">'
