@@ -86,7 +86,7 @@ class ORCabAdmin(admin.ModelAdmin):
 
   def process_remito(self, request, pedido_id, *args, **kwargs):
     pedido = PedidoCabecera.objects.get(pk=pedido_id)
-    rem = RemitoCabecera(pedido=pedido, proveedor=pedido.proveedor, destino=pedido.destino)
+    rem = RemitoCabecera(pedido=pedido, registro=pedido.registro, proveedor=pedido.proveedor, destino=pedido.destino)
     rem.save()
     for qs in PedidoDetalle.objects.filter(orden_retiro=pedido_id).order_by('pk'):
       det = RemitoDetalle(remito=rem, descripcion=qs.descripcion, cantidad=qs.cantidad, medida=qs.medida)

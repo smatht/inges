@@ -87,6 +87,7 @@ class RemitoCabecera(models.Model):
     # cuit = lambda: Registro.objects.get(cuit='23144591119')
     factura = models.ForeignKey(Registro_factura, blank=True, null=True)
     pedido = models.ForeignKey(PedidoCabecera, blank=True, null=True)
+    registro = models.ForeignKey(Registro, default=1, verbose_name='Empresa')
     proveedor = models.ForeignKey(Proveedor, blank=True, null=True)
     numeroRemito = models.CharField(max_length=20, blank=True, null=True, verbose_name='Numero remito')
     fecha = models.DateTimeField(default=datetime.datetime.now)
