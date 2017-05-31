@@ -82,6 +82,9 @@ class PedidoDetalle(models.Model):
         verbose_name = 'Detalle de pedido'
         verbose_name_plural = 'Detalle de pedido'
 
+    def __unicode__(self):
+        return unicode(self.descripcion + ' [' + str(self.cantidad) + ']')
+
 
 class RemitoCabecera(models.Model):
     # cuit = lambda: Registro.objects.get(cuit='23144591119')
@@ -130,3 +133,6 @@ class RemitoDetalle(models.Model):
     class Meta:
         verbose_name = 'Detalle de remito'
         verbose_name_plural = 'Detalle de remito'
+
+    def __unicode__(self):
+        return unicode(self.descripcion + ' [' + str(self.cantidad) + ']')

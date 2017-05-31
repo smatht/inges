@@ -4,7 +4,7 @@ from facturacion.models import Pais, Ciudad, Localidad, Cliente
 
 
 class Obra(models.Model):
-  descripcion = models.CharField(max_length=140, verbose_name='Obra', blank=False, null=False)
+  descripcion = models.TextField(max_length=300, verbose_name='Obra', blank=False, null=False)
   descripcion_corta = models.CharField(max_length=30, blank=True, null=True)
   fecha_inicio = models.DateField(auto_now=False, auto_now_add=False, blank=True, null=True)
   fecha_fin = models.DateField(auto_now=False, auto_now_add=False, blank=True, null=True)

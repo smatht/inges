@@ -114,14 +114,14 @@ class RemitoDetalleInline(admin.TabularInline):
   form = PedidoDetalleForm
   # template = 'admin/edit_inline/stacked.html'
   model = RemitoDetalle
-  extra = 0
+  extra = 1
 
 
 class RemitoAdmin(admin.ModelAdmin):
   form = RemitoForm
   list_display = ('fecha', 'proveedor', 'pedido_ID')
   inlines = [RemitoDetalleInline]
-  list_filter = ('fecha', 'pedido__id')
+  list_filter = ('fecha', 'proveedor__nombre_fantasia', 'pedido__id')
   search_fields = ('remitodetalle__descripcion',)
   exclude = ('factura',)
 
