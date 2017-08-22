@@ -4,11 +4,9 @@ from django.db import models
 from django.utils.datetime_safe import datetime
 from django.utils.html import format_html
 
-from inges.facturacion.models import Registro
-
-from inges.facturacion.models import Proveedor
-
-from inges.proyectos.models import Obra
+from facturacion.models import Registro, Registro_factura
+from facturacion.models import Proveedor
+from proyectos.models import Obra
 
 
 class Pedido(models.Model):
@@ -46,27 +44,10 @@ class Pedido(models.Model):
 
 
 class PedidoItem(models.Model):
-    orden_retiro = models.ForeignKey(Pedido)
+    pedido = models.ForeignKey(Pedido)
     descripcion = models.CharField(max_length=300)
     cantidad = models.CharField(max_length=10)
-    UNIDAD_MEDIDA = (
-        ('un', 'unidades'),
-        ('mt', 'metros'),
-        ('m2', 'metros cuadrados'),
-        ('m3', 'metros cubicos'),
-        ('gr', 'gramos'),
-        ('kg', 'kilogramos'),
-        ('lt', 'litros'),
-        ('ml', 'milimetros'),
-        ('km', 'kilómetros'),
-        ('tn', 'toneladas'),
-        ('om', 'otras medidas'),
-    )
-    medida = models.CharField(
-        max_length=2,
-        choices=UNIDAD_MEDIDA,
-        default='un',
-    )
+
 
     class Meta:
         verbose_name = 'Detalle de pedido'
@@ -75,4 +56,35 @@ class PedidoItem(models.Model):
     def __unicode__(self):
         return unicode(self.descripcion + ' [' + str(self.cantidad) + ']')
 
-# Create your models here.
+
+class Remito(models.Model):
+    # cuit = lambda: Registro.objects.get(cuit='23144591119')
+    factura = models.ForeignKey(Registro_factura, blank=True, null=True)
+    pedido = models.ForeignKey(Pedido, blank=True, null=True)
+    registro = models.ForeignKey(Registro, default=1, verbose_name='Empresa')
+    proveedor = models.ForeignKey(Proveedor, blank=True, null=True)
+    numeroRemito = models.CharField(max_length=20, blank=True, null=True, verbose_name='Numero remito')
+    fecha = models.DateTimeField(default=datetime.datetime.now)
+    destino = models.ForeignKey(Obra, blank=True, null=True)
+
+    class Meta:
+        verbose_name = 'Remito'
+        verbose_name_plural = 'Remitos'
+
+    def __unicode__(self):
+        return unicode(self.fecha.strftime('%d/%m/%Y') + ' - ' + str(self.proveedor) + ' - ' + str(self.destino))
+
+
+class RemitoDetalle(models.Model):
+    remito = models.ForeignKey(Remito)
+    confirmacion = models.BooleanField(default=True)
+    descripcion = models.CharField(max_length=300)
+    cantidad = models.CharField(max_length=10)
+    importe = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+
+    class Meta:
+        verbose_name = 'Detalle de remito'
+        verbose_name_plural = 'Detalle de remito'
+
+    def __unicode__(self):
+        return unicode(self.descripcion + ' [' + str(self.cantidad) + ']')
