@@ -1,7 +1,7 @@
+import datetime
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db import models
-from django.utils.datetime_safe import datetime
 from django.utils.html import format_html
 
 from facturacion.models import Registro, Registro_factura
@@ -14,10 +14,10 @@ class Pedido(models.Model):
     registro = models.ForeignKey(Registro, default=1, verbose_name='Empresa')
     fecha = models.DateField(default=datetime.datetime.now)
     proveedor = models.ForeignKey(Proveedor)
-    se_autoriza = models.ForeignKey(User, related_name='toUser', verbose_name='Se autoriza a', blank=True, null=True)
+    se_autoriza = models.ForeignKey(User, related_name='toUser1', verbose_name='Se autoriza a', blank=True, null=True)
     destino = models.ForeignKey(Obra, verbose_name='Obra')
-    firmante = models.ForeignKey(User, related_name='fromUser', help_text='Persona que autoriza', blank=True, null=True)
-    remitente = models.ForeignKey(User, related_name='registerUser', help_text='Persona que registra')
+    firmante = models.ForeignKey(User, related_name='fromUser1', help_text='Persona que autoriza', blank=True, null=True)
+    remitente = models.ForeignKey(User, related_name='registerUser1', help_text='Persona que registra')
 
     class Meta:
         ordering = ['-fecha']
@@ -47,7 +47,8 @@ class PedidoItem(models.Model):
     pedido = models.ForeignKey(Pedido)
     descripcion = models.CharField(max_length=300)
     cantidad = models.CharField(max_length=10)
-
+    precioUnitario = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    importe = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
     class Meta:
         verbose_name = 'Detalle de pedido'
@@ -75,11 +76,12 @@ class Remito(models.Model):
         return unicode(self.fecha.strftime('%d/%m/%Y') + ' - ' + str(self.proveedor) + ' - ' + str(self.destino))
 
 
-class RemitoDetalle(models.Model):
+class RemitoItem(models.Model):
     remito = models.ForeignKey(Remito)
     confirmacion = models.BooleanField(default=True)
     descripcion = models.CharField(max_length=300)
     cantidad = models.CharField(max_length=10)
+    precioUnitario = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     importe = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
     class Meta:

@@ -166,6 +166,7 @@ INSTALLED_APPS = (
     # 'south',
     'rest_framework',
     'pedidos',
+    'compras',
     'proyectos',
 )
 
@@ -213,6 +214,10 @@ SUIT_CONFIG = {
         {'app': 'pedidos', 'models': (
             {'model': 'pedidos.pedidocabecera', 'label': 'Pedido', 'permissions': 'pedidos.add_pedidocabecera'},
             {'model': 'pedidos.remitocabecera', 'label': 'Remito', 'permissions': 'pedidos.add_remitocabecera'},
+        )},
+        {'app': 'compras', 'models': (
+            {'model': 'compras.pedido', 'label': 'Pedido', 'permissions': 'compras.add_pedido'},
+            {'model': 'compras.remito', 'label': 'Remito', 'permissions': 'compras.add_remito'},
         )},
         {'app': 'auth', 'icon':'icon-lock', 'models': ('user', 'group')},
         ),
