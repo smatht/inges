@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import datetime
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
@@ -10,14 +11,17 @@ from proyectos.models import Obra
 
 
 class Pedido(models.Model):
+    usuario = models.ForeignKey(User, null=True)
     # cuit = lambda: Registro.objects.get(cuit='23144591119')
     registro = models.ForeignKey(Registro, default=1, verbose_name='Empresa')
     fecha = models.DateField(default=datetime.datetime.now)
     proveedor = models.ForeignKey(Proveedor)
     se_autoriza = models.ForeignKey(User, related_name='toUser1', verbose_name='Se autoriza a', blank=True, null=True)
     destino = models.ForeignKey(Obra, verbose_name='Obra')
+    generaRemito = models.BooleanField(default=False, verbose_name="Recepción inmediata")
     firmante = models.ForeignKey(User, related_name='fromUser1', help_text='Persona que autoriza', blank=True, null=True)
     remitente = models.ForeignKey(User, related_name='registerUser1', help_text='Persona que registra')
+    anulado = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['-fecha']
@@ -34,7 +38,7 @@ class Pedido(models.Model):
     def account_actions(self):
         return format_html(
             '<a class="btn" href="{}" target="_blank" title="Mostrar pdf"><i class="icon-print"></i></a>'
-            '<a class="btn" id="add_id_remito" href="{}" title="Agregar remito" onclick="return showRelatedObjectPopup(this, 1100, 500);"><i class="icon-check"></i></a>',
+            '<a class="btn" id="add_id_remito" href="{}" title="Recibir" onclick="return showRelatedObjectPopup(this, 1100, 500);"><i class="icon-check"></i></a>',
             reverse('admin:process-print', args=[self.pk]),
             reverse('admin:process-remito', args=[self.pk]),
         )
@@ -59,14 +63,19 @@ class PedidoItem(models.Model):
 
 
 class Remito(models.Model):
+    usuario = models.ForeignKey(User, null=True)
     # cuit = lambda: Registro.objects.get(cuit='23144591119')
     factura = models.ForeignKey(Registro_factura, blank=True, null=True)
-    pedido = models.ForeignKey(Pedido, blank=True, null=True)
+    pedido = models.ForeignKey(Pedido)
     registro = models.ForeignKey(Registro, default=1, verbose_name='Empresa')
     proveedor = models.ForeignKey(Proveedor, blank=True, null=True)
     numeroRemito = models.CharField(max_length=20, blank=True, null=True, verbose_name='Numero remito')
     fecha = models.DateTimeField(default=datetime.datetime.now)
     destino = models.ForeignKey(Obra, blank=True, null=True)
+    observaciones = models.TextField(blank=True)
+    origen = models.SmallIntegerField(default=0)
+    # (origen) Se usa para saber si el remito se creo a partir de un pedido o no
+    afectaStock = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = 'Remito'

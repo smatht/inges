@@ -15,7 +15,7 @@ class UserInline(admin.StackedInline):
   can_delete = False
   verbose_name_plural = 'usuarios'
 
-
+# @admin.register(User)
 class UserAdmin(BaseUserAdmin):
   inlines = (UserInline,)
 
@@ -24,17 +24,17 @@ class PedidoItemInline(admin.TabularInline):
   model = PedidoItem
   extra = 1
 
-
+@admin.register(Pedido)
 class PedidoAdmin(admin.ModelAdmin):
   form = PedidoForm
-  list_display = ('id', 'fecha', 'registro', 'proveedor', 'destino', 'remito', 'account_actions')
+  list_display = ('id', 'fecha', 'registro', 'proveedor', 'destino', 'recepcion', 'account_actions')
   list_filter = ('proveedor__nombre_fantasia', 'destino__descripcion_corta', 'fecha')
   search_fields = ('pedido__descripcion',)
-  exclude = ('remitente', )
+  exclude = ('remitente', 'usuario', 'anulado')
   inlines = [PedidoItemInline]
   actions = [export_OR_as_pdf]
   fieldsets = [
-    (None, {'fields': ['registro', 'fecha', 'proveedor','destino']}),
+    (None, {'fields': ['registro', 'fecha', 'proveedor','destino', 'generaRemito']}),
     ('Orden de retiro', {
       'description': 'Para extender una orden de retiro complete este campo',
       'fields': ['se_autoriza', 'firmante']}),
@@ -44,13 +44,13 @@ class PedidoAdmin(admin.ModelAdmin):
     dets = PedidoItem.objects.filter(pedido=obj)
     return dets
 
-  def remito(self, obj):
+  def recepcion(self, obj):
     rem = Remito.objects.filter(pedido=obj)
     ped_det = PedidoItem.objects.filter(pedido=obj)
     cant_ped_det = 0
     cant_rem_det = 0
 
-    rem_det_is_false = Remito.objects.filter(remito=rem, confirmacion=False)
+    rem_det_is_false = RemitoItem.objects.filter(remito=rem, confirmacion=False)
     for d in ped_det:
       cant_ped_det += float(d.cantidad)
     for r in rem:
@@ -64,13 +64,15 @@ class PedidoAdmin(admin.ModelAdmin):
         return '<img src="/static/admin/img/icon-yes.gif" alt="True">'
     else:
       return '<img src="/static/admin/img/icon-no.gif" alt="False">'
-  remito.allow_tags = True
+  recepcion.allow_tags = True
 
   def save_model(self, request, obj, form, change):
     if getattr(obj, 'remitente', None) is None:
       obj.remitente = request.user
     if getattr(obj, 'firmante', None) is None:
       obj.firmante = request.user
+    if getattr(obj, 'usuario', None) is None:
+      obj.usuario = request.user
     obj.save()
     # save_then_pdf(request, obj)
 
@@ -115,14 +117,19 @@ class RemitoItemInline(admin.TabularInline):
   model = RemitoItem
   extra = 1
 
-
+@admin.register(Remito)
 class RemitoAdmin(admin.ModelAdmin):
   form = RemitoForm
   list_display = ('fecha', 'proveedor', 'pedido_ID')
   inlines = [RemitoItemInline]
   list_filter = ('fecha', 'proveedor__nombre_fantasia', 'pedido__id')
   search_fields = ('remitodetalle__descripcion',)
-  exclude = ('factura',)
+  exclude = ('factura', 'usuario', 'origen', 'afectaStock')
+
+  def save_model(self, request, obj, form, change):
+    if getattr(obj, 'usuario', None) is None:
+      obj.usuario = request.user
+    obj.save()
 
   def pedido_ID(self, obj):
     if (obj.pedido):
@@ -132,7 +139,7 @@ class RemitoAdmin(admin.ModelAdmin):
   pedido_ID.allow_tags = True
 
 
-admin.site.unregister(User)
-admin.site.register(User, UserAdmin)
-admin.site.register(Pedido, PedidoAdmin)
-admin.site.register(Remito, RemitoAdmin)
+# admin.site.unregister(User)
+# admin.site.register(User, UserAdmin)
+# admin.site.register(Pedido, PedidoAdmin)
+# admin.site.register(Remito, RemitoAdmin)
