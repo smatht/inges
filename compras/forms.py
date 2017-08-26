@@ -9,7 +9,7 @@ class PedidoForm(ModelForm):
   class Meta:
     # model = Registro_factura
     widgets = {
-      'fecha': SuitDateWidget,
+      'fechaPedido': SuitDateWidget,
     }
 
 class PedidoItemForm(ModelForm):
@@ -25,5 +25,5 @@ class RemitoForm(ModelForm):
   class Meta:
     # model = Registro_factura
     widgets = {
-      'fecha': SuitSplitDateTimeWidget,
+      'fechaRemito': SuitDateWidget,
     }

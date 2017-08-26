@@ -27,14 +27,14 @@ class PedidoItemInline(admin.TabularInline):
 @admin.register(Pedido)
 class PedidoAdmin(admin.ModelAdmin):
   form = PedidoForm
-  list_display = ('id', 'fecha', 'registro', 'proveedor', 'destino', 'recepcion', 'account_actions')
-  list_filter = ('proveedor__nombre_fantasia', 'destino__descripcion_corta', 'fecha')
+  list_display = ('id', 'fechaPedido', 'registro', 'proveedor', 'destino', 'recepcion', 'account_actions')
+  list_filter = ('proveedor__nombre_fantasia', 'destino__descripcion_corta', 'fechaPedido')
   search_fields = ('pedido__descripcion',)
-  exclude = ('remitente', 'usuario', 'anulado')
+  exclude = ('remitente', 'usuario', 'anulado', 'fechaCarga')
   inlines = [PedidoItemInline]
   actions = [export_OR_as_pdf]
   fieldsets = [
-    (None, {'fields': ['registro', 'fecha', 'proveedor','destino', 'generaRemito']}),
+    (None, {'fields': ['registro', 'fechaPedido', 'proveedor','destino', 'generaRemito']}),
     ('Orden de retiro', {
       'description': 'Para extender una orden de retiro complete este campo',
       'fields': ['se_autoriza', 'firmante']}),
@@ -120,11 +120,11 @@ class RemitoItemInline(admin.TabularInline):
 @admin.register(Remito)
 class RemitoAdmin(admin.ModelAdmin):
   form = RemitoForm
-  list_display = ('fecha', 'proveedor', 'pedido_ID')
+  list_display = ('fechaRemito', 'proveedor', 'pedido_ID')
   inlines = [RemitoItemInline]
-  list_filter = ('fecha', 'proveedor__nombre_fantasia', 'pedido__id')
+  list_filter = ('fechaRemito', 'proveedor__nombre_fantasia', 'pedido__id')
   search_fields = ('remitodetalle__descripcion',)
-  exclude = ('factura', 'usuario', 'origen', 'afectaStock')
+  exclude = ('factura', 'usuario', 'origen', 'afectaStock', 'fechaCarga')
 
   def save_model(self, request, obj, form, change):
     if getattr(obj, 'usuario', None) is None:

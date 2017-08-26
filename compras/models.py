@@ -14,7 +14,8 @@ class Pedido(models.Model):
     usuario = models.ForeignKey(User, null=True)
     # cuit = lambda: Registro.objects.get(cuit='23144591119')
     registro = models.ForeignKey(Registro, default=1, verbose_name='Empresa')
-    fecha = models.DateField(default=datetime.datetime.now)
+    fechaPedido = models.DateField(default=datetime.datetime.now)
+    fechaCarga = models.DateTimeField(default=datetime.datetime.now)
     proveedor = models.ForeignKey(Proveedor)
     se_autoriza = models.ForeignKey(User, related_name='toUser1', verbose_name='Se autoriza a', blank=True, null=True)
     destino = models.ForeignKey(Obra, verbose_name='Obra')
@@ -24,12 +25,12 @@ class Pedido(models.Model):
     anulado = models.BooleanField(default=False)
 
     class Meta:
-        ordering = ['-fecha']
+        ordering = ['-fechaPedido']
         verbose_name = 'Pedido'
         verbose_name_plural = 'Pedidos'
 
     def __unicode__(self):
-        return unicode('[' + str(self.pk) + '] ' + self.fecha.strftime('%d/%m/%Y') + ' - ' + str(self.proveedor) +
+        return unicode('[' + str(self.pk) + '] ' + self.fechaPedido.strftime('%d/%m/%Y') + ' - ' + str(self.proveedor) +
                        ' (' + str(self.destino) + ')')
         # return unicode(self.fecha.strftime('%d/%m/%Y'))
 
@@ -66,11 +67,12 @@ class Remito(models.Model):
     usuario = models.ForeignKey(User, null=True)
     # cuit = lambda: Registro.objects.get(cuit='23144591119')
     factura = models.ForeignKey(Registro_factura, blank=True, null=True)
-    pedido = models.ForeignKey(Pedido)
+    pedido = models.ForeignKey(Pedido, blank=True, null=True)
     registro = models.ForeignKey(Registro, default=1, verbose_name='Empresa')
     proveedor = models.ForeignKey(Proveedor, blank=True, null=True)
     numeroRemito = models.CharField(max_length=20, blank=True, null=True, verbose_name='Numero remito')
-    fecha = models.DateTimeField(default=datetime.datetime.now)
+    fechaRemito = models.DateField(default=datetime.datetime.now)
+    fechaCarga = models.DateTimeField(default=datetime.datetime.now)
     destino = models.ForeignKey(Obra, blank=True, null=True)
     observaciones = models.TextField(blank=True)
     origen = models.SmallIntegerField(default=0)
@@ -82,7 +84,7 @@ class Remito(models.Model):
         verbose_name_plural = 'Remitos'
 
     def __unicode__(self):
-        return unicode(self.fecha.strftime('%d/%m/%Y') + ' - ' + str(self.proveedor) + ' - ' + str(self.destino))
+        return unicode(self.fechaRemito.strftime('%d/%m/%Y') + ' - ' + str(self.proveedor) + ' - ' + str(self.destino))
 
 
 class RemitoItem(models.Model):
