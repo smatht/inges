@@ -226,6 +226,11 @@ SUIT_CONFIG = {
             {'model': 'compras.pedido', 'label': 'Pedido', 'permissions': 'compras.add_pedido'},
             {'model': 'compras.remito', 'label': 'Remito', 'permissions': 'compras.add_remito'},
         )},
+        {'app': 'stock', 'models': (
+            {'model': 'stock.producto', 'label': 'Productos', 'permissions': 'stock.add_producto'},
+            {'model': 'stock.familia', 'label': 'Familias', 'permissions': 'stock.add_familia'},
+            {'model': 'stock.unidades', 'label': 'Unidades', 'permissions': 'stock.add_unidades'},
+        )},
         {'app': 'auth', 'icon':'icon-lock', 'models': ('user', 'group')},
         ),
 
