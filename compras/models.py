@@ -9,6 +9,8 @@ from facturacion.models import Registro, Registro_factura
 from facturacion.models import Proveedor
 from proyectos.models import Obra
 
+from stock.models import Producto, Unidades
+
 
 class Pedido(models.Model):
     usuario = models.ForeignKey(User, null=True)
@@ -50,14 +52,16 @@ class Pedido(models.Model):
 
 class PedidoItem(models.Model):
     pedido = models.ForeignKey(Pedido)
-    descripcion = models.CharField(max_length=300)
+    # descripcion = models.CharField(max_length=300)
+    producto = models.ForeignKey(Producto)
     cantidad = models.CharField(max_length=10)
-    precioUnitario = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    importe = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    unidades = models.ForeignKey(Unidades)
+    # precioUnitario = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    # importe = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
     class Meta:
-        verbose_name = 'Detalle de pedido'
-        verbose_name_plural = 'Detalle de pedido'
+        verbose_name = 'Item'
+        verbose_name_plural = 'Items'
 
     def __unicode__(self):
         return unicode(self.descripcion + ' [' + str(self.cantidad) + ']')
@@ -96,8 +100,8 @@ class RemitoItem(models.Model):
     importe = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
     class Meta:
-        verbose_name = 'Detalle de remito'
-        verbose_name_plural = 'Detalle de remito'
+        verbose_name = 'Item'
+        verbose_name_plural = 'Items'
 
     def __unicode__(self):
         return unicode(self.descripcion + ' [' + str(self.cantidad) + ']')

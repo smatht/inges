@@ -47,7 +47,7 @@ class Familia(models.Model):
 
 
 class Producto(models.Model):
-    descripcion = models.CharField(max_length=50)
+    descripcion = models.CharField(max_length=150)
     descripcionCorta = models.CharField(max_length=10, blank=True, null=True)
     familia = models.ForeignKey(Familia)
     proveedor = models.ManyToManyField(Proveedor)
