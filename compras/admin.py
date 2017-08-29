@@ -29,7 +29,7 @@ class PedidoAdmin(admin.ModelAdmin):
   form = PedidoForm
   list_display = ('id', 'fechaPedido', 'registro', 'proveedor', 'destino', 'recepcion', 'account_actions')
   list_filter = ('proveedor__nombre_fantasia', 'destino__descripcion_corta', 'fechaPedido')
-  search_fields = ('pedido__descripcion',)
+  search_fields = ('pedido__producto__descripcion',)
   exclude = ('remitente', 'usuario', 'anulado', 'fechaCarga')
   inlines = [PedidoItemInline]
   actions = [export_OR_as_pdf]
@@ -89,10 +89,10 @@ class PedidoAdmin(admin.ModelAdmin):
     pedido = Pedido.objects.get(pk=pedido_id)
     rem = Remito(pedido=pedido, registro=pedido.registro, proveedor=pedido.proveedor, destino=pedido.destino)
     rem.save()
-    for qs in Pedido.objects.filter(orden_retiro=pedido_id).order_by('pk'):
-      det = Remito(remito=rem, descripcion=qs.descripcion, cantidad=qs.cantidad, medida=qs.medida)
+    for qs in PedidoItem.objects.filter(pedido=pedido_id).order_by('pk'):
+      det = RemitoItem(remito=rem, producto=qs.producto, cantidad=qs.cantidad, unidades=qs.unidades)
       det.save()
-    return HttpResponseRedirect("../../../remitocabecera/%s?_popup=1" % rem.id)
+    return HttpResponseRedirect("../../../remito/%s?_popup=1" % rem.id)
 
   def get_urls(self):
     urls = super(PedidoAdmin, self).get_urls()
@@ -123,7 +123,7 @@ class RemitoAdmin(admin.ModelAdmin):
   list_display = ('fechaRemito', 'proveedor', 'pedido_ID')
   inlines = [RemitoItemInline]
   list_filter = ('fechaRemito', 'proveedor__nombre_fantasia', 'pedido__id')
-  search_fields = ('remitodetalle__descripcion',)
+  search_fields = ('remitoitem__producto__descripcion',)
   exclude = ('factura', 'usuario', 'origen', 'afectaStock', 'fechaCarga')
 
   def save_model(self, request, obj, form, change):

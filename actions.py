@@ -18,7 +18,7 @@ from reportlab.platypus import TableStyle
 from reportlab.platypus.para import Paragraph
 from reportlab.lib.styles import getSampleStyleSheet
 
-from pedidos.models import PedidoDetalle
+from compras.models import PedidoItem
 from sistema_inges import settings
 
 stylesheet=getSampleStyleSheet()
@@ -75,7 +75,7 @@ def tabla(pdf, qs):
     # Creamos una tupla de encabezados para neustra tabla
     encabezados = ('fecha', 'Proveedor', 'Autorizado', 'Destino', 'Remitente')
     # Creamos una lista de tuplas que van a contener a las personas
-    detalles = [(qs.fecha, qs.proveedor.cuit, qs.se_autoriza, qs.destino, qs.remitente)]
+    detalles = [(qs.fechaPedido, qs.proveedor.cuit, qs.se_autoriza, qs.destino, qs.remitente)]
     # Establecemos el tamaño de cada una de las columnas de la tabla
     detalle_orden = Table([encabezados] + detalles, colWidths=[2 * cm, 5 * cm, 5 * cm, 5 * cm])
     # Aplicamos estilos a las celdas de la tabla
@@ -188,20 +188,20 @@ def frameDetalle(pdf, idOrden):
   f = Frame(10,55, 570, 437)
   f.drawBoundary(pdf)
 
-  encabezado = ('CANT.', 'DESCRIPCION')
+  encabezado = ('CANT.', 'MATERIAL')
   # Detalle de tabla con 20 renglones
   # detalle = [(qs.cantidad, qs.descripcion) for qs in PedidoDetalle.objects.filter(orden_retiro=idOrden).order_by('pk')]
   detalle = []
-  for qs in PedidoDetalle.objects.filter(orden_retiro=idOrden).order_by('pk'):
-      if (len(qs.descripcion) <= 102):
-          detalle += [(qs.cantidad +' '+ qs.medida, qs.descripcion)]
+  for qs in PedidoItem.objects.filter(pedido=idOrden).order_by('pk'):
+      if (len(qs.producto.descripcion) <= 102):
+          detalle += [(qs.cantidad +' '+ qs.unidades.descripcionCorta, qs.producto.descripcion)]
       else:
-          detalle += [(qs.cantidad +' '+ qs.medida, qs.descripcion[:102])]
-          if (len(qs.descripcion[102:240]) <= 102):
-              detalle += [('', qs.descripcion[102:240])]
+          detalle += [(qs.cantidad +' '+ qs.unidades.descripcionCorta, qs.producto.descripcion[:102])]
+          if (len(qs.producto.descripcion[102:240]) <= 102):
+              detalle += [('', qs.producto.descripcion[102:240])]
           else:
-              detalle += [('', qs.descripcion[102:240])]
-              detalle += [('', qs.descripcion[240:300])]
+              detalle += [('', qs.producto.descripcion[102:240])]
+              detalle += [('', qs.producto.descripcion[240:300])]
   while len(detalle) < 23:
     detalle = detalle + [('', '')]
   # d = [('2', 'Bombillas'), ('3', 'churros'), ('', ''), ('', ''), ('', ''),
@@ -310,7 +310,7 @@ def export_OR_as_pdf(modeladmin, request, obj):
 
   # Draw things on the PDF. Here's where the PDF generation happens.
   # See the ReportLab documentation for the full list of functionality.
-  f = obj.fecha
+  f = obj.fechaPedido
   tablaFecha(p, f)
   frameCabecera(p, obj)
   frameDetalle(p, obj.id)

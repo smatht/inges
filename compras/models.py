@@ -5,8 +5,7 @@ from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.html import format_html
 
-from facturacion.models import Registro, Registro_factura
-from facturacion.models import Proveedor
+from facturacion.models import Registro, Registro_factura, Proveedor
 from proyectos.models import Obra
 
 from stock.models import Producto, Unidades
@@ -16,7 +15,7 @@ class Pedido(models.Model):
     usuario = models.ForeignKey(User, null=True)
     # cuit = lambda: Registro.objects.get(cuit='23144591119')
     registro = models.ForeignKey(Registro, default=1, verbose_name='Empresa')
-    fechaPedido = models.DateField(default=datetime.datetime.now)
+    fechaPedido = models.DateField(default=datetime.datetime.now, verbose_name='Fecha')
     fechaCarga = models.DateTimeField(default=datetime.datetime.now)
     proveedor = models.ForeignKey(Proveedor)
     se_autoriza = models.ForeignKey(User, related_name='toUser1', verbose_name='Se autoriza a', blank=True, null=True)
@@ -64,7 +63,7 @@ class PedidoItem(models.Model):
         verbose_name_plural = 'Items'
 
     def __unicode__(self):
-        return unicode(self.descripcion + ' [' + str(self.cantidad) + ']')
+        return unicode(self.producto.descripcion + ' [' + str(self.cantidad) + ']')
 
 
 class Remito(models.Model):
@@ -94,8 +93,9 @@ class Remito(models.Model):
 class RemitoItem(models.Model):
     remito = models.ForeignKey(Remito)
     confirmacion = models.BooleanField(default=True)
-    descripcion = models.CharField(max_length=300)
+    producto = models.ForeignKey(Producto)
     cantidad = models.CharField(max_length=10)
+    unidades = models.ForeignKey(Unidades)
     precioUnitario = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     importe = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
@@ -104,4 +104,4 @@ class RemitoItem(models.Model):
         verbose_name_plural = 'Items'
 
     def __unicode__(self):
-        return unicode(self.descripcion + ' [' + str(self.cantidad) + ']')
+        return unicode(self.producto.descripcion + ' [' + str(self.cantidad) + ']')
