@@ -59,11 +59,11 @@ class PedidoAdmin(admin.ModelAdmin):
 
     if (rem):
       if ((cant_ped_det != cant_rem_det) | (len(rem_det_is_false) >= 1)):
-        return '<img src="/static/admin/img/icon_alert.gif" alt="True">'
+        return '<img src="/static/admin/img/icon-casi-yes.gif" alt="True">'
       else:
         return '<img src="/static/admin/img/icon-yes.gif" alt="True">'
     else:
-      return '<img src="/static/admin/img/icon-no.gif" alt="False">'
+      return '<img src="/static/admin/img/icon-casi-no.gif" alt="False">'
   recepcion.allow_tags = True
 
   def save_model(self, request, obj, form, change):
@@ -133,9 +133,9 @@ class RemitoAdmin(admin.ModelAdmin):
 
   def pedido_ID(self, obj):
     if (obj.pedido):
-      return '<a href="../%s/%d">%d</a>' % ('pedidocabecera', obj.pedido.id, obj.pedido.id)
+      return '<a href="../%s/%d">%d</a>' % ('pedido', obj.pedido.id, obj.pedido.id)
     else:
-      return '<img src="/static/admin/img/icon-no.gif" alt="False">'
+      return '<img src="/static/admin/img/icon-casi-no.gif" alt="False">'
   pedido_ID.allow_tags = True
 
 
