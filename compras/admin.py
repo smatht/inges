@@ -1,13 +1,14 @@
 from django.conf.urls import url
 from django.contrib import admin
 from compras.models import PedidoItem, Pedido, Remito, RemitoItem
+from functools32 import update_wrapper
 from pedidos.models import ExtendUser
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from actions import export_OR_as_pdf, save_then_pdf
 from compras.forms import PedidoItemForm, PedidoForm, RemitoForm
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
-
+from django_extensions.admin import ForeignKeyAutocompleteAdmin, ForeignKeyAutocompleteTabularInline
 
 
 class UserInline(admin.StackedInline):
@@ -19,13 +20,18 @@ class UserInline(admin.StackedInline):
 class UserAdmin(BaseUserAdmin):
   inlines = (UserInline,)
 
-class PedidoItemInline(admin.TabularInline):
+class PedidoItemInline(ForeignKeyAutocompleteTabularInline):
   form = PedidoItemForm
   model = PedidoItem
+  # related_search_fields = {
+  #   'producto': ('descripcion',),
+  # }
+  # # fields = ('producto',)
   extra = 1
 
+
 @admin.register(Pedido)
-class PedidoAdmin(admin.ModelAdmin):
+class PedidoAdmin(ForeignKeyAutocompleteAdmin):
   form = PedidoForm
   list_display = ('id', 'fechaPedido', 'registro', 'proveedor', 'destino', 'recepcion', 'account_actions')
   list_filter = ('proveedor__nombre_fantasia', 'destino__descripcion_corta', 'fechaPedido')
@@ -111,14 +117,18 @@ class PedidoAdmin(admin.ModelAdmin):
     return custom_urls + urls
 
 
-class RemitoItemInline(admin.TabularInline):
+class RemitoItemInline(ForeignKeyAutocompleteTabularInline):
   form = PedidoItemForm
   # template = 'admin/edit_inline/stacked.html'
   model = RemitoItem
   extra = 1
+  related_search_fields = {
+    'producto': ('descripcion',),
+  }
+  # fields = ('producto',)
 
 @admin.register(Remito)
-class RemitoAdmin(admin.ModelAdmin):
+class RemitoAdmin(ForeignKeyAutocompleteAdmin):
   form = RemitoForm
   list_display = ('fechaRemito', 'proveedor', 'pedido_ID')
   inlines = [RemitoItemInline]
@@ -137,6 +147,18 @@ class RemitoAdmin(admin.ModelAdmin):
     else:
       return '<img src="/static/admin/img/icon-casi-no.gif" alt="False">'
   pedido_ID.allow_tags = True
+
+
+  def wrap(self, view):
+    def wrapper(*args, **kwargs):
+      return self.admin_site.admin_view(view)(*args, **kwargs)
+
+    wrapper.model_admin = self
+    return update_wrapper(wrapper, view)
+
+  def get_urls(self):
+    urlpatterns = super(RemitoAdmin, self).get_urls()
+    return urlpatterns
 
 
 # admin.site.unregister(User)
