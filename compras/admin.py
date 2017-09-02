@@ -6,9 +6,12 @@ from pedidos.models import ExtendUser
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from actions import export_OR_as_pdf, save_then_pdf
 from compras.forms import PedidoItemForm, PedidoForm, RemitoForm
+from stock.models import Producto
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django_extensions.admin import ForeignKeyAutocompleteAdmin, ForeignKeyAutocompleteTabularInline
+
+
 
 
 class UserInline(admin.StackedInline):
@@ -23,11 +26,11 @@ class UserAdmin(BaseUserAdmin):
 class PedidoItemInline(ForeignKeyAutocompleteTabularInline):
   form = PedidoItemForm
   model = PedidoItem
-  # related_search_fields = {
-  #   'producto': ('descripcion',),
-  # }
+  related_search_fields = {
+    'producto': ('descripcion',),
+  }
   # # fields = ('producto',)
-  extra = 1
+  extra = 10
 
 
 @admin.register(Pedido)
@@ -45,6 +48,12 @@ class PedidoAdmin(ForeignKeyAutocompleteAdmin):
       'description': 'Para extender una orden de retiro complete este campo',
       'fields': ['se_autoriza', 'firmante']}),
     ]
+
+  def wrap(self, view):
+    def wrapper(*args, **kwargs):
+      return self.admin_site.admin_view(view)(*args, **kwargs)
+    wrapper.model_admin = self
+    return update_wrapper(wrapper, view)
 
   def detalles(self, obj):
     dets = PedidoItem.objects.filter(pedido=obj)
@@ -121,7 +130,7 @@ class RemitoItemInline(ForeignKeyAutocompleteTabularInline):
   form = PedidoItemForm
   # template = 'admin/edit_inline/stacked.html'
   model = RemitoItem
-  extra = 1
+  extra = 10
   related_search_fields = {
     'producto': ('descripcion',),
   }
@@ -129,6 +138,7 @@ class RemitoItemInline(ForeignKeyAutocompleteTabularInline):
 
 @admin.register(Remito)
 class RemitoAdmin(ForeignKeyAutocompleteAdmin):
+  ForeignKeyAutocompleteAdmin.model = Producto
   form = RemitoForm
   list_display = ('fechaRemito', 'proveedor', 'pedido_ID')
   inlines = [RemitoItemInline]
@@ -152,7 +162,6 @@ class RemitoAdmin(ForeignKeyAutocompleteAdmin):
   def wrap(self, view):
     def wrapper(*args, **kwargs):
       return self.admin_site.admin_view(view)(*args, **kwargs)
-
     wrapper.model_admin = self
     return update_wrapper(wrapper, view)
 
