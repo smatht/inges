@@ -2,7 +2,7 @@ from django.conf.urls import url
 from django.contrib import admin
 from compras.models import PedidoItem, Pedido, Remito, RemitoItem
 from functools32 import update_wrapper
-from pedidos.models import ExtendUser
+from mantenimiento.models import ExtendUser
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from actions import export_OR_as_pdf, save_then_pdf
 from compras.forms import PedidoItemForm, PedidoForm, RemitoForm

@@ -96,8 +96,8 @@ class RemitoItem(models.Model):
     producto = models.ForeignKey(Producto)
     cantidad = models.CharField(max_length=10)
     unidades = models.ForeignKey(Unidades, default=1)
-    precioUnitario = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    importe = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    # precioUnitario = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    # importe = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
     class Meta:
         verbose_name = 'Item'

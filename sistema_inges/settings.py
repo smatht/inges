@@ -155,6 +155,7 @@ TEMPLATE_DIRS = (
     # Don't forget to use absolute paths, not relative paths.
 )
 
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -162,22 +163,22 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'suit',
     'django_extensions',
-    'tellme',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
+    'suit',
     'facturacion',
     # 'south',
     'rest_framework',
-    'pedidos',
-    'compras',
+    'tellme',
     'proyectos',
+    # 'pedidos',
+    'compras',
     'stock',
+    'mantenimiento',
 )
-
 # Any global settings for a REST framework API are kept in a single configuration dictionary named REST_FRAMEWORK.
 # Start off by adding the following to your settings.py module:
 REST_FRAMEWORK = {
