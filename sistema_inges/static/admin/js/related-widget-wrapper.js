@@ -1,5 +1,6 @@
 django.jQuery(function($){
     function updateLinks() {
+//        alert("putoi");
         var $this = $(this);
         var siblings = $this.nextAll('.change-related, .delete-related');
         if (!siblings.length) return;
@@ -13,6 +14,7 @@ django.jQuery(function($){
     }
     var container = $(document);
     container.on('change', '.related-widget-wrapper select', updateLinks);
+    container.on('focus', '.vForeignKeyRawIdAdminField', updateLinks);
     container.find('.related-widget-wrapper select').each(updateLinks);
     container.on('click', '.related-widget-wrapper-link', function(event){
         if (this.href) {

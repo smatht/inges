@@ -29,7 +29,7 @@ class PedidoItemInline(ForeignKeyAutocompleteTabularInline):
   related_search_fields = {
     'producto': ('descripcion',),
   }
-  # # fields = ('producto',)
+  # fields = ('producto', 'cantidad', 'unidades')
   extra = 10
 
 
