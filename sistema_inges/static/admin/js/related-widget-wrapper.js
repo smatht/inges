@@ -1,6 +1,5 @@
 django.jQuery(function($){
     function updateLinks() {
-//        alert("putoi");
         var $this = $(this);
         var siblings = $this.nextAll('.change-related, .delete-related');
         if (!siblings.length) return;
