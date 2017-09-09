@@ -20,10 +20,10 @@ class Pedido(models.Model):
     proveedor = models.ForeignKey(Proveedor)
     se_autoriza = models.ForeignKey(User, related_name='toUser1', verbose_name='Se autoriza a', blank=True, null=True)
     destino = models.ForeignKey(Obra, verbose_name='Obra')
-    generaRemito = models.BooleanField(default=False, verbose_name="Recepción inmediata")
+    bGeneraRemito = models.BooleanField(default=False, verbose_name="Recepción inmediata")
     firmante = models.ForeignKey(User, related_name='fromUser1', help_text='Persona que autoriza', blank=True, null=True)
     remitente = models.ForeignKey(User, related_name='registerUser1', help_text='Persona que registra')
-    anulado = models.BooleanField(default=False)
+    bAnulado = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['-fechaPedido']
@@ -51,9 +51,9 @@ class Pedido(models.Model):
 
 class PedidoItem(models.Model):
     pedido = models.ForeignKey(Pedido)
-    # descripcion = models.CharField(max_length=300)
     producto = models.ForeignKey(Producto)
-    cantidad = models.CharField(max_length=10)
+    sAclaracion = models.CharField(max_length=50, null=True, blank=True, verbose_name='aclaracion')
+    sCantidad = models.CharField(max_length=10, verbose_name='cantidad', default='1')
     unidades = models.ForeignKey(Unidades, default=1)
     # precioUnitario = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     # importe = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
@@ -63,7 +63,20 @@ class PedidoItem(models.Model):
         verbose_name_plural = 'Items'
 
     def __unicode__(self):
-        return unicode(self.producto.descripcion + ' [' + str(self.cantidad) + ']')
+        return unicode(self.producto.descripcion + ' [' + str(self.sCantidad) + ']')
+
+
+class PedidoItemConcepto(models.Model):
+    pedido = models.ForeignKey(Pedido)
+    sDescripcion = models.CharField(max_length=300, verbose_name='descripcion')
+    sCantidad = models.CharField(max_length=10, verbose_name='cantidad', default='1')
+    unidades = models.ForeignKey(Unidades, default=1)
+    # precioUnitario = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    # importe = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+
+    class Meta:
+        verbose_name = 'Concepto'
+        verbose_name_plural = 'Conceptos'
 
 
 class Remito(models.Model):
@@ -73,14 +86,14 @@ class Remito(models.Model):
     pedido = models.ForeignKey(Pedido, blank=True, null=True)
     registro = models.ForeignKey(Registro, default=1, verbose_name='Empresa')
     proveedor = models.ForeignKey(Proveedor, blank=True, null=True)
-    numeroRemito = models.CharField(max_length=20, blank=True, null=True, verbose_name='Numero remito')
+    sNumeroRemito = models.CharField(max_length=20, blank=True, null=True, verbose_name='Numero remito')
     fechaRemito = models.DateField(default=datetime.datetime.now)
     fechaCarga = models.DateTimeField(default=datetime.datetime.now)
     destino = models.ForeignKey(Obra, blank=True, null=True)
-    observaciones = models.TextField(blank=True)
-    origen = models.SmallIntegerField(default=0)
+    sObservaciones = models.TextField(blank=True)
+    iOrigen = models.SmallIntegerField(default=0)
     # (origen) Se usa para saber si el remito se creo a partir de un pedido o no
-    afectaStock = models.BooleanField(default=True)
+    # afectaStock = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = 'Remito'
@@ -92,9 +105,9 @@ class Remito(models.Model):
 
 class RemitoItem(models.Model):
     remito = models.ForeignKey(Remito)
-    confirmacion = models.BooleanField(default=True)
+    bConfirmacion = models.BooleanField(default=True)
     producto = models.ForeignKey(Producto)
-    cantidad = models.CharField(max_length=10)
+    sCantidad = models.CharField(max_length=10)
     unidades = models.ForeignKey(Unidades, default=1)
     # precioUnitario = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     # importe = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
@@ -104,4 +117,4 @@ class RemitoItem(models.Model):
         verbose_name_plural = 'Items'
 
     def __unicode__(self):
-        return unicode(self.producto.descripcion + ' [' + str(self.cantidad) + ']')
+        return unicode(self.producto.descripcion + ' [' + str(self.sCantidad) + ']')

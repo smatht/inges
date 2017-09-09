@@ -190,24 +190,22 @@ def frameDetalle(pdf, idOrden):
 
   encabezado = ('CANT.', 'MATERIAL')
   # Detalle de tabla con 20 renglones
-  # detalle = [(qs.cantidad, qs.descripcion) for qs in PedidoDetalle.objects.filter(orden_retiro=idOrden).order_by('pk')]
+  # detalle = [(qs.sCantidad, qs.descripcion) for qs in PedidoDetalle.objects.filter(orden_retiro=idOrden).order_by('pk')]
   detalle = []
+  descripcion = ''
   for qs in PedidoItem.objects.filter(pedido=idOrden).order_by('pk'):
-      if (len(qs.producto.descripcion) <= 102):
-          detalle += [(qs.cantidad +' '+ qs.unidades.descripcionCorta, qs.producto.descripcion)]
+      descripcion = qs.producto.descripcion + ' ' + qs.sAclaracion
+      if (len(descripcion) <= 102):
+          detalle += [(qs.sCantidad +' '+ qs.unidades.descripcionCorta, descripcion)]
       else:
-          detalle += [(qs.cantidad +' '+ qs.unidades.descripcionCorta, qs.producto.descripcion[:102])]
-          if (len(qs.producto.descripcion[102:240]) <= 102):
-              detalle += [('', qs.producto.descripcion[102:240])]
+          detalle += [(qs.sCantidad +' '+ qs.unidades.descripcionCorta, descripcion[:102])]
+          if (len(descripcion[102:240]) <= 102):
+              detalle += [('', descripcion[102:240])]
           else:
-              detalle += [('', qs.producto.descripcion[102:240])]
-              detalle += [('', qs.producto.descripcion[240:300])]
+              detalle += [('', descripcion[102:240])]
+              detalle += [('', descripcion[240:300])]
   while len(detalle) < 23:
     detalle = detalle + [('', '')]
-  # d = [('2', 'Bombillas'), ('3', 'churros'), ('', ''), ('', ''), ('', ''),
-  #      ('', ''), ('', ''), ('', ''), ('', ''), ('', ''), ('', ''), ('', ''),
-  #      ('', ''), ('', ''), ('', ''), ('', ''), ('', ''), ('', ''), ('', ''),
-  #      ('', '')]
 
   detalle_orden = Table([encabezado] + detalle, colWidths=[2 * cm, 17.95 * cm])
 

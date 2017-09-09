@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from django.contrib import admin
-from compras.models import PedidoItem, Pedido, Remito, RemitoItem
+from compras.models import PedidoItem, Pedido, Remito, RemitoItem, PedidoItemConcepto
 from functools32 import update_wrapper
 from mantenimiento.models import ExtendUser
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
@@ -33,6 +33,12 @@ class PedidoItemInline(ForeignKeyAutocompleteTabularInline):
   extra = 10
 
 
+class PedidoItemConceptoInline(ForeignKeyAutocompleteTabularInline):
+  form = PedidoItemForm
+  model = PedidoItemConcepto
+  extra = 0
+
+
 @admin.register(Pedido)
 class PedidoAdmin(ForeignKeyAutocompleteAdmin):
   form = PedidoForm
@@ -40,10 +46,10 @@ class PedidoAdmin(ForeignKeyAutocompleteAdmin):
   list_filter = ('proveedor__nombre_fantasia', 'destino__descripcion_corta', 'fechaPedido')
   search_fields = ('pedido__producto__descripcion',)
   exclude = ('remitente', 'usuario', 'anulado', 'fechaCarga')
-  inlines = [PedidoItemInline]
+  inlines = [PedidoItemInline, PedidoItemConceptoInline]
   actions = [export_OR_as_pdf]
   fieldsets = [
-    (None, {'fields': ['registro', 'fechaPedido', 'proveedor','destino', 'generaRemito']}),
+    (None, {'fields': ['registro', 'fechaPedido', 'proveedor','destino', 'bGeneraRemito']}),
     ('Orden de retiro', {
       'description': 'Para extender una orden de retiro complete este campo',
       'fields': ['se_autoriza', 'firmante']}),
@@ -65,12 +71,12 @@ class PedidoAdmin(ForeignKeyAutocompleteAdmin):
     cant_ped_det = 0
     cant_rem_det = 0
 
-    rem_det_is_false = RemitoItem.objects.filter(remito=rem, confirmacion=False)
+    rem_det_is_false = RemitoItem.objects.filter(remito=rem, bConfirmacion=False)
     for d in ped_det:
-      cant_ped_det += float(d.cantidad)
+      cant_ped_det += float(d.sCantidad)
     for r in rem:
       for d in RemitoItem.objects.filter(remito=r):
-        cant_rem_det += float(d.cantidad)
+        cant_rem_det += float(d.sCantidad)
 
     if (rem):
       if ((cant_ped_det != cant_rem_det) | (len(rem_det_is_false) >= 1)):
@@ -105,7 +111,7 @@ class PedidoAdmin(ForeignKeyAutocompleteAdmin):
     rem = Remito(pedido=pedido, registro=pedido.registro, proveedor=pedido.proveedor, destino=pedido.destino)
     rem.save()
     for qs in PedidoItem.objects.filter(pedido=pedido_id).order_by('pk'):
-      det = RemitoItem(remito=rem, producto=qs.producto, cantidad=qs.cantidad, unidades=qs.unidades)
+      det = RemitoItem(remito=rem, producto=qs.producto, sCantidad=qs.sCantidad, unidades=qs.unidades)
       det.save()
     return HttpResponseRedirect("../../../remito/%s?_popup=1" % rem.id)
 

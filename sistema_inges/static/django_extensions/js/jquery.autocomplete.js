@@ -189,7 +189,8 @@
             line = lines[i].split(cellSeparator);
             data = [];
             for (j = 0; j < line.length; j++) {
-                data.push(decodeURIComponent(line[j]));
+                data.push(decodeURIComponent(encodeURIComponent(line[j])));
+                //console.log(decodeURIComponent(line[j]));
             }
             value = data.shift();
             results.push({ value: value, data: data });
