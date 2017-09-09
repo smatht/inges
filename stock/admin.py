@@ -4,9 +4,12 @@ from django.contrib import admin
 from django_extensions.admin import ForeignKeyAutocompleteAdmin
 from stock.models import Producto, Familia, Linea, Unidades
 
+from stock.forms import ProductoForm
+
 
 @admin.register(Producto)
 class ProductoAdmin(ForeignKeyAutocompleteAdmin):
+    form = ProductoForm
     list_display = ('id', 'descripcion', 'activo', 'familia')
     search_fields = ('descripcion',)
 

@@ -37,7 +37,11 @@ class PedidoItemConceptoInline(ForeignKeyAutocompleteTabularInline):
   form = PedidoItemForm
   model = PedidoItemConcepto
   extra = 0
-
+  fieldsets = [
+    (None, {
+      'fields': ['sDescripcion', 'sCantidad', 'unidades'],
+      'description': "Use linea de concepto cuando quiera agregar un producto no recurrente o alguna compra especial"}),
+  ]
 
 
 @admin.register(Pedido)

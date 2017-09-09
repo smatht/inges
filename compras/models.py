@@ -52,7 +52,7 @@ class Pedido(models.Model):
 class PedidoItem(models.Model):
     pedido = models.ForeignKey(Pedido)
     producto = models.ForeignKey(Producto)
-    sAclaracion = models.CharField(max_length=50, null=True, blank=True, verbose_name='aclaracion')
+    sAclaracion = models.CharField(max_length=150, null=True, blank=True, verbose_name='aclaracion')
     sCantidad = models.CharField(max_length=10, verbose_name='cantidad', default='1')
     unidades = models.ForeignKey(Unidades, default=1)
     # precioUnitario = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
