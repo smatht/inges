@@ -8,7 +8,7 @@ from stock.models import Producto, Familia, Linea, Unidades
 @admin.register(Producto)
 class ProductoAdmin(ForeignKeyAutocompleteAdmin):
     list_display = ('id', 'descripcion', 'activo', 'familia')
-    # list_filter = ('descripcion',)
+    search_fields = ('descripcion',)
 
 
 

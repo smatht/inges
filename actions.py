@@ -3,7 +3,6 @@
 
 import csv
 
-import cStringIO
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.http import HttpResponse
 from django.template import Context, Template
@@ -18,8 +17,7 @@ from reportlab.platypus import TableStyle
 from reportlab.platypus.para import Paragraph
 from reportlab.lib.styles import getSampleStyleSheet
 
-from compras.models import PedidoItem
-from sistema_inges import settings
+from compras.models import PedidoItem, PedidoItemConcepto
 
 stylesheet=getSampleStyleSheet()
 
@@ -190,9 +188,8 @@ def frameDetalle(pdf, idOrden):
 
   encabezado = ('CANT.', 'MATERIAL')
   # Detalle de tabla con 20 renglones
-  # detalle = [(qs.sCantidad, qs.descripcion) for qs in PedidoDetalle.objects.filter(orden_retiro=idOrden).order_by('pk')]
+  # Recorre PedidoItem (linea por producto)
   detalle = []
-  descripcion = ''
   for qs in PedidoItem.objects.filter(pedido=idOrden).order_by('pk'):
       descripcion = qs.producto.descripcion + ' ' + qs.sAclaracion
       if (len(descripcion) <= 102):
@@ -204,21 +201,34 @@ def frameDetalle(pdf, idOrden):
           else:
               detalle += [('', descripcion[102:240])]
               detalle += [('', descripcion[240:300])]
+
+  # Recorre PedidoItemConcepto (linea por concepto)
+  for qs in PedidoItemConcepto.objects.filter(pedido=idOrden).order_by('pk'):
+      descripcion = qs.sDescripcion
+      if (len(descripcion) <= 102):
+          detalle += [(qs.sCantidad +' '+ qs.unidades.descripcionCorta, descripcion)]
+      else:
+          detalle += [(qs.sCantidad +' '+ qs.unidades.descripcionCorta, descripcion[:102])]
+          if (len(descripcion[102:240]) <= 102):
+              detalle += [('', descripcion[102:240])]
+          else:
+              detalle += [('', descripcion[102:240])]
+              detalle += [('', descripcion[240:300])]
+
   while len(detalle) < 23:
-    detalle = detalle + [('', '')]
+      detalle = detalle + [('', '')]
+      detalle_orden = Table([encabezado] + detalle, colWidths=[2 * cm, 17.95 * cm])
 
-  detalle_orden = Table([encabezado] + detalle, colWidths=[2 * cm, 17.95 * cm])
-
-  detalle_orden.setStyle(TableStyle(
-    [
-      # La primera fila(encabezados) va a estar centrada
-      ('ALIGN', (0, 0), (1, 0), 'CENTER'),
-      # Los bordes de todas las celdas serán de color negro y con un grosor de 1
-      ('GRID', (0, 0), (-1, -1), 1, colors.black),
-      # El tamaño de las letras de cada una de las celdas será de 10
-      ('FONTSIZE', (0, 0), (-1, -1), 10),
-    ]
-  ))
+      detalle_orden.setStyle(TableStyle(
+          [
+            # La primera fila(encabezados) va a estar centrada
+            ('ALIGN', (0, 0), (1, 0), 'CENTER'),
+            # Los bordes de todas las celdas serán de color negro y con un grosor de 1
+            ('GRID', (0, 0), (-1, -1), 1, colors.black),
+            # El tamaño de las letras de cada una de las celdas será de 10
+            ('FONTSIZE', (0, 0), (-1, -1), 10),
+          ]
+      ))
   # Establecemos el tamaño de la hoja que ocupará la tabla
   detalle_orden.wrapOn(pdf, 800, 600)
   # Definimos la coordenada donde se dibujará la tabla

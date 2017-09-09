@@ -39,6 +39,7 @@ class PedidoItemConceptoInline(ForeignKeyAutocompleteTabularInline):
   extra = 0
 
 
+
 @admin.register(Pedido)
 class PedidoAdmin(ForeignKeyAutocompleteAdmin):
   form = PedidoForm
