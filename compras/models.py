@@ -118,3 +118,8 @@ class RemitoItem(models.Model):
 
     def __unicode__(self):
         return unicode(self.producto.descripcion + ' [' + str(self.sCantidad) + ']')
+
+#######################################################################################
+#### IMPLEMENTAR REMITO ITEM CONCEPTO
+#######################################################################################
+

@@ -1,11 +1,11 @@
 #encoding:utf-8
 # Django settings for sistema_inges project.
 
-# export INGESDB_NAME=d3vobr4ece5eqg
-# export INGESDB_HOST=ec2-54-197-241-82.compute-1.amazonaws.com
+# export INGESDB_NAME=df4sco1u608bra
+# export INGESDB_HOST=ec2-107-21-236-219.compute-1.amazonaws.com
 # export INGESDB_PORT=5432
-# export INGESDB_USER=rvurxlyzmbxmul
-# export INGESDB_PASSWORD=D7-2CMosP-26LfwapnlNHTbZ7r
+# export INGESDB_USER=opxavbxjahzkut
+# export INGESDB_PASSWORD=5c8cd1ae416ad7593efae3ded70d6db194cc40d629cc531aff51b959dedb30f7
 
 import os
 
@@ -212,7 +212,7 @@ SUIT_CONFIG = {
     'MENU_OPEN_FIRST_CHILD': True, # Default True
     # 'MENU_EXCLUDE': ('auth.group',),
     'MENU': (
-        {'label': 'Empresas', 'models': ('facturacion.registro', 'facturacion.cliente', 'facturacion.proveedor')},
+        {'label': 'Empresas', 'models': ('facturacion.registro', 'facturacion.cliente')},
         {'app': 'facturacion', 'models': (
             # {'label': 'Emitir factura', 'icon': 'none', 'url': '/facturacion/emision/', 'permissions': 'facturacion.add_informes'},
             {'model': 'facturacion.registro_factura', 'label': 'Registrar factura', 'permissions': 'facturacion.add_registro_factura'},
@@ -220,13 +220,10 @@ SUIT_CONFIG = {
             {'model': 'facturacion.emision_factura', 'label': 'Emitir factura', 'permissions': 'facturacion.add_emision_factura'},
             {'label': 'Informe facturacion', 'icon': 'icon-briefcase', 'url': 'facturacion.views.informesFacturacion', 'permissions': 'facturacion.add_informes'},
         )},
-        {'app': 'pedidos', 'models': (
-            {'model': 'pedidos.pedidocabecera', 'label': 'Pedido', 'permissions': 'pedidos.add_pedidocabecera'},
-            {'model': 'pedidos.remitocabecera', 'label': 'Remito', 'permissions': 'pedidos.add_remitocabecera'},
-        )},
         {'app': 'compras', 'models': (
-            {'model': 'compras.pedido', 'label': 'Pedido', 'permissions': 'compras.add_pedido'},
-            {'model': 'compras.remito', 'label': 'Remito', 'permissions': 'compras.add_remito'},
+            {'model': 'facturacion.proveedor', 'label': 'Proveedores', 'permissions': 'facturacion.add_proveedor'},
+            {'model': 'compras.pedido', 'label': 'Orden de compra', 'permissions': 'compras.add_pedido'},
+            {'model': 'compras.remito', 'label': 'Remito de compra', 'permissions': 'compras.add_remito'},
         )},
         {'app': 'stock', 'models': (
             {'model': 'stock.producto', 'label': 'Productos', 'permissions': 'stock.add_producto'},
