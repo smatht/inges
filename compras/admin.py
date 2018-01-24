@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from django.contrib import admin
-from compras.models import PedidoItem, Pedido, Remito, RemitoItem, PedidoItemConcepto
+from compras.models import PedidoItem, Pedido, Remito, RemitoItem, PedidoItemConcepto, Compra
 from functools32 import update_wrapper
 from mantenimiento.models import ExtendUser
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
@@ -10,7 +10,6 @@ from stock.models import Producto
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django_extensions.admin import ForeignKeyAutocompleteAdmin, ForeignKeyAutocompleteTabularInline
-
 
 
 
@@ -185,3 +184,4 @@ class RemitoAdmin(ForeignKeyAutocompleteAdmin):
 # admin.site.register(User, UserAdmin)
 # admin.site.register(Pedido, PedidoAdmin)
 # admin.site.register(Remito, RemitoAdmin)
+admin.site.register(Compra)

@@ -1,0 +1,58 @@
+[
+  {
+    "model": "mantenimiento.TiposDoc",
+    "pk": "FCA",
+    "fields": {
+      "descripcion": "Factura de venta A",
+      "esFactura": 1
+    }
+  },
+  {
+    "model": "mantenimiento.TiposDoc",
+    "pk": "FCB",
+    "fields": {
+      "descripcion": "Factura de venta B",
+      "esFactura": 1
+    }
+  },
+  {
+    "model": "mantenimiento.TiposDoc",
+    "pk": "FCC",
+    "fields": {
+      "descripcion": "Factura de venta C",
+      "esFactura": 1
+    }
+  },
+  {
+    "model": "mantenimiento.TiposDoc",
+    "pk": "FCM",
+    "fields": {
+      "descripcion": "Factura de venta M",
+      "esFactura": 1
+    }
+  },
+  {
+    "model": "mantenimiento.TiposDoc",
+    "pk": "CCA",
+    "fields": {
+      "descripcion": "Factura de compra A",
+      "esFactura": 1
+    }
+  },
+  {
+    "model": "mantenimiento.TiposDoc",
+    "pk": "CCB",
+    "fields": {
+      "descripcion": "Factura de compra B",
+      "esFactura": 1
+    }
+  },
+  {
+    "model": "mantenimiento.TiposDoc",
+    "pk": "CCC",
+    "fields": {
+      "descripcion": "Factura de compra C",
+      "esFactura": 1
+    }
+  }
+]

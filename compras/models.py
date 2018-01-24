@@ -10,6 +10,8 @@ from proyectos.models import Obra
 
 from stock.models import Producto, Unidades
 
+from mantenimiento.models import TiposDoc, Impuesto
+
 
 class Pedido(models.Model):
     usuario = models.ForeignKey(User, null=True)
@@ -123,3 +125,53 @@ class RemitoItem(models.Model):
 #### IMPLEMENTAR REMITO ITEM CONCEPTO
 #######################################################################################
 
+
+############################################
+#  Clases principal Facturacion Compras    #
+############################################
+class AbstractCompra(models.Model):
+    proveedor = models.ForeignKey(Proveedor)
+    tipoDoc = models.ForeignKey(TiposDoc)
+    sucursal = models.IntegerField()
+    numDoc = models.IntegerField()
+    fDocumento = models.DateField()
+    fRegistro = models.DateTimeField(default=datetime.datetime.now)
+    operador = models.ForeignKey(User, null=True)
+    observaciones = models.TextField(null=True, blank=True)
+    anulado = models.BooleanField(default=False)
+    fanulacion = models.DateTimeField(null=True, blank=True)
+    afectaEmpresa = models.ForeignKey(Registro, default=1, verbose_name='Empresa')
+
+    class Meta:
+        abstract = True
+        unique_together = (('proveedor', 'tipoDoc', 'sucursal', 'numDoc'),)
+
+
+class Compra(AbstractCompra):
+    totBruto = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    totImpuestos = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
+    totDescuentos = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
+    totNeto = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    pagado = models.BooleanField(default=False)
+    esCopia = models.BooleanField(default=False)
+    yaAfectoStock = models.BooleanField(default=False)
+    fContabilizar = models.DateField(null=True, blank=True, verbose_name='Fecha contable', help_text='Afecta a informes '
+                                                                                                     'contables.')
+
+    class Meta:
+        verbose_name_plural = "registro facturas"
+
+    def __unicode__(self):
+        return unicode(self.fecha_factura) + " - " + self.numDoc.__str__()
+
+class CompraItem(models.Model):
+    factura = models.ForeignKey(Compra)
+    producto = models.CharField(max_length=140)
+    cantidad = models.PositiveSmallIntegerField()
+    alicuota = models.ForeignKey(Impuesto)
+    precio_unitario = models.DecimalField(max_digits=10, decimal_places=2)
+    prFinal = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = 'Detalle de factura'
+        verbose_name_plural = 'Detalle de factura'

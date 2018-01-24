@@ -222,6 +222,7 @@ SUIT_CONFIG = {
         )},
         {'app': 'compras', 'models': (
             {'model': 'facturacion.proveedor', 'label': 'Proveedores', 'permissions': 'facturacion.add_proveedor'},
+            {'model': 'compras.compra', 'label': 'Factura de compra', 'permissions': 'compras.add_compra'},
             {'model': 'compras.pedido', 'label': 'Orden de compra', 'permissions': 'compras.add_pedido'},
             {'model': 'compras.remito', 'label': 'Remito de compra', 'permissions': 'compras.add_remito'},
         )},
@@ -229,6 +230,9 @@ SUIT_CONFIG = {
             {'model': 'stock.producto', 'label': 'Productos', 'permissions': 'stock.add_producto'},
             {'model': 'stock.familia', 'label': 'Familias', 'permissions': 'stock.add_familia'},
             {'model': 'stock.unidades', 'label': 'Unidades', 'permissions': 'stock.add_unidades'},
+        )},
+        {'label': 'Informes - Consultas', 'icon': 'icon-briefcase', 'models': (
+	        {'label': 'Informe compra x venta', 'icon': 'icon-briefcase', 'url': 'facturacion.views.informesFacturacion', 'permissions': 'facturacion.add_informes'},
         )},
         {'app': 'auth', 'icon':'icon-lock', 'models': ('user', 'group')},
         ),
@@ -263,6 +267,10 @@ from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
 TEMPLATE_CONTEXT_PROCESSORS = TCP + (
     'django.core.context_processors.request',
     'facturacion.context_processors.ejemplo',
+)
+
+FIXTURE_DIRS = (
+	os.path.join(RUTA_PROYECTO, 'fixtures'),
 )
 
 # Django Suit configuration example

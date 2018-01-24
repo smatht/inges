@@ -11,3 +11,26 @@ class ExtendUser(models.Model):
                                                     'una orden de retiro con su firma)')
 
 # Create your models here.
+
+
+class TiposDoc(models.Model):
+	id = models.CharField(max_length=3, primary_key=True)
+	descripcion = models.CharField(max_length=50)
+	esFactura = models.BooleanField(default=False)
+
+	def __unicode__(self):
+		return unicode(self.descripcion)
+
+
+class TipoImpuesto(models.Model):
+	descripcion = models.CharField(max_length=50)
+
+
+class Impuesto(models.Model):
+	descripcion = models.CharField(max_length=50)
+	tiposImpuesto = models.ForeignKey(TipoImpuesto)
+	valorImpuesto = models.DecimalField(max_digits=5, decimal_places=4)
+	esPorcentaje = models.BooleanField()
+
+	def __unicode__(self):
+		return unicode(self.porcentaje)
