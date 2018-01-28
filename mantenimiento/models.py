@@ -14,23 +14,43 @@ class ExtendUser(models.Model):
 
 
 class TiposDoc(models.Model):
-	id = models.CharField(max_length=3, primary_key=True)
-	descripcion = models.CharField(max_length=50)
-	esFactura = models.BooleanField(default=False)
+    id = models.CharField(max_length=3, primary_key=True, verbose_name='Nombre')
+    descripcion = models.CharField(max_length=50)
+    esFactura = models.BooleanField(default=False)
+    STOCK = (
+        (1, 'Aumenta'),
+        (-1, 'Disminuye'),
+        (0, 'No aplica'),
+    )
+    TIPO = (
+        (0, 'Factura de venta'),
+        (1, 'Factura de compra'),
+        (2, 'Presupuesto'),
+        (3, 'Otro documento'),
+    )
+    aplicaStock = models.SmallIntegerField(choices=STOCK, verbose_name='Cambia stock')
+    tipo = models.SmallIntegerField(choices=TIPO)
 
-	def __unicode__(self):
-		return unicode(self.descripcion)
+    def __unicode__(self):
+        return unicode(self.descripcion)
 
 
 class TipoImpuesto(models.Model):
-	descripcion = models.CharField(max_length=50)
+    descripcion = models.CharField(max_length=50)
 
 
 class Impuesto(models.Model):
-	descripcion = models.CharField(max_length=50)
-	tiposImpuesto = models.ForeignKey(TipoImpuesto)
-	valorImpuesto = models.DecimalField(max_digits=5, decimal_places=4)
-	esPorcentaje = models.BooleanField()
+    descripcion = models.CharField(max_length=50)
+    TIPO = (
+        (0, 'Impuesto interno'),
+        (1, 'IVA'),
+        (2, 'DGR'),
+        (3, 'Otro'),
+    )
+    tipoImpuesto = models.SmallIntegerField(choices=TIPO)
+    valorImpuesto = models.DecimalField(max_digits=3, decimal_places=2)
+    esPorcentaje = models.BooleanField(default=True)
+    esObligatorio = models.BooleanField(default=False)
 
-	def __unicode__(self):
-		return unicode(self.porcentaje)
+    def __unicode__(self):
+        return unicode(self.porcentaje)

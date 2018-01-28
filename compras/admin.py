@@ -1,16 +1,15 @@
 from django.conf.urls import url
 from django.contrib import admin
-from compras.models import PedidoItem, Pedido, Remito, RemitoItem, PedidoItemConcepto, Compra
+from models import PedidoItem, Pedido, Remito, RemitoItem, PedidoItemConcepto, Compra
 from functools32 import update_wrapper
 from mantenimiento.models import ExtendUser
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from actions import export_OR_as_pdf, save_then_pdf
-from compras.forms import PedidoItemForm, PedidoForm, RemitoForm
+from forms import PedidoItemForm, PedidoForm, RemitoForm
 from stock.models import Producto
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django_extensions.admin import ForeignKeyAutocompleteAdmin, ForeignKeyAutocompleteTabularInline
-
 
 
 class UserInline(admin.StackedInline):
@@ -180,8 +179,23 @@ class RemitoAdmin(ForeignKeyAutocompleteAdmin):
     return urlpatterns
 
 
+@admin.register(Compra)
+class CompraAdmin(ForeignKeyAutocompleteAdmin):
+    list_display = ('tipoDoc', 'proveedor', 'fRegistro', 'fDocumento', 'totBruto', 'totImpuestos', 'totDescuentos', 'totNeto')
+    exclude = ('fRegistro', 'operador', 'anulado', 'fanulacion', 'totBruto', 'totImpuesto', 'totDescuento', 'totNeto',
+               'yaAfectoStock')
+    list_filter = ('fDocumento', 'fRegistro')
+    radio_fields = {"condPago": admin.VERTICAL}
+    fieldsets = [
+        (None, {'fields': ['afectaEmpresa', 'fContabilizar', 'fDocumento', 'proveedor', 'tipoDoc', ('sucursal', 'numDoc'),
+                           'condPago', ('prFinal', 'afectaStock', 'esCopia')]}),
+        ('Cai:', {
+          'classes': ('collapse',),
+          'fields': ['cai', 'vCai']}),
+        ]
+
 # admin.site.unregister(User)
 # admin.site.register(User, UserAdmin)
 # admin.site.register(Pedido, PedidoAdmin)
 # admin.site.register(Remito, RemitoAdmin)
-admin.site.register(Compra)
+

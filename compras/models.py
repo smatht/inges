@@ -131,10 +131,10 @@ class RemitoItem(models.Model):
 ############################################
 class AbstractCompra(models.Model):
     proveedor = models.ForeignKey(Proveedor)
-    tipoDoc = models.ForeignKey(TiposDoc)
+    tipoDoc = models.ForeignKey(TiposDoc, verbose_name='Documento')
     sucursal = models.IntegerField()
-    numDoc = models.IntegerField()
-    fDocumento = models.DateField()
+    numDoc = models.IntegerField(verbose_name='Numero')
+    fDocumento = models.DateField(verbose_name='Fecha del documento')
     fRegistro = models.DateTimeField(default=datetime.datetime.now)
     operador = models.ForeignKey(User, null=True)
     observaciones = models.TextField(null=True, blank=True)
@@ -152,11 +152,24 @@ class Compra(AbstractCompra):
     totImpuestos = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
     totDescuentos = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
     totNeto = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
-    pagado = models.BooleanField(default=False)
-    esCopia = models.BooleanField(default=False)
+    cond_pago = (
+        ('CTD', 'Contado'),
+        ('CRE', 'Crédito'),
+    )
+    condPago = models.CharField(
+        max_length=3,
+        choices=cond_pago,
+        default='CTD',
+        verbose_name='Condición pago',
+    )
+    esCopia = models.BooleanField(default=False, verbose_name='Es copia')
+    afectaStock = models.BooleanField(default=False, verbose_name='Afecta a stock')
     yaAfectoStock = models.BooleanField(default=False)
-    fContabilizar = models.DateField(null=True, blank=True, verbose_name='Fecha contable', help_text='Afecta a informes '
+    prFinal = models.BooleanField(default=True, verbose_name='Utiliza precio final')
+    fContabilizar = models.DateField(default=datetime.datetime.now, verbose_name='Fecha contable', help_text='Afecta a informes '
                                                                                                      'contables.')
+    cai = models.BigIntegerField(null=True, blank=True)
+    vCai = models.DateField(null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "registro facturas"
@@ -170,7 +183,6 @@ class CompraItem(models.Model):
     cantidad = models.PositiveSmallIntegerField()
     alicuota = models.ForeignKey(Impuesto)
     precio_unitario = models.DecimalField(max_digits=10, decimal_places=2)
-    prFinal = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = 'Detalle de factura'

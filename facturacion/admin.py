@@ -47,7 +47,6 @@ class Registro_factura_admin(admin.ModelAdmin):
   list_display = ('emisor', 'fecha_factura', 'nro_factura', 'valor_subtotal', 'valor_iva', 'valor_total')
   exclude = ('usuario',)
   list_filter = ('fecha_factura', 'fecha_registro')
-  #search_fields = ('iva__porcentaje',)
   search_fields = ('emisor__razon_social', 'nro_factura',)
   # Para editar un campo de forma inline
   #list_editable = ('percepciones_otros',)
