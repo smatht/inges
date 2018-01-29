@@ -148,10 +148,10 @@ class AbstractCompra(models.Model):
 
 
 class Compra(AbstractCompra):
-    totBruto = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
-    totImpuestos = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
-    totDescuentos = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
-    totNeto = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    totBruto = models.FloatField(null=True, blank=True)
+    totImpuestos = models.FloatField(null=True, blank=True)
+    totDescuentos = models.FloatField(null=True, blank=True)
+    totNeto = models.FloatField(null=True, blank=True)
     cond_pago = (
         ('CTD', 'Contado'),
         ('CRE', 'Crédito'),
@@ -175,15 +175,27 @@ class Compra(AbstractCompra):
         verbose_name_plural = "registro facturas"
 
     def __unicode__(self):
-        return unicode(self.fecha_factura) + " - " + self.numDoc.__str__()
+        return unicode(self.fDocumento) + " - " + self.numDoc.__str__()
 
 class CompraItem(models.Model):
     factura = models.ForeignKey(Compra)
-    producto = models.CharField(max_length=140)
-    cantidad = models.PositiveSmallIntegerField()
+    producto = models.ForeignKey(Producto)
+    cantidad = models.FloatField()
     alicuota = models.ForeignKey(Impuesto)
-    precio_unitario = models.DecimalField(max_digits=10, decimal_places=2)
+    precio_unitario = models.FloatField()
 
     class Meta:
         verbose_name = 'Detalle de factura'
         verbose_name_plural = 'Detalle de factura'
+
+
+class CompraItemConcepto(models.Model):
+    factura = models.ForeignKey(Compra)
+    descripcion = models.CharField(max_length=300)
+    cantidad = models.FloatField()
+    alicuota = models.ForeignKey(Impuesto)
+    precio_unitario = models.FloatField()
+
+    class Meta:
+        verbose_name = 'Concepto'
+        verbose_name_plural = 'Conceptos'

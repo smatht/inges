@@ -10,6 +10,11 @@ class TiposDocAdmin(admin.ModelAdmin):
     ]
 
 
-admin.site.register(Impuesto)
+@admin.register(Impuesto)
+class ImpuestoAdmin(admin.ModelAdmin):
+    fieldsets = [
+        (None, {'fields': ['descripcion', 'tipoImpuesto', 'valorImpuesto', 'esPorcentaje', 'esObligatorio']}),
+    ]
+
 
 # Register your models here.

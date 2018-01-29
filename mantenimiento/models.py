@@ -48,9 +48,9 @@ class Impuesto(models.Model):
         (3, 'Otro'),
     )
     tipoImpuesto = models.SmallIntegerField(choices=TIPO)
-    valorImpuesto = models.DecimalField(max_digits=3, decimal_places=2)
+    valorImpuesto = models.FloatField()
     esPorcentaje = models.BooleanField(default=True)
     esObligatorio = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return unicode(self.porcentaje)
+        return unicode(self.descripcion)

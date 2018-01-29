@@ -1,11 +1,13 @@
 from django.conf.urls import url
 from django.contrib import admin
-from models import PedidoItem, Pedido, Remito, RemitoItem, PedidoItemConcepto, Compra
+
+from mantenimiento.models import TiposDoc
+from models import PedidoItem, Pedido, Remito, RemitoItem, PedidoItemConcepto, Compra, CompraItem, CompraItemConcepto
 from functools32 import update_wrapper
 from mantenimiento.models import ExtendUser
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from actions import export_OR_as_pdf, save_then_pdf
-from forms import PedidoItemForm, PedidoForm, RemitoForm
+from forms import PedidoItemForm, PedidoForm, RemitoForm, CompraForm
 from stock.models import Producto
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
@@ -17,7 +19,7 @@ class UserInline(admin.StackedInline):
   can_delete = False
   verbose_name_plural = 'usuarios'
 
-# @admin.register(User)
+
 class UserAdmin(BaseUserAdmin):
   inlines = (UserInline,)
 
@@ -179,13 +181,34 @@ class RemitoAdmin(ForeignKeyAutocompleteAdmin):
     return urlpatterns
 
 
+class CompraItemInline(ForeignKeyAutocompleteTabularInline):
+  form = CompraForm
+  model = CompraItem
+  related_search_fields = {
+    'producto': ('descripcion',),
+  }
+  extra = 10
+
+
+class CompraItemConceptoInline(ForeignKeyAutocompleteTabularInline):
+  form = CompraForm
+  model = CompraItemConcepto
+  extra = 0
+  fieldsets = [
+    (None, {
+      'fields': ['descripcion', 'cantidad', 'alicuota', 'precio_unitario'],
+      'description': "Use linea de concepto cuando quiera agregar un producto no recurrente o alguna compra especial"}),
+  ]
+
 @admin.register(Compra)
 class CompraAdmin(ForeignKeyAutocompleteAdmin):
+    form = CompraForm
     list_display = ('tipoDoc', 'proveedor', 'fRegistro', 'fDocumento', 'totBruto', 'totImpuestos', 'totDescuentos', 'totNeto')
     exclude = ('fRegistro', 'operador', 'anulado', 'fanulacion', 'totBruto', 'totImpuesto', 'totDescuento', 'totNeto',
                'yaAfectoStock')
     list_filter = ('fDocumento', 'fRegistro')
     radio_fields = {"condPago": admin.VERTICAL}
+    inlines = [CompraItemInline, CompraItemConceptoInline]
     fieldsets = [
         (None, {'fields': ['afectaEmpresa', 'fContabilizar', 'fDocumento', 'proveedor', 'tipoDoc', ('sucursal', 'numDoc'),
                            'condPago', ('prFinal', 'afectaStock', 'esCopia')]}),
@@ -193,6 +216,21 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
           'classes': ('collapse',),
           'fields': ['cai', 'vCai']}),
         ]
+
+    def save_model(self, request, obj, form, change):
+        if getattr(obj, 'operador', None) is None:
+            obj.operador = request.user
+        obj.save()
+
+    def suit_row_attributes(self, obj, request):
+        condPago = {'CTD': '', 'CRE': 'warning'}.get(obj.condPago)
+        # copia = {1: 'error', 0: ''}.get(obj.esCopia)
+        if condPago:
+            return {'class': condPago}
+
+    def render_change_form(self, request, context, *args, **kwargs):
+        context['adminform'].form.fields['tipoDoc'].queryset = TiposDoc.objects.filter(tipo=1)
+        return super(CompraAdmin, self).render_change_form(request, context, args, kwargs)
 
 # admin.site.unregister(User)
 # admin.site.register(User, UserAdmin)

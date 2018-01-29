@@ -2,7 +2,8 @@
 from django.forms import ModelForm
 from django.forms import Select
 from django.forms import Textarea
-from suit.widgets import SuitDateWidget, NumberInput, SuitSplitDateTimeWidget
+from django.forms.widgets import TextInput
+from suit.widgets import SuitDateWidget, NumberInput, SuitSplitDateTimeWidget, EnclosedInput
 
 
 class PedidoForm(ModelForm):
@@ -29,4 +30,26 @@ class RemitoForm(ModelForm):
     # model = Registro_factura
     widgets = {
       'fechaRemito': SuitDateWidget,
+    }
+
+
+class CompraForm(ModelForm):
+  class Meta:
+    # model = Registro_factura
+    widgets = {
+        'sucursal': TextInput(attrs={'style': 'width: 50px'}),
+        'numDoc': TextInput(attrs={'style': 'width: 150px'}),
+        'cantidad': TextInput(attrs={'style': 'width: 40px'}),
+        'alicuota': Select(attrs={'style': 'width: 100px'}),
+        'precio_unitario': EnclosedInput(prepend='$', attrs={'style': 'width: 60px'}),
+        'descripcion': Textarea(attrs={'style': 'width: 370px', 'rows': 1}),
+    }
+
+
+class CompraItemForm(ModelForm):
+  class Meta:
+    # model = Registro_factura
+    widgets = {
+      'cantidad': TextInput(attrs={'style': 'width: 40px'}),
+      'alicuota': Select(attrs={'style': 'width: 100px'}),
     }
