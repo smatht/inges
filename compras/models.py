@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import datetime
+
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db import models
@@ -152,13 +154,9 @@ class Compra(AbstractCompra):
     totImpuestos = models.FloatField(null=True, blank=True)
     totDescuentos = models.FloatField(null=True, blank=True)
     totNeto = models.FloatField(null=True, blank=True)
-    cond_pago = (
-        ('CTD', 'Contado'),
-        ('CRE', 'Crédito'),
-    )
     condPago = models.CharField(
         max_length=3,
-        choices=cond_pago,
+        choices=settings.COND_PAGO,
         default='CTD',
         verbose_name='Condición pago',
     )

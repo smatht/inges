@@ -197,7 +197,7 @@ REST_FRAMEWORK = {
 SUIT_CONFIG = {
     # header
     'ADMIN_NAME': 'SISTEMA INGES',
-	'VERSION': 'v1.0',
+    'VERSION': 'v1.0',
     'HEADER_DATE_FORMAT': 'l, j. F Y',
     'HEADER_TIME_FORMAT': 'H:i',
 
@@ -234,7 +234,7 @@ SUIT_CONFIG = {
             {'model': 'stock.unidades', 'label': 'Unidades', 'permissions': 'stock.add_unidades'},
         )},
         {'label': 'Informes - Consultas', 'icon': 'icon-briefcase', 'models': (
-	        {'label': 'Informe compra x venta', 'icon': 'icon-briefcase', 'url': 'facturacion.views.informesFacturacion', 'permissions': 'facturacion.add_informes'},
+            {'label': 'Informe compra x venta', 'icon': 'icon-briefcase', 'url': 'facturacion.views.informesFacturacion', 'permissions': 'facturacion.add_informes'},
         )},
         {'app': 'auth', 'icon':'icon-lock', 'models': ('user', 'group')},
         ),
@@ -272,8 +272,13 @@ TEMPLATE_CONTEXT_PROCESSORS = TCP + (
 )
 
 FIXTURE_DIRS = (
-	os.path.join(RUTA_PROYECTO, 'fixtures'),
+    os.path.join(RUTA_PROYECTO, 'fixtures'),
 )
 
-# Django Suit configuration example
+
+# MODELS VARS
+COND_PAGO = (
+        ('CTD', 'Contado'),
+        ('CRE', 'Crédito'),
+    )
 

@@ -2,6 +2,8 @@ from django.conf.urls import url
 from django.contrib import admin
 
 from mantenimiento.models import TiposDoc
+
+from mantenimiento.models import Configuracion
 from models import PedidoItem, Pedido, Remito, RemitoItem, PedidoItemConcepto, Compra, CompraItem, CompraItemConcepto
 from functools32 import update_wrapper
 from mantenimiento.models import ExtendUser
@@ -230,6 +232,8 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
 
     def render_change_form(self, request, context, *args, **kwargs):
         context['adminform'].form.fields['tipoDoc'].queryset = TiposDoc.objects.filter(tipo=1)
+        context['adminform'].form.fields['condPago'].initial = Configuracion.objects.get(pk=1).compras_condPago
+        context['adminform'].form.fields['afectaEmpresa'].initial = Configuracion.objects.get(pk=1).compras_empresa
         return super(CompraAdmin, self).render_change_form(request, context, args, kwargs)
 
 # admin.site.unregister(User)

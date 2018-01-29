@@ -1,8 +1,10 @@
+# -*- coding: utf-8 -*-
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
+from facturacion.models import Registro
 
 
-# Claser que extiende al modelo de usuario de Django
 class ExtendUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     dni = models.IntegerField(blank=True, null=True)
@@ -54,3 +56,16 @@ class Impuesto(models.Model):
 
     def __unicode__(self):
         return unicode(self.descripcion)
+
+
+class Configuracion(models.Model):
+    compras_condPago = models.CharField(
+        max_length=3,
+        choices=settings.COND_PAGO,
+        default='CTD',
+        verbose_name='Condición pago',
+    )
+    compras_empresa = models.ForeignKey(Registro, related_name='empresaCompra', null=True, blank=True)
+    compras_tipoDoc = models.ForeignKey(TiposDoc, related_name='tipoFacCompra', null=True, blank=True)
+    ventas_empresa = models.ForeignKey(Registro, related_name='empresaVenta', null=True, blank=True)
+    ventas_tipoDoc = models.ForeignKey(TiposDoc, related_name='tipoFacVenta', null=True, blank=True)
