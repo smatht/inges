@@ -22,12 +22,16 @@ class ImpuestoAdmin(admin.ModelAdmin):
 class ConfigAdmin(admin.ModelAdmin):
     fieldsets = [
         (None, {
+            'classes': ('suit-tab suit-tab-general',),
+            'fields': ['empresa']}),
+        (None, {
             'classes': ('suit-tab suit-tab-compras',),
-            'fields': ['compras_empresa', 'compras_tipoDoc', 'compras_condPago']}),
+            'fields': ['compras_tipoDoc', 'compras_condPago', 'compras_usaPrFinal',
+                       'compras_FacAfectaStk']}),
         (None, {
             'classes': ('suit-tab suit-tab-ventas',),
-            'fields': ['ventas_empresa', 'ventas_tipoDoc']}),
+            'fields': ['ventas_tipoDoc']}),
     ]
-    suit_form_tabs = (('compras', 'Compras'), ('ventas', 'Ventas'))
+    suit_form_tabs = (('general', 'General'),('compras', 'Compras'), ('ventas', 'Ventas'))
 
 # Register your models here.

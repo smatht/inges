@@ -65,7 +65,22 @@ class Configuracion(models.Model):
         default='CTD',
         verbose_name='Condición pago',
     )
-    compras_empresa = models.ForeignKey(Registro, related_name='empresaCompra', null=True, blank=True)
-    compras_tipoDoc = models.ForeignKey(TiposDoc, related_name='tipoFacCompra', null=True, blank=True)
-    ventas_empresa = models.ForeignKey(Registro, related_name='empresaVenta', null=True, blank=True)
-    ventas_tipoDoc = models.ForeignKey(TiposDoc, related_name='tipoFacVenta', null=True, blank=True)
+    empresa = models.ForeignKey(
+        Registro,
+        null=True,
+        blank=True,
+        verbose_name='Empresa principal')
+    compras_tipoDoc = models.ForeignKey(
+        TiposDoc,
+        related_name='tipoFacCompra',
+        null=True,
+        blank=True,
+        verbose_name='Tipo doc')
+    compras_usaPrFinal = models.BooleanField()
+    compras_FacAfectaStk = models.BooleanField()
+    ventas_tipoDoc = models.ForeignKey(
+        TiposDoc,
+        related_name='tipoFacVenta',
+        null=True,
+        blank=True,
+        verbose_name='Tipo doc')

@@ -179,6 +179,7 @@ INSTALLED_APPS = (
     'compras',
     'stock',
     'mantenimiento',
+    'fondos',
 )
 # Any global settings for a REST framework API are kept in a single configuration dictionary named REST_FRAMEWORK.
 # Start off by adding the following to your settings.py module:
@@ -227,6 +228,11 @@ SUIT_CONFIG = {
             {'model': 'compras.compra', 'label': 'Factura de compra', 'permissions': 'compras.add_compra'},
             {'model': 'compras.pedido', 'label': 'Orden de compra', 'permissions': 'compras.add_pedido'},
             {'model': 'compras.remito', 'label': 'Remito de compra', 'permissions': 'compras.add_remito'},
+        )},
+        {'app': 'fondos', 'models': (
+            {'model': 'fondos.tipocaja', 'label': 'Cajas', 'permissions': 'fondos.add_caja'},
+            {'model': 'fondos.movcaja', 'label': 'Nuevo movimiento', 'permissions': 'fondos.add_movcaja'},
+            {'model': 'fondos.tipomovcaja', 'label': 'Tipo movimiento', 'permissions': 'fondos.add_tipomovcaja'},
         )},
         {'app': 'stock', 'models': (
             {'model': 'stock.producto', 'label': 'Productos', 'permissions': 'stock.add_producto'},
