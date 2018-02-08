@@ -1,0 +1,93 @@
+[
+  {
+    "model": "fondos.TipoMovCaja",
+    "fields": {
+      "descripcion": "Venta Contado",
+      "suma": 1
+    }
+  },
+  {
+    "model": "fondos.TipoMovCaja",
+    "fields": {
+      "descripcion": "Anulación Venta Contado"
+    }
+  },
+  {
+    "model": "fondos.TipoMovCaja",
+    "fields": {
+      "descripcion": "Compra Contado"
+    }
+  },
+  {
+    "model": "fondos.TipoMovCaja",
+    "fields": {
+      "descripcion": "Anulación Compra Contado",
+      "suma": 1
+    }
+  },
+  {
+    "model": "fondos.TipoMovCaja",
+    "fields": {
+      "descripcion": "Cobranza"
+    }
+  },
+  {
+    "model": "fondos.TipoMovCaja",
+    "fields": {
+      "descripcion": "Anulación Cobranza",
+      "suma": 1
+    }
+  },
+  {
+    "model": "fondos.TipoMovCaja",
+    "fields": {
+      "descripcion": "Pago a Proveedores"
+    }
+  },
+  {
+    "model": "fondos.TipoMovCaja",
+    "fields": {
+      "descripcion": "Anulación pago a Proveedores",
+      "suma": 1
+    }
+  },
+  {
+    "model": "fondos.TipoMovCaja",
+    "fields": {
+      "descripcion": "Varios (Ingreso)",
+      "suma": 1
+    }
+  },
+  {
+    "model": "fondos.TipoMovCaja",
+    "fields": {
+      "descripcion": "Varios (Egreso)"
+    }
+  },
+  {
+    "model": "fondos.TipoMovCaja",
+    "fields": {
+      "descripcion": "Movimiento de fondos (Ingreso)",
+      "suma": 1
+    }
+  },
+  {
+    "model": "fondos.TipoMovCaja",
+    "fields": {
+      "descripcion": "Movimiento de fondos (Egreso)"
+    }
+  },
+  {
+    "model": "fondos.TipoMovCaja",
+    "fields": {
+      "descripcion": "Gasto contado"
+    }
+  },
+  {
+    "model": "fondos.TipoMovCaja",
+    "fields": {
+      "descripcion": "Anulacion gasto contado",
+      "suma": 1
+    }
+  }
+]

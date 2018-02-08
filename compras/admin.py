@@ -1,9 +1,8 @@
 from django.conf.urls import url
 from django.contrib import admin
 
-from mantenimiento.models import TiposDoc
+from mantenimiento.models import TiposDoc, Impuesto, Configuracion
 
-from mantenimiento.models import Configuracion
 from models import PedidoItem, Pedido, Remito, RemitoItem, PedidoItemConcepto, Compra, CompraItem, CompraItemConcepto
 from functools32 import update_wrapper
 from mantenimiento.models import ExtendUser
@@ -238,6 +237,27 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
         context['adminform'].form.fields['prFinal'].initial = Configuracion.objects.get(pk=1).compras_usaPrFinal
         context['adminform'].form.fields['afectaStock'].initial = Configuracion.objects.get(pk=1).compras_FacAfectaStk
         return super(CompraAdmin, self).render_change_form(request, context, args, kwargs)
+
+    # Los siguientes 3 metodos sirven para Operar con cada FacturaItem
+    # the following functions are for calculating the total price of the invoice header based on the lines
+    def response_add(self, request, new_object, **kwargs):
+        obj = self.after_saving_model_and_related_inlines(new_object)
+        return super(CompraAdmin, self).response_add(request, obj)
+
+    def response_change(self, request, obj):
+        obj = self.after_saving_model_and_related_inlines(obj)
+        return super(CompraAdmin, self).response_change(request, obj)
+
+    def after_saving_model_and_related_inlines(self, cabecera):
+        lineas = CompraItem.objects.filter(factura=obj.pk)
+
+        cabecera.totBruto = 0
+        cabecera.totNeto = 0
+        for linea in lineas:
+            if cabecera.prFinal:
+                cabecera.totBruto = cabecera.totBruto + (linea.precio_unitario * linea.cantidad)
+        cabecera.save()
+        return cabecera
 
 # admin.site.unregister(User)
 # admin.site.register(User, UserAdmin)

@@ -1,0 +1,14 @@
+[
+  {
+    "model": "fondos.TipoCaja",
+    "fields": {
+      "descripcion": "Caja chica"
+    }
+  },
+  {
+    "model": "fondos.TipoCaja",
+    "fields": {
+      "descripcion": "Fondo fijo"
+    }
+  }
+]

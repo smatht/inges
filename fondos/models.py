@@ -13,8 +13,12 @@ class TipoCaja(models.Model):
     descripcion = models.CharField(max_length=50)
 
     class Meta:
+        ordering = ['pk']
         verbose_name = 'Caja'
         verbose_name_plural = 'Cajas'
+
+    def __unicode__(self):
+        return format(self.descripcion)
 
 
 class Caja(models.Model):
@@ -29,15 +33,19 @@ class Caja(models.Model):
 
 class TipoMovCaja(models.Model):
     descripcion = models.CharField(max_length=75)
-    suma = models.BooleanField()
+    suma = models.BooleanField(default=False)
 
     class Meta:
+        ordering = ['pk']
         verbose_name = 'Tipo movimiento'
         verbose_name_plural = 'Tipo movimiento'
 
+    def __unicode__(self):
+        return format(self.descripcion)
+
 
 class MovCaja(models.Model):
-    caja = models.ForeignKey(Caja)
+    caja = models.ForeignKey(TipoCaja)
     fecha = models.DateTimeField(default=datetime.datetime.now)
     tipoDoc = models.ForeignKey(TiposDoc)
     numDoc = models.IntegerField()

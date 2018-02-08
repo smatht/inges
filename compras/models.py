@@ -146,7 +146,7 @@ class AbstractCompra(models.Model):
 
     class Meta:
         abstract = True
-        unique_together = (('proveedor', 'tipoDoc', 'sucursal', 'numDoc'),)
+        # unique_together = (('proveedor', 'tipoDoc', 'sucursal', 'numDoc'),)
 
 
 class Compra(AbstractCompra):

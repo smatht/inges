@@ -68,11 +68,6 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.AddField(
-            model_name='movcaja',
-            name='tipoMovCaja',
-            field=models.ForeignKey(to='fondos.TipoMovCaja'),
-        ),
-        migrations.AddField(
             model_name='caja',
             name='tipoCaja',
             field=models.ForeignKey(to='fondos.TipoCaja'),
