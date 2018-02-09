@@ -255,9 +255,18 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
         cabecera.totImpuestos = 0
         for linea in lineas:
             if cabecera.prFinal:
-                cabecera.totNeto = cabecera.totNeto + (linea.precio_unitario * linea.cantidad)
-                cabecera.totBruto = cabecera.totBruto + ((linea.precio_unitario/(1+(linea.alicuota.valorImpuesto/100))) * linea.cantidad)
-                cabecera.totImpuestos = cabecera.totImpuestos + ((linea.precio_unitario - (linea.precio_unitario/(1+(linea.alicuota.valorImpuesto/100)))) * linea.cantidad)
+                totNeto = (linea.precio_unitario * linea.cantidad)
+                totBruto = ((linea.precio_unitario/(1+(linea.alicuota.valorImpuesto/100))) * linea.cantidad)
+                totImpuestos = ((linea.precio_unitario - (linea.precio_unitario/(1+(linea.alicuota.valorImpuesto/100)))) * linea.cantidad)
+                cabecera.totNeto = cabecera.totNeto + totNeto
+                cabecera.totBruto = cabecera.totBruto + totBruto
+                cabecera.totImpuestos = cabecera.totImpuestos + totImpuestos
+            else:
+                totBruto = (linea.precio_unitario * linea.cantidad)
+                totImpuestos = (totBruto * (linea.alicuota.valorImpuesto/100))
+                cabecera.totBruto = cabecera.totBruto + totBruto
+                cabecera.totImpuestos = cabecera.totImpuestos + totImpuestos
+                cabecera.totNeto = totBruto + totImpuestos
         cabecera.save()
         return cabecera
 
