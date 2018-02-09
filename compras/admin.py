@@ -170,7 +170,6 @@ class RemitoAdmin(ForeignKeyAutocompleteAdmin):
       return '<img src="/static/admin/img/icon-casi-no.gif" alt="False">'
   pedido_ID.allow_tags = True
 
-
   def wrap(self, view):
     def wrapper(*args, **kwargs):
       return self.admin_site.admin_view(view)(*args, **kwargs)
@@ -249,13 +248,16 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
         return super(CompraAdmin, self).response_change(request, obj)
 
     def after_saving_model_and_related_inlines(self, cabecera):
-        lineas = CompraItem.objects.filter(factura=obj.pk)
+        lineas = CompraItem.objects.filter(factura=cabecera.pk)
 
         cabecera.totBruto = 0
         cabecera.totNeto = 0
+        cabecera.totImpuestos = 0
         for linea in lineas:
             if cabecera.prFinal:
-                cabecera.totBruto = cabecera.totBruto + (linea.precio_unitario * linea.cantidad)
+                cabecera.totNeto = cabecera.totNeto + (linea.precio_unitario * linea.cantidad)
+                cabecera.totBruto = cabecera.totBruto + ((linea.precio_unitario/(1+(linea.alicuota.valorImpuesto/100))) * linea.cantidad)
+                cabecera.totImpuestos = cabecera.totImpuestos + ((linea.precio_unitario - (linea.precio_unitario/(1+(linea.alicuota.valorImpuesto/100)))) * linea.cantidad)
         cabecera.save()
         return cabecera
 
