@@ -8,6 +8,8 @@ from mantenimiento.models import TiposDoc
 
 from facturacion.models import Registro
 
+from proyectos.models import Obra
+
 
 class TipoCaja(models.Model):
     descripcion = models.CharField(max_length=50)
@@ -22,13 +24,13 @@ class TipoCaja(models.Model):
 
 
 class Caja(models.Model):
-    empresa = models.ForeignKey(Registro)
     tipoCaja = models.ForeignKey(TipoCaja)
     fApertura = models.DateTimeField(default=datetime.datetime.now)
     fCierre = models.DateTimeField(null=True, blank=True)
     montoInicial = models.FloatField(default=0)
     acumEntradas = models.FloatField(null=True, blank=True)
     acumSalidas = models.FloatField(null=True, blank=True)
+    destino = models.ForeignKey(Obra)
 
 
 class TipoMovCaja(models.Model):
@@ -45,7 +47,8 @@ class TipoMovCaja(models.Model):
 
 
 class MovCaja(models.Model):
-    caja = models.ForeignKey(TipoCaja)
+    caja = models.ForeignKey(Caja)
+    empresa = models.ForeignKey(Registro)
     fecha = models.DateTimeField(default=datetime.datetime.now)
     tipoDoc = models.ForeignKey(TiposDoc)
     numDoc = models.IntegerField()

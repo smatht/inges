@@ -3,6 +3,8 @@ from django.contrib import admin
 
 from mantenimiento.models import TiposDoc, Impuesto, Configuracion
 
+from fondos.models import Caja, MovCaja, TipoCaja, TipoMovCaja
+
 from models import PedidoItem, Pedido, Remito, RemitoItem, PedidoItemConcepto, Compra, CompraItem, CompraItemConcepto
 from functools32 import update_wrapper
 from mantenimiento.models import ExtendUser
@@ -188,6 +190,11 @@ class CompraItemInline(ForeignKeyAutocompleteTabularInline):
     'producto': ('descripcion',),
   }
   extra = 10
+  fieldsets = [
+      (None, {
+          'fields': ['producto', 'cantidad', 'alicuota', 'precio_unitario', 'obra'],
+          'description': "Use linea de concepto cuando quiera agregar un producto no recurrente o alguna compra especial"}),
+  ]
 
 
 class CompraItemConceptoInline(ForeignKeyAutocompleteTabularInline):
@@ -196,7 +203,7 @@ class CompraItemConceptoInline(ForeignKeyAutocompleteTabularInline):
   extra = 0
   fieldsets = [
     (None, {
-      'fields': ['descripcion', 'cantidad', 'alicuota', 'precio_unitario'],
+      'fields': ['descripcion', 'cantidad', 'alicuota', 'precio_unitario', 'obra'],
       'description': "Use linea de concepto cuando quiera agregar un producto no recurrente o alguna compra especial"}),
   ]
 
@@ -210,7 +217,7 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
     radio_fields = {"condPago": admin.VERTICAL}
     inlines = [CompraItemInline, CompraItemConceptoInline]
     fieldsets = [
-        (None, {'fields': ['afectaEmpresa', 'fContabilizar', 'fDocumento', 'proveedor', 'tipoDoc', ('sucursal', 'numDoc'),
+        (None, {'fields': ['afectaEmpresa', 'obra', 'fContabilizar', 'fDocumento', 'proveedor', 'tipoDoc', ('sucursal', 'numDoc'),
                            'condPago', ('prFinal', 'afectaStock', 'esCopia')]}),
         ('Cai:', {
           'classes': ('collapse',),
@@ -240,20 +247,26 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
     # Los siguientes 3 metodos sirven para Operar con cada FacturaItem
     # the following functions are for calculating the total price of the invoice header based on the lines
     def response_add(self, request, new_object, **kwargs):
-        obj = self.after_saving_model_and_related_inlines(new_object)
+        obj = self.after_saving_model_and_related_inlines(request, new_object)
         return super(CompraAdmin, self).response_add(request, obj)
 
     def response_change(self, request, obj):
         obj = self.after_saving_model_and_related_inlines(obj)
         return super(CompraAdmin, self).response_change(request, obj)
 
-    def after_saving_model_and_related_inlines(self, cabecera):
+    def after_saving_model_and_related_inlines(self, request, cabecera):
         lineas = CompraItem.objects.filter(factura=cabecera.pk)
 
         cabecera.totBruto = 0
         cabecera.totNeto = 0
         cabecera.totImpuestos = 0
+        # Obtenemos la ultima caja abierta para esa obra
+        caja = Caja.objects.filter(destino=cabecera.obra, fCierre=None)
+        if not caja:
+            caja = self.abrirCaja(cabecera.obra)
         for linea in lineas:
+            precioLinea = 0 # Usamos para movCaja
+            # Completa datos de cabecera con valores de las lineas dependiendo si se usa precio final o bruto por item
             if cabecera.prFinal:
                 totNeto = (linea.precio_unitario * linea.cantidad)
                 totBruto = ((linea.precio_unitario/(1+(linea.alicuota.valorImpuesto/100))) * linea.cantidad)
@@ -261,14 +274,33 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
                 cabecera.totNeto = cabecera.totNeto + totNeto
                 cabecera.totBruto = cabecera.totBruto + totBruto
                 cabecera.totImpuestos = cabecera.totImpuestos + totImpuestos
+                precioLinea = linea.precio_unitario
             else:
                 totBruto = (linea.precio_unitario * linea.cantidad)
                 totImpuestos = (totBruto * (linea.alicuota.valorImpuesto/100))
                 cabecera.totBruto = cabecera.totBruto + totBruto
                 cabecera.totImpuestos = cabecera.totImpuestos + totImpuestos
                 cabecera.totNeto = totBruto + totImpuestos
+                precioLinea = linea.precio_unitario * (1+(linea.alicuota.valorImpuesto/100))
+            # Si campo Obra de linea esta vacio completamos con la Obra seleccionada en cabecera sino se deja como esta
+            if not linea.obra:
+                linea.obra = cabecera.obra
+                linea.save()
+            # Hacemos el movimiento de caja.
+            desc = cabecera.tipoDoc.id + " Nro:" + str(cabecera.numDoc) + " Prov: " + cabecera.proveedor.razon_social \
+                   + " " + linea.producto.descripcionCorta + " " + str(linea.cantidad) + " Unid."
+            mc = TipoMovCaja.objects.get(pk=3)
+            m = MovCaja(caja=caja, empresa=cabecera.afectaEmpresa, tipoDoc=cabecera.tipoDoc, numDoc= cabecera.numDoc,
+                        descripcion=desc, operador=request.user, importe=precioLinea, tipoMovCaja=mc)
+            m.save()
         cabecera.save()
         return cabecera
+
+    def abrirCaja(self, obra):
+        tc = TipoCaja.objects.get(pk=1)
+        c = Caja(tipoCaja=tc, destino=obra)
+        c.save()
+        return c
 
 # admin.site.unregister(User)
 # admin.site.register(User, UserAdmin)

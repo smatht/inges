@@ -143,6 +143,7 @@ class AbstractCompra(models.Model):
     anulado = models.BooleanField(default=False)
     fanulacion = models.DateTimeField(null=True, blank=True)
     afectaEmpresa = models.ForeignKey(Registro, default=1, verbose_name='Empresa')
+    obra = models.ForeignKey(Obra)
 
     class Meta:
         abstract = True
@@ -181,6 +182,7 @@ class CompraItem(models.Model):
     cantidad = models.FloatField()
     alicuota = models.ForeignKey(Impuesto)
     precio_unitario = models.FloatField()
+    obra = models.ForeignKey(Obra, blank=True, null=True)
 
     class Meta:
         verbose_name = 'Detalle de factura'
@@ -193,6 +195,7 @@ class CompraItemConcepto(models.Model):
     cantidad = models.FloatField()
     alicuota = models.ForeignKey(Impuesto)
     precio_unitario = models.FloatField()
+    obra = models.ForeignKey(Obra, blank=True, null=True)
 
     class Meta:
         verbose_name = 'Concepto'
