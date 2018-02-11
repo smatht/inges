@@ -49,13 +49,13 @@ class TipoMovCaja(models.Model):
 class MovCaja(models.Model):
     caja = models.ForeignKey(Caja)
     empresa = models.ForeignKey(Registro)
-    fecha = models.DateTimeField(default=datetime.datetime.now)
+    fecha = models.DateTimeField(default=datetime.datetime.now, verbose_name='Fecha y hora')
     tipoDoc = models.ForeignKey(TiposDoc)
     numDoc = models.IntegerField()
     descripcion = models.CharField(max_length=100)
     operador = models.ForeignKey(User, null=True)
     importe = models.FloatField()
-    tipoMovCaja = models.ForeignKey(TipoMovCaja)
+    tipoMovCaja = models.ForeignKey(TipoMovCaja, verbose_name='Operacion')
 
     class Meta:
         verbose_name = 'Movimiento de caja'

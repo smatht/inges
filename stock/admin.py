@@ -12,6 +12,7 @@ class ProductoAdmin(ForeignKeyAutocompleteAdmin):
     form = ProductoForm
     list_display = ('id', 'descripcion', 'activo', 'familia')
     search_fields = ('descripcion',)
+    filter_horizontal = ('proveedor',)
 
 
 

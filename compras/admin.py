@@ -210,7 +210,7 @@ class CompraItemConceptoInline(ForeignKeyAutocompleteTabularInline):
 @admin.register(Compra)
 class CompraAdmin(ForeignKeyAutocompleteAdmin):
     form = CompraForm
-    list_display = ('tipoDoc', 'proveedor', 'fRegistro', 'fDocumento', 'totBruto', 'totImpuestos', 'totDescuentos', 'totNeto')
+    list_display = ('tipoDoc', 'proveedor', 'numero_doc', 'fRegistro', 'fDocumento', 'totBruto', 'totImpuestos', 'totDescuentos', 'totNeto')
     exclude = ('fRegistro', 'operador', 'anulado', 'fanulacion', 'totBruto', 'totImpuesto', 'totDescuento', 'totNeto',
                'yaAfectoStock')
     list_filter = ('fDocumento', 'fRegistro')
@@ -234,6 +234,9 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
         # copia = {1: 'error', 0: ''}.get(obj.esCopia)
         if condPago:
             return {'class': condPago}
+
+    def numero_doc(self, obj):
+        return '%s-%s' % (str(obj.sucursal).zfill(4), str(obj.numDoc).zfill(8))
 
     def render_change_form(self, request, context, *args, **kwargs):
         context['adminform'].form.fields['tipoDoc'].queryset = TiposDoc.objects.filter(tipo=1)
@@ -293,6 +296,8 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
             m = MovCaja(caja=caja, empresa=cabecera.afectaEmpresa, tipoDoc=cabecera.tipoDoc, numDoc= cabecera.numDoc,
                         descripcion=desc, operador=request.user, importe=precioLinea, tipoMovCaja=mc)
             m.save()
+            # Actualizamos el campo salida de Caja
+            caja.acumSalidas += precioLinea
         cabecera.save()
         return cabecera
 
