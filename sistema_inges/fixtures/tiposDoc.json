@@ -4,7 +4,9 @@
     "pk": "FCA",
     "fields": {
       "descripcion": "Factura de venta A",
-      "esFactura": 1
+      "esFactura": 1,
+      "aplicaStock": 0,
+      "tipo":0
     }
   },
   {
@@ -12,7 +14,9 @@
     "pk": "FCB",
     "fields": {
       "descripcion": "Factura de venta B",
-      "esFactura": 1
+      "esFactura": 1,
+      "aplicaStock": 0,
+      "tipo":0
     }
   },
   {
@@ -20,7 +24,9 @@
     "pk": "FCC",
     "fields": {
       "descripcion": "Factura de venta C",
-      "esFactura": 1
+      "esFactura": 1,
+      "aplicaStock": 0,
+      "tipo":0
     }
   },
   {
@@ -28,7 +34,9 @@
     "pk": "FCM",
     "fields": {
       "descripcion": "Factura de venta M",
-      "esFactura": 1
+      "esFactura": 1,
+      "aplicaStock": 0,
+      "tipo":0
     }
   },
   {
@@ -36,7 +44,9 @@
     "pk": "CCA",
     "fields": {
       "descripcion": "Factura de compra A",
-      "esFactura": 1
+      "esFactura": 1,
+      "aplicaStock": 1,
+      "tipo":1
     }
   },
   {
@@ -44,7 +54,9 @@
     "pk": "CCB",
     "fields": {
       "descripcion": "Factura de compra B",
-      "esFactura": 1
+      "esFactura": 1,
+      "aplicaStock": 1,
+      "tipo":1
     }
   },
   {
@@ -52,7 +64,9 @@
     "pk": "CCC",
     "fields": {
       "descripcion": "Factura de compra C",
-      "esFactura": 1
+      "esFactura": 1,
+      "aplicaStock": 1,
+      "tipo":1
     }
   }
 ]
