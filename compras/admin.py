@@ -1,3 +1,4 @@
+from datetime import date, timedelta
 from django.conf.urls import url
 from django.contrib import admin
 
@@ -210,15 +211,19 @@ class CompraItemConceptoInline(ForeignKeyAutocompleteTabularInline):
 @admin.register(Compra)
 class CompraAdmin(ForeignKeyAutocompleteAdmin):
     form = CompraForm
-    list_display = ('tipoDoc', 'proveedor', 'numero_doc', 'fRegistro', 'fDocumento', 'totBruto', 'totImpuestos', 'totDescuentos', 'totNeto')
-    exclude = ('fRegistro', 'operador', 'anulado', 'fanulacion', 'totBruto', 'totImpuesto', 'totDescuento', 'totNeto',
+    list_display = ('tipoDoc', 'proveedor', 'numero_doc', 'fRegistro', 'fDocumento', 'fVencimiento', 'totBruto', 'totImpuestos', 'totDescuentos', 'totNeto')
+    exclude = ('fRegistro', 'operador', 'anulado', 'fanulacion', 'totBruto', 'totImpuesto', 'totNeto',
                'yaAfectoStock')
     list_filter = ('fDocumento', 'fRegistro')
     radio_fields = {"condPago": admin.VERTICAL}
     inlines = [CompraItemInline, CompraItemConceptoInline]
     fieldsets = [
-        (None, {'fields': ['afectaEmpresa', 'obra', 'fContabilizar', 'fDocumento', 'proveedor', 'tipoDoc', ('sucursal', 'numDoc'),
-                           'condPago', ('prFinal', 'afectaStock', 'esCopia')]}),
+        (None, {'fields': ['afectaEmpresa', 'obra', 'fContabilizar', 'fDocumento', 'proveedor',
+                           'tipoDoc', ('sucursal', 'numDoc'), 'condPago']}),
+        ('Fecha vencimiento:', {
+            'classes': ('collapse',),
+            'fields': ['fVencimiento']}),
+        (None, {'fields': [('prFinal', 'afectaStock', 'esCopia')]}),
         ('Cai:', {
           'classes': ('collapse',),
           'fields': ['cai', 'vCai']}),
@@ -230,7 +235,15 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
         obj.save()
 
     def suit_row_attributes(self, obj, request):
-        condPago = {'CTD': '', 'CRE': 'warning'}.get(obj.condPago)
+        condPago = 'info'
+        if obj.condPago == 'CRE':
+            if (obj.fVencimiento < date.today()):
+                condPago = 'error'
+            elif (obj.fVencimiento <= (date.today() + timedelta(days=3))):
+                condPago = 'warning'
+            else:
+                condPago = 'success'
+        #condPago = {'CTD': '', 'CRE': 'warning'}.get(obj.condPago)
         # copia = {1: 'error', 0: ''}.get(obj.esCopia)
         if condPago:
             return {'class': condPago}
@@ -254,7 +267,7 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
         return super(CompraAdmin, self).response_add(request, obj)
 
     def response_change(self, request, obj):
-        obj = self.after_saving_model_and_related_inlines(obj)
+        obj = self.after_saving_model_and_related_inlines(request, obj)
         return super(CompraAdmin, self).response_change(request, obj)
 
     def after_saving_model_and_related_inlines(self, request, cabecera):
@@ -264,7 +277,7 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
         cabecera.totNeto = 0
         cabecera.totImpuestos = 0
         # Obtenemos la ultima caja abierta para esa obra
-        caja = Caja.objects.filter(destino=cabecera.obra, fCierre=None)
+        caja = Caja.objects.get(destino=cabecera.obra, fCierre=None)
         if not caja:
             caja = self.abrirCaja(cabecera.obra)
         for linea in lineas:
@@ -297,7 +310,10 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
                         descripcion=desc, operador=request.user, importe=precioLinea, tipoMovCaja=mc)
             m.save()
             # Actualizamos el campo salida de Caja
-            caja.acumSalidas += precioLinea
+            if caja.acumSalidas:
+                caja.acumSalidas += precioLinea
+            else:
+                caja.acumSalidas = precioLinea
         cabecera.save()
         return cabecera
 

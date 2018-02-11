@@ -169,6 +169,7 @@ class Compra(AbstractCompra):
                                                                                                      'contables.')
     cai = models.BigIntegerField(null=True, blank=True)
     vCai = models.DateField(null=True, blank=True)
+    fVencimiento = models.DateField(verbose_name='Fecha de vencimiento')
 
     class Meta:
         verbose_name_plural = "registro facturas"
