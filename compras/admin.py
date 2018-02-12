@@ -1,4 +1,6 @@
 from datetime import date, timedelta
+
+from daterange_filter.filter import DateRangeFilter
 from django.conf.urls import url
 from django.contrib import admin
 
@@ -211,10 +213,10 @@ class CompraItemConceptoInline(ForeignKeyAutocompleteTabularInline):
 @admin.register(Compra)
 class CompraAdmin(ForeignKeyAutocompleteAdmin):
     form = CompraForm
-    list_display = ('tipoDoc', 'proveedor', 'numero_doc', 'fRegistro', 'fDocumento', 'fVencimiento', 'totBruto', 'totImpuestos', 'totDescuentos', 'totNeto')
+    list_display = ('tipoDoc', 'proveedor', 'numero_doc', 'fRegistro', 'fDocumento', 'fVencimiento', 'totBruto', 'totImpuestos', 'totNeto')
     exclude = ('fRegistro', 'operador', 'anulado', 'fanulacion', 'totBruto', 'totImpuesto', 'totNeto',
-               'yaAfectoStock')
-    list_filter = ('fDocumento', 'fRegistro')
+               'yaAfectoStock', 'totDescuentos')
+    list_filter = ('fRegistro', ('fDocumento', DateRangeFilter))
     radio_fields = {"condPago": admin.VERTICAL}
     inlines = [CompraItemInline, CompraItemConceptoInline]
     fieldsets = [

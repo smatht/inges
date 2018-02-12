@@ -180,6 +180,7 @@ INSTALLED_APPS = (
     'stock',
     'mantenimiento',
     'fondos',
+    'daterange_filter'
 )
 # Any global settings for a REST framework API are kept in a single configuration dictionary named REST_FRAMEWORK.
 # Start off by adding the following to your settings.py module:
