@@ -1,6 +1,5 @@
 from facturacion.models import Registro_factura, Iva, Proveedor, Cliente
-from django.shortcuts import render_to_response, get_object_or_404, HttpResponse, render, HttpResponseRedirect
-from django.contrib.auth import authenticate, login
+from django.shortcuts import render_to_response, render, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from models import *
 import datetime

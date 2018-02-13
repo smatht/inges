@@ -10,6 +10,8 @@ from facturacion.models import Registro
 
 from proyectos.models import Obra
 
+from facturacion.models import Proveedor
+
 
 class TipoCaja(models.Model):
     descripcion = models.CharField(max_length=50)
@@ -50,13 +52,17 @@ class MovCaja(models.Model):
     caja = models.ForeignKey(Caja)
     empresa = models.ForeignKey(Registro)
     fecha = models.DateTimeField(default=datetime.datetime.now, verbose_name='Fecha y hora')
-    tipoDoc = models.ForeignKey(TiposDoc)
-    numDoc = models.IntegerField()
+    tipoDoc = models.ForeignKey(TiposDoc, null=True, blank=True)
+    numDoc = models.IntegerField(null=True, blank=True)
     descripcion = models.CharField(max_length=100)
     operador = models.ForeignKey(User, null=True)
     importe = models.FloatField()
     tipoMovCaja = models.ForeignKey(TipoMovCaja, verbose_name='Operacion')
+    proveedor = models.ForeignKey(Proveedor, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Movimiento de caja'
         verbose_name_plural = 'Movimientos de caja'
+
+
+# class OrdenPago(models.Model):

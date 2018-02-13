@@ -4,6 +4,9 @@ from django.conf.urls.static import static
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
+
+from stock.views import PROViewSet
+
 admin.autodiscover()
 
 from facturacion.views import FRViewSet
@@ -13,6 +16,7 @@ router = routers.DefaultRouter()
 import facturacion.urls
 
 router.register(r'links', FRViewSet)
+router.register(r'precios', PROViewSet)
 
 urlpatterns = patterns('',
     url(r'^api/', include(router.urls)),

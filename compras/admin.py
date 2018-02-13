@@ -311,11 +311,20 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
             m = MovCaja(caja=caja, empresa=cabecera.afectaEmpresa, tipoDoc=cabecera.tipoDoc, numDoc= cabecera.numDoc,
                         descripcion=desc, operador=request.user, importe=precioLinea, tipoMovCaja=mc)
             m.save()
+
             # Actualizamos el campo salida de Caja
             if caja.acumSalidas:
                 caja.acumSalidas += precioLinea
             else:
                 caja.acumSalidas = precioLinea
+
+            # Actualizamos precio de compra
+            if linea.producto.precio(cabecera.proveedor):
+                if linea.producto.precio(cabecera.proveedor) != linea.precio_unitario:
+                    linea.producto.nuevoPrecio(cabecera.proveedor, linea.precio_unitario)
+            else:
+                linea.producto.nuevoPrecio(cabecera.proveedor, linea.precio_unitario)
+
         cabecera.save()
         return cabecera
 

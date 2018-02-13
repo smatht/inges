@@ -10,7 +10,7 @@ from stock.forms import ProductoForm
 @admin.register(Producto)
 class ProductoAdmin(ForeignKeyAutocompleteAdmin):
     form = ProductoForm
-    list_display = ('id', 'descripcion', 'activo', 'familia')
+    list_display = ('id', 'descripcion', 'activo', 'familia', 'precio')
     search_fields = ('descripcion',)
     filter_horizontal = ('proveedor',)
 
