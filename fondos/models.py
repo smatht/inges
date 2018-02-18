@@ -3,14 +3,11 @@ import datetime
 
 from django.contrib.auth.models import User
 from django.db import models
-
 from mantenimiento.models import TiposDoc
-
 from facturacion.models import Registro
-
 from proyectos.models import Obra
-
 from facturacion.models import Proveedor
+from compras.models import Compra
 
 
 class TipoCaja(models.Model):
@@ -33,6 +30,10 @@ class Caja(models.Model):
     acumEntradas = models.FloatField(null=True, blank=True)
     acumSalidas = models.FloatField(null=True, blank=True)
     destino = models.ForeignKey(Obra)
+
+    def __unicode__(self):
+        return format(self.tipoCaja.__unicode__() + ' Obra: ' + self.destino.__unicode__()
+                      + ' ' + self.fApertura.strftime("%d-%m-%Y"))
 
 
 class TipoMovCaja(models.Model):
@@ -65,4 +66,16 @@ class MovCaja(models.Model):
         verbose_name_plural = 'Movimientos de caja'
 
 
-# class OrdenPago(models.Model):
+class OrdenPago(models.Model):
+    empresa = models.ForeignKey(Registro)
+    proveedor = models.ForeignKey(Proveedor)
+    fPago = models.DateField(default=datetime.datetime.now, verbose_name='Fecha pago')
+    fCarga = models.DateTimeField(default=datetime.datetime.now) #No admin
+    importe = models.FloatField()
+    operador = models.ForeignKey(User, null=True)
+    anulado = models.BooleanField(default=False)
+    aplicado = models.BooleanField(default=False)
+    comentario = models.CharField(max_length=100, null=True, blank=True)
+    facturas = models.ManyToManyField(Compra, null=True, blank=True)
+    # Si es pago en efectivo
+    caja = models.ForeignKey(Caja)

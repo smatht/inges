@@ -175,7 +175,8 @@ class Compra(AbstractCompra):
         verbose_name_plural = "registro facturas"
 
     def __unicode__(self):
-        return unicode(self.fDocumento) + " - " + self.numDoc.__str__()
+        return unicode(self.proveedor) + " Num: " + self.sucursal.__str__().zfill(4) + " - " \
+               + self.numDoc.__str__().zfill(8) + " Vto: " + unicode(self.fVencimiento)
 
 class CompraItem(models.Model):
     factura = models.ForeignKey(Compra)
