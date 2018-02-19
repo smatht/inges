@@ -40,8 +40,8 @@ class CompraForm(ModelForm):
   class Meta:
     # model = Registro_factura
     widgets = {
-        'sucursal': TextInput(attrs={'style': 'width: 50px'}),
-        'numDoc': TextInput(attrs={'style': 'width: 150px'}),
+        'sucursal': TextInput(attrs={'style': 'width: 50px', 'maxlength':'4'}),
+        'numDoc': TextInput(attrs={'style': 'width: 150px', 'maxlength':'8'}),
         'cantidad': TextInput(attrs={'style': 'width: 40px'}),
         'alicuota': Select(attrs={'style': 'width: 100px'}),
         'precio_unitario': EnclosedInput(prepend='$', attrs={'style': 'width: 60px'}),

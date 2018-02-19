@@ -76,6 +76,12 @@ class OrdenPago(models.Model):
     anulado = models.BooleanField(default=False)
     aplicado = models.BooleanField(default=False)
     comentario = models.CharField(max_length=100, null=True, blank=True)
-    facturas = models.ManyToManyField(Compra, null=True, blank=True)
+    facturas = models.ManyToManyField(Compra, blank=True)
     # Si es pago en efectivo
     caja = models.ForeignKey(Caja)
+
+    # def save(self, *args, **kwargs):
+    #     if self.diferencia != 0:
+    #         return  # No se graba!
+    #     else:
+    #         super(OrdenPago, self).save(*args, **kwargs)

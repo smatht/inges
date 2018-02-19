@@ -170,13 +170,15 @@ class Compra(AbstractCompra):
     cai = models.BigIntegerField(null=True, blank=True)
     vCai = models.DateField(null=True, blank=True)
     fVencimiento = models.DateField(verbose_name='Fecha de vencimiento')
+    saldo = models.FloatField(null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "registro facturas"
 
     def __unicode__(self):
-        return unicode(self.proveedor) + " Num: " + self.sucursal.__str__().zfill(4) + " - " \
-               + self.numDoc.__str__().zfill(8) + " Vto: " + unicode(self.fVencimiento)
+        return " Num: " + self.sucursal.__str__().zfill(4) + " - " + self.numDoc.__str__().zfill(8) \
+               + " Vto: " + unicode(self.fVencimiento) + " Saldo: " + unicode(self.totNeto) \
+               + " (" + unicode(self.proveedor) + ")"
 
 class CompraItem(models.Model):
     factura = models.ForeignKey(Compra)

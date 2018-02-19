@@ -2,7 +2,7 @@ from datetime import date, timedelta
 
 from daterange_filter.filter import DateRangeFilter
 from django.conf.urls import url
-from django.contrib import admin
+from django.contrib import admin, messages
 
 from mantenimiento.models import TiposDoc, Impuesto, Configuracion
 
@@ -234,6 +234,7 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
     def save_model(self, request, obj, form, change):
         if getattr(obj, 'operador', None) is None:
             obj.operador = request.user
+            # messages.add_message(request, messages.INFO, 'Operador registrado')
         obj.save()
 
     def suit_row_attributes(self, obj, request):
@@ -274,6 +275,7 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
 
     def after_saving_model_and_related_inlines(self, request, cabecera):
         lineas = CompraItem.objects.filter(factura=cabecera.pk)
+        conceptos = CompraItemConcepto.objects.filter(factura=cabecera.pk)
 
         cabecera.totBruto = 0
         cabecera.totNeto = 0
@@ -282,6 +284,7 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
         caja = Caja.objects.get(destino=cabecera.obra, fCierre=None)
         if not caja:
             caja = self.abrirCaja(cabecera.obra)
+        # Bucle CompraItem
         for linea in lineas:
             precioLinea = 0 # Usamos para movCaja
             # Completa datos de cabecera con valores de las lineas dependiendo si se usa precio final o bruto por item
@@ -292,14 +295,15 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
                 cabecera.totNeto = cabecera.totNeto + totNeto
                 cabecera.totBruto = cabecera.totBruto + totBruto
                 cabecera.totImpuestos = cabecera.totImpuestos + totImpuestos
-                precioLinea = linea.precio_unitario
+                precioLinea = totNeto
             else:
                 totBruto = (linea.precio_unitario * linea.cantidad)
-                totImpuestos = (totBruto * (linea.alicuota.valorImpuesto/100))
+                precioLinea = (linea.precio_unitario * (1 + (linea.alicuota.valorImpuesto / 100))) * linea.cantidad
+                totImpuestos = (precioLinea - totBruto)
                 cabecera.totBruto = cabecera.totBruto + totBruto
                 cabecera.totImpuestos = cabecera.totImpuestos + totImpuestos
                 cabecera.totNeto = totBruto + totImpuestos
-                precioLinea = linea.precio_unitario * (1+(linea.alicuota.valorImpuesto/100))
+
             # Si campo Obra de linea esta vacio completamos con la Obra seleccionada en cabecera sino se deja como esta
             if not linea.obra:
                 linea.obra = cabecera.obra
@@ -324,6 +328,49 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
                     linea.producto.nuevoPrecio(cabecera.proveedor, linea.precio_unitario)
             else:
                 linea.producto.nuevoPrecio(cabecera.proveedor, linea.precio_unitario)
+
+        # Bucle CompraItemConcepto
+        for concepto in conceptos:
+            precioConcepto = 0  # Usamos para movCaja
+            # Completa datos de cabecera con valores de las conceptos dependiendo si se usa precio final o bruto por item
+            if cabecera.prFinal:
+                totNeto = (concepto.precio_unitario * concepto.cantidad)
+                totBruto = ((concepto.precio_unitario / (
+                            1 + (concepto.alicuota.valorImpuesto / 100))) * concepto.cantidad)
+                totImpuestos = ((concepto.precio_unitario - (concepto.precio_unitario / (
+                            1 + (concepto.alicuota.valorImpuesto / 100)))) * concepto.cantidad)
+                cabecera.totNeto = cabecera.totNeto + totNeto
+                cabecera.totBruto = cabecera.totBruto + totBruto
+                cabecera.totImpuestos = cabecera.totImpuestos + totImpuestos
+                precioConcepto = totNeto
+            else:
+                totBruto = (concepto.precio_unitario * concepto.cantidad)
+                precioConcepto = (concepto.precio_unitario * (
+                            1 + (concepto.alicuota.valorImpuesto / 100))) * concepto.cantidad
+                totImpuestos = (precioconcepto - totBruto)
+                cabecera.totBruto = cabecera.totBruto + totBruto
+                cabecera.totImpuestos = cabecera.totImpuestos + totImpuestos
+                cabecera.totNeto = totBruto + totImpuestos
+
+            # Si campo Obra de concepto esta vacio completamos con la Obra seleccionada en cabecera sino se deja como esta
+            if not concepto.obra:
+                concepto.obra = cabecera.obra
+                concepto.save()
+            # Hacemos el movimiento de caja.
+            desc = cabecera.tipoDoc.id + " Nro:" + str(
+                cabecera.numDoc) + " Prov: " + cabecera.proveedor.razon_social \
+                   + " " + concepto.descripcion + " " + str(concepto.cantidad) + " Unid."
+            mc = TipoMovCaja.objects.get(pk=3)
+            m = MovCaja(caja=caja, empresa=cabecera.afectaEmpresa, tipoDoc=cabecera.tipoDoc,
+                        numDoc=cabecera.numDoc,
+                        descripcion=desc, operador=request.user, importe=precioConcepto, tipoMovCaja=mc)
+            m.save()
+
+            # Actualizamos el campo salida de Caja
+            if caja.acumSalidas:
+                caja.acumSalidas += precioConcepto
+            else:
+                caja.acumSalidas = precioConcepto
 
         cabecera.save()
         return cabecera
