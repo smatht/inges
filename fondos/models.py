@@ -85,3 +85,7 @@ class OrdenPago(models.Model):
     #         return  # No se graba!
     #     else:
     #         super(OrdenPago, self).save(*args, **kwargs)
+
+# class OrdenPago_Facturas(models.Model):
+#     ordenPago = models.ForeignKey(OrdenPago)
+#     factura = models.ForeignKey(Compra)

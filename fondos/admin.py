@@ -1,4 +1,5 @@
 from django.contrib import admin, messages
+from django.db.models import Q
 from django.forms import SelectMultiple
 from django.db import models
 
@@ -50,17 +51,18 @@ class OrdenPagoAdmin(admin.ModelAdmin):
     suit_form_tabs = (('facturas', 'Facturas a pagar'), ('valores', 'Valores'))
 
     def render_change_form(self, request, context, *args, **kwargs):
+        idPagadas = OrdenPago.facturas.through.objects.values_list('compra', flat=True)
         context['adminform'].form.fields['empresa'].initial = Configuracion.objects.get(pk=1).empresa
-        context['adminform'].form.fields['facturas'].queryset = Compra.objects.filter(condPago='CRE')
+        context['adminform'].form.fields['facturas'].queryset = Compra.objects.filter(~Q(id__in=idPagadas), condPago='CRE')
         return super(OrdenPagoAdmin, self).render_change_form(request, context, args, kwargs)
 
-    def save_model(self, request, obj, form, change):
-        pass
-        if getattr(obj, 'diferencia', None) is not 0:
-            messages.add_message(request, messages.ERROR, 'ERROR EN LA OPERACION')
-            pass
-        else:
-            obj.save()
+    # def save_model(self, request, obj, form, change):
+    #     pass
+    #     if getattr(obj, 'diferencia', None) is not 0:
+    #         messages.add_message(request, messages.ERROR, 'ERROR EN LA OPERACION')
+    #         pass
+    #     else:
+    #         obj.save()
 
 
 

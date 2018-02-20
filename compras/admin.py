@@ -8,6 +8,7 @@ from mantenimiento.models import TiposDoc, Impuesto, Configuracion
 
 from fondos.models import Caja, MovCaja, TipoCaja, TipoMovCaja
 
+from fondos.models import OrdenPago
 from models import PedidoItem, Pedido, Remito, RemitoItem, PedidoItemConcepto, Compra, CompraItem, CompraItemConcepto
 from functools32 import update_wrapper
 from mantenimiento.models import ExtendUser
@@ -240,12 +241,13 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
     def suit_row_attributes(self, obj, request):
         condPago = 'info'
         if obj.condPago == 'CRE':
-            if (obj.fVencimiento < date.today()):
-                condPago = 'error'
-            elif (obj.fVencimiento <= (date.today() + timedelta(days=3))):
-                condPago = 'warning'
-            else:
-                condPago = 'success'
+            if obj.pk not in OrdenPago.facturas.through.objects.values_list('compra', flat=True):
+                if (obj.fVencimiento < date.today()):
+                    condPago = 'error'
+                elif (obj.fVencimiento <= (date.today() + timedelta(days=3))):
+                    condPago = 'warning'
+                else:
+                    condPago = 'success'
         #condPago = {'CTD': '', 'CRE': 'warning'}.get(obj.condPago)
         # copia = {1: 'error', 0: ''}.get(obj.esCopia)
         if condPago:
@@ -347,7 +349,7 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
                 totBruto = (concepto.precio_unitario * concepto.cantidad)
                 precioConcepto = (concepto.precio_unitario * (
                             1 + (concepto.alicuota.valorImpuesto / 100))) * concepto.cantidad
-                totImpuestos = (precioconcepto - totBruto)
+                totImpuestos = (precioConcepto - totBruto)
                 cabecera.totBruto = cabecera.totBruto + totBruto
                 cabecera.totImpuestos = cabecera.totImpuestos + totImpuestos
                 cabecera.totNeto = totBruto + totImpuestos

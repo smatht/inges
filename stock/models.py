@@ -59,7 +59,7 @@ class Producto(models.Model):
     def __unicode__(self):
         return unicode(self.descripcion)
 
-    def precio(self, proveedor):
+    def precio(self, proveedor=None):
         p = PrecioCompra.getPrecioXProductoUltimaVigencia(self, proveedor)
         if p:
             return p.precioCompra
@@ -67,14 +67,17 @@ class Producto(models.Model):
             return None
 
     def nuevoPrecio(self, proveedor, precio):
-        p = PrecioCompra(producto=self, proveedor=proveedor, precioCompra=precio)
+        if proveedor is None:
+            p = PrecioCompra(producto=self, precioCompra=precio)
+        else:
+            p = PrecioCompra(producto=self, proveedor=proveedor, precioCompra=precio)
         p.save()
         # PrecioCompra.setNuevoPrecio(self, proveedor, precio)
 
 
 class PrecioCompra(models.Model):
     producto = models.ForeignKey(Producto)
-    proveedor = models.ForeignKey(Proveedor)
+    proveedor = models.ForeignKey(Proveedor, null=True, blank=True)
     fDesde = models.DateTimeField(default=datetime.datetime.now)
     precioCompra = models.FloatField()
 
