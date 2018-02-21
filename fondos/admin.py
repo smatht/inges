@@ -51,6 +51,7 @@ class OrdenPagoAdmin(admin.ModelAdmin):
     suit_form_tabs = (('facturas', 'Facturas a pagar'), ('valores', 'Valores'))
 
     def render_change_form(self, request, context, *args, **kwargs):
+        # Busca ids de facturas ya pagadas (asignadas a un recibo)
         idPagadas = OrdenPago.facturas.through.objects.values_list('compra', flat=True)
         context['adminform'].form.fields['empresa'].initial = Configuracion.objects.get(pk=1).empresa
         context['adminform'].form.fields['facturas'].queryset = Compra.objects.filter(~Q(id__in=idPagadas), condPago='CRE')

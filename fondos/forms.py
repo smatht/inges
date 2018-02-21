@@ -24,4 +24,8 @@ class FondosForm(forms.ModelForm):
         fields = '__all__'
         widgets = {
             'facturas': SelectMultiple(attrs={'size': '10'})
-    }
+        }
+
+    class Media:
+        js = ('js/filterM2M.js',)
+
