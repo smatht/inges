@@ -84,3 +84,6 @@ class Configuracion(models.Model):
         null=True,
         blank=True,
         verbose_name='Tipo doc')
+
+    def __unicode__(self):
+        return unicode('Ajustes')

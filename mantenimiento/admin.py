@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.shortcuts import redirect
 
 from models import TiposDoc, Impuesto, Configuracion
 
@@ -33,5 +34,12 @@ class ConfigAdmin(admin.ModelAdmin):
             'fields': ['ventas_tipoDoc']}),
     ]
     suit_form_tabs = (('general', 'General'),('compras', 'Compras'), ('ventas', 'Ventas'))
+
+    def response_add(self, request, new_object, **kwargs):
+        return redirect('/administracion/')
+
+    def response_change(self, request, obj):
+        return redirect('/administracion/')
+
 
 # Register your models here.

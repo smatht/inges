@@ -217,7 +217,8 @@ SUIT_CONFIG = {
     # 'MENU_EXCLUDE': ('auth.group',),
     'MENU': (
         {'app': 'mantenimiento', 'models': (
-            {'model': 'mantenimiento.configuracion', 'label': 'Ajustes', 'permissions': 'mantenimiento.add_configuracion'},
+            {'label': 'Ajustes', 'url': '/administracion/mantenimiento/configuracion/1/', 'permissions': 'mantenimiento.add_configuracion'},
+            # {'model': 'mantenimiento.configuracion', 'label': 'Ajustes', 'permissions': 'mantenimiento.add_configuracion'},
             {'model': 'facturacion.registro', 'label': 'Empresas', 'permissions': 'facturacion.add_registro'},
             {'model': 'mantenimiento.impuesto', 'label': 'Impuestos', 'permissions': 'mantenimiento.add_impuesto'},
             {'model': 'mantenimiento.tiposdoc', 'label': 'Documentos', 'permissions': 'mantenimiento.add_tiposdoc'},
