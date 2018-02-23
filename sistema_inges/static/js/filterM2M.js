@@ -7,7 +7,7 @@ $(document).ready(function() {
 
     slcProv.on('change', function (e) {
         var fltFacturas = document.getElementById('id_facturas_input');
-//        fltFacturas.setAttribute('readonly', 'readonly');
+        fltFacturas.setAttribute('readonly', 'readonly');
         var optionSelected = $(this).find("option:selected");
         var valueSelected = optionSelected.text();
         fltFacturas.value = valueSelected;

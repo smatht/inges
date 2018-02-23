@@ -216,13 +216,17 @@ SUIT_CONFIG = {
     'MENU_OPEN_FIRST_CHILD': True, # Default True
     # 'MENU_EXCLUDE': ('auth.group',),
     'MENU': (
-        {'label': 'Empresas', 'models': ('facturacion.registro', 'facturacion.cliente')},
+        {'app': 'mantenimiento', 'models': (
+            {'model': 'mantenimiento.configuracion', 'label': 'Ajustes', 'permissions': 'mantenimiento.add_configuracion'},
+            {'model': 'facturacion.registro', 'label': 'Empresas', 'permissions': 'facturacion.add_registro'},
+            {'model': 'mantenimiento.impuesto', 'label': 'Impuestos', 'permissions': 'mantenimiento.add_impuesto'},
+            {'model': 'mantenimiento.tiposdoc', 'label': 'Documentos', 'permissions': 'mantenimiento.add_tiposdoc'},
+            {'model': 'proyectos.obra', 'label': 'Obras', 'permissions': 'proyectos.add_obra'},
+        )},
         {'app': 'facturacion', 'models': (
             # {'label': 'Emitir factura', 'icon': 'none', 'url': '/facturacion/emision/', 'permissions': 'facturacion.add_informes'},
-            {'model': 'facturacion.registro_factura', 'label': 'Registrar factura', 'permissions': 'facturacion.add_registro_factura'},
-            {'model': 'facturacion.pago', 'label': 'Pagos', 'permissions': 'facturacion.add_pago'},
+            {'model': 'facturacion.cliente', 'label': 'Clientes', 'permissions': 'facturacion.add_cliente'},
             {'model': 'facturacion.emision_factura', 'label': 'Emitir factura', 'permissions': 'facturacion.add_emision_factura'},
-            {'label': 'Informe facturacion', 'icon': 'icon-briefcase', 'url': 'facturacion.views.informesFacturacion', 'permissions': 'facturacion.add_informes'},
         )},
         {'app': 'compras', 'models': (
             {'model': 'facturacion.proveedor', 'label': 'Proveedores', 'permissions': 'facturacion.add_proveedor'},
@@ -231,7 +235,8 @@ SUIT_CONFIG = {
             {'model': 'compras.remito', 'label': 'Remito de compra', 'permissions': 'compras.add_remito'},
         )},
         {'app': 'fondos', 'models': (
-            {'model': 'fondos.tipocaja', 'label': 'Cajas', 'permissions': 'fondos.add_caja'},
+            {'model': 'fondos.tipocaja', 'label': 'Cajas', 'permissions': 'fondos.add_tipocaja'},
+            {'model': 'fondos.caja', 'label': 'Aperturas de caja', 'permissions': 'fondos.add_caja'},
             {'model': 'fondos.movcaja', 'label': 'Nuevo movimiento', 'permissions': 'fondos.add_movcaja'},
             {'model': 'fondos.tipomovcaja', 'label': 'Tipo movimiento', 'permissions': 'fondos.add_tipomovcaja'},
         )},

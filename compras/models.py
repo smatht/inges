@@ -15,6 +15,7 @@ from stock.models import Producto, Unidades
 from mantenimiento.models import TiposDoc, Impuesto
 
 
+
 class Pedido(models.Model):
     usuario = models.ForeignKey(User, null=True)
     # cuit = lambda: Registro.objects.get(cuit='23144591119')
@@ -159,7 +160,7 @@ class Compra(AbstractCompra):
         max_length=3,
         choices=settings.COND_PAGO,
         default='CTD',
-        verbose_name='Condición pago',
+        verbose_name='Condicion pago',
     )
     esCopia = models.BooleanField(default=False, verbose_name='Es copia')
     afectaStock = models.BooleanField(default=False, verbose_name='Afecta a stock')
@@ -179,6 +180,8 @@ class Compra(AbstractCompra):
         return " Num: " + self.sucursal.__str__().zfill(4) + " - " + self.numDoc.__str__().zfill(8) \
                + " Vto: " + unicode(self.fVencimiento) + " Saldo: " + unicode(self.totNeto) \
                + " (" + unicode(self.proveedor) + ")"
+
+
 
 class CompraItem(models.Model):
     factura = models.ForeignKey(Compra)

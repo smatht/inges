@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from datetime import date, timedelta
 
 from daterange_filter.filter import DateRangeFilter
@@ -217,7 +218,7 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
     list_display = ('tipoDoc', 'proveedor', 'numero_doc', 'fRegistro', 'fDocumento', 'fVencimiento', 'totBruto', 'totImpuestos', 'totNeto')
     exclude = ('fRegistro', 'operador', 'anulado', 'fanulacion', 'totBruto', 'totImpuesto', 'totNeto',
                'yaAfectoStock', 'totDescuentos')
-    list_filter = ('fRegistro', ('fDocumento', DateRangeFilter))
+    list_filter = ('fRegistro', ('fDocumento', DateRangeFilter), 'condPago')
     radio_fields = {"condPago": admin.VERTICAL}
     inlines = [CompraItemInline, CompraItemConceptoInline]
     fieldsets = [
@@ -284,6 +285,7 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
         cabecera.totImpuestos = 0
         # Obtenemos la ultima caja abierta para esa obra
         caja = Caja.objects.get(destino=cabecera.obra, fCierre=None)
+        print(caja)
         if not caja:
             caja = self.abrirCaja(cabecera.obra)
         # Bucle CompraItem
@@ -319,10 +321,11 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
             m.save()
 
             # Actualizamos el campo salida de Caja
-            if caja.acumSalidas:
+            if caja.acumSalidas >= 0:
                 caja.acumSalidas += precioLinea
             else:
                 caja.acumSalidas = precioLinea
+            caja.save()
 
             # Actualizamos precio de compra
             if linea.producto.precio(cabecera.proveedor):
@@ -369,10 +372,11 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
             m.save()
 
             # Actualizamos el campo salida de Caja
-            if caja.acumSalidas:
+            if caja.acumSalidas >= 0:
                 caja.acumSalidas += precioConcepto
             else:
                 caja.acumSalidas = precioConcepto
+            caja.save()
 
         cabecera.save()
         return cabecera
@@ -382,6 +386,7 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
         c = Caja(tipoCaja=tc, destino=obra)
         c.save()
         return c
+
 
 # admin.site.unregister(User)
 # admin.site.register(User, UserAdmin)

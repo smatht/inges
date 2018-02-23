@@ -8,7 +8,7 @@ from forms import FondosForm
 from mantenimiento.models import Configuracion
 
 from compras.models import Compra
-from models import TipoCaja, MovCaja, TipoMovCaja, OrdenPago
+from models import TipoCaja, MovCaja, TipoMovCaja, OrdenPago, Caja
 
 
 @admin.register(MovCaja)
@@ -18,6 +18,7 @@ class MovCajaAdmin(admin.ModelAdmin):
 
     def obra(self, obj):
         return obj.caja.destino
+
 
 
 @admin.register(OrdenPago)
@@ -65,6 +66,12 @@ class OrdenPagoAdmin(admin.ModelAdmin):
     #     else:
     #         obj.save()
 
+
+@admin.register(Caja)
+class CajaAdmin(admin.ModelAdmin):
+    pass
+    # list_display = ('fecha', 'obra', 'importe', 'tipoMovCaja', 'descripcion')
+    # list_filter = ('caja__destino',)
 
 
 admin.site.register(TipoCaja)
