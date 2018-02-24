@@ -61,15 +61,6 @@ class MovCaja(models.Model):
     tipoMovCaja = models.ForeignKey(TipoMovCaja, verbose_name='Operacion')
     proveedor = models.ForeignKey(Proveedor, null=True, blank=True)
 
-    def save(self, *args, **kwargs):
-        # Check how the current values differ from ._loaded_values. For example,
-        # prevent changing the creator_id of the model. (This example doesn't
-        # support cases where 'creator_id' is deferred).
-        op = MovCaja.objects.values('operador').get(pk=self.pk)
-        if self.operador != op:
-            raise ValueError("Pshh! No puede editar un movimiento ajeno!")
-        super(MovCaja).save(*args, **kwargs)
-
     class Meta:
         verbose_name = 'Movimiento de caja'
         verbose_name_plural = 'Movimientos de caja'
