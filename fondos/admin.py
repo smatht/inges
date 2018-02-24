@@ -102,5 +102,9 @@ class CajaAdmin(admin.ModelAdmin):
         return obj.montoInicial + obj.acumEntradas - obj.acumSalidas
 
 
+
+
+
+
 admin.site.register(TipoCaja)
 admin.site.register(TipoMovCaja)
