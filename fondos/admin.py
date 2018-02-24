@@ -1,3 +1,4 @@
+import datetime
 from django.contrib import admin, messages
 from django.db.models import Q
 from django.forms import SelectMultiple
@@ -15,6 +16,31 @@ from models import TipoCaja, MovCaja, TipoMovCaja, OrdenPago, Caja
 class MovCajaAdmin(admin.ModelAdmin):
     list_display = ('fecha', 'obra', 'importe', 'tipoMovCaja', 'descripcion')
     list_filter = ('caja__destino',)
+    fieldsets = (
+        (None, {
+            'fields': ('empresa', 'caja', 'tipoMovCaja', 'importe', 'descripcion'),
+        }),
+        ('Datos adicionales:', {
+            'classes': ('collapse',),
+            'fields': ('tipoDoc', 'numDoc', 'proveedor')}),
+    )
+
+    def save_model(self, request, obj, form, change):
+        if getattr(obj, 'operador', None) is None:
+            obj.operador = request.user
+            # messages.add_message(request, messages.INFO, 'Operador registrado')
+        if getattr(obj, 'fecha', None) is None:
+            obj.fecha = datetime.datetime.now
+        if getattr(obj, 'tipoMovCaja').suma:
+            obj.caja.acumEntradas += obj.importe
+        else:
+            obj.caja.acumSalidas += obj.importe
+        obj.save()
+
+    def render_change_form(self, request, context, *args, **kwargs):
+        # context['adminform'].form.fields['tipoDoc'].queryset = TiposDoc.objects.filter(tipo=1)
+        context['adminform'].form.fields['empresa'].initial = Configuracion.objects.get(pk=1).empresa
+        return super(MovCajaAdmin, self).render_change_form(request, context, args, kwargs)
 
     def obra(self, obj):
         return obj.caja.destino
@@ -69,9 +95,11 @@ class OrdenPagoAdmin(admin.ModelAdmin):
 
 @admin.register(Caja)
 class CajaAdmin(admin.ModelAdmin):
-    pass
-    # list_display = ('fecha', 'obra', 'importe', 'tipoMovCaja', 'descripcion')
+    list_display = ('tipoCaja', 'fApertura', 'destino', 'montoInicial', 'acumEntradas', 'acumSalidas', 'saldo')
     # list_filter = ('caja__destino',)
+
+    def saldo(self, obj):
+        return obj.montoInicial + obj.acumEntradas - obj.acumSalidas
 
 
 admin.site.register(TipoCaja)
