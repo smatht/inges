@@ -4,6 +4,7 @@ from datetime import date, timedelta
 from daterange_filter.filter import DateRangeFilter
 from django.conf.urls import url
 from django.contrib import admin, messages
+from django.core.exceptions import ObjectDoesNotExist
 
 from mantenimiento.models import TiposDoc, Impuesto, Configuracion
 
@@ -284,7 +285,10 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
         cabecera.totNeto = 0
         cabecera.totImpuestos = 0
         # Obtenemos la ultima caja abierta para esa obra
-        caja = Caja.objects.get(destino=cabecera.obra, fCierre=None)
+        try:
+            caja = Caja.objects.get(destino=cabecera.obra, fCierre=None)
+        except ObjectDoesNotExist:
+            caja = None
         print(caja)
         if not caja:
             caja = self.abrirCaja(cabecera.obra)
