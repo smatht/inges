@@ -35,6 +35,8 @@ class MovCajaAdmin(admin.ModelAdmin):
             obj.caja.acumEntradas += obj.importe
         else:
             obj.caja.acumSalidas += obj.importe
+
+        obj.caja.save()
         obj.save()
 
     def render_change_form(self, request, context, *args, **kwargs):
