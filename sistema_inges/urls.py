@@ -14,7 +14,7 @@ from rest_framework import routers
 router = routers.DefaultRouter()
 
 import facturacion.urls
-
+from fondos_externos.views import save_cuenta
 router.register(r'links', FRViewSet)
 router.register(r'precios', PROViewSet)
 
@@ -25,7 +25,8 @@ urlpatterns = patterns('',
     url(r'^administracion/', include(admin.site.urls)),
     (r'^logout/$', 'django.contrib.auth.views.logout', {'next_page': '/'}),
     url(r'^tellme/', include("tellme.urls")),
-    url(r'^', include(facturacion.urls))
+    url(r'^', include(facturacion.urls)),
+    url(r'^wallet/', save_cuenta)
 
 
     # Examples:

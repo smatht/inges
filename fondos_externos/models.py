@@ -2,9 +2,12 @@ from django.db import models
 
 class Cuenta(models.Model):
     id = models.CharField(primary_key=True, max_length=36)
-    nombre = models.CharField(max_length=50)
+    name = models.CharField(max_length=50)
     color = models.CharField(null=True, blank=True, max_length=10)
-    montoInicial = models.FloatField(default=0)
+    excludeFromStats = models.BooleanField()
+    gps = models.BooleanField()
+    initAmount = models.FloatField(default=0)
+    position = models.IntegerField()
 
 
 class Categoria(models.Model):

@@ -125,6 +125,8 @@ STATICFILES_FINDERS = (
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '$5o+=*d#pa=3z2%*vun0@6h_))&2r!^1u@onv7i1!@b))vl&g&'
+# Token for BudgetBakers Wallet
+WALLET_KEY = '5a3709ce-acfb-49fb-8b60-b1b9e55ffb51'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
