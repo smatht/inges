@@ -14,8 +14,8 @@ from models import TipoCaja, MovCaja, TipoMovCaja, OrdenPago, Caja
 
 @admin.register(MovCaja)
 class MovCajaAdmin(admin.ModelAdmin):
-    list_display = ('fecha', 'obra', 'importe', 'tipoMovCaja', 'descripcion')
-    list_filter = ('caja__destino',)
+    list_display = ('fecha', 'obra', 'importe', 'tipoMovCaja', 'descripcion', 'operacion')
+    list_filter = ('caja__destino', 'caja__tipoCaja')
     fieldsets = (
         (None, {
             'fields': ('empresa', 'caja', 'tipoMovCaja', 'importe', 'descripcion'),
@@ -46,6 +46,13 @@ class MovCajaAdmin(admin.ModelAdmin):
 
     def obra(self, obj):
         return obj.caja.destino
+
+    def operacion(self, obj):
+        if (obj.tipoMovCaja.suma):
+            return '<img src="/static/admin/img/mas.gif" alt="True">'
+        else:
+            return '<img src="/static/admin/img/menos.gif" alt="False">'
+    operacion.allow_tags = True
 
 
 
