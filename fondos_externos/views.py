@@ -3,7 +3,7 @@ from django.conf import settings
 from django.template.context import RequestContext
 from pip._vendor import requests
 
-from .serializers import CuentaSerializer
+from .serializers import CuentaSerializer, CuentaSerializer2
 
 
 def save_cuenta(request):
@@ -18,11 +18,11 @@ def save_cuenta(request):
     }
     r = requests.get(url, headers=headers)
     json = r.json()
-    serializer = CuentaSerializer(data=json)
+    print(json)
+    serializer = CuentaSerializer(data=json, many=True)
     print(serializer.is_valid())
-    # print(serializer.data)
+    print(serializer.data)
     if serializer.is_valid():
-        print('VALIDOOOO')
         serializer.save()
     return redirect('/')
 

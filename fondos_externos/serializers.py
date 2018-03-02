@@ -4,6 +4,7 @@ from .models import Cuenta
 class CuentaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cuenta
+        fields = ('id', 'name', 'color', 'excludeFromStats', 'gps', 'initAmount', 'position')
 
 
 class CuentaSerializer2(serializers.Serializer):

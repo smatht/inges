@@ -1,6 +1,6 @@
 #encoding:utf-8
 # Django settings for sistema_inges project.
-
+#
 # export INGESDB_NAME=df4sco1u608bra
 # export INGESDB_HOST=ec2-107-21-236-219.compute-1.amazonaws.com
 # export INGESDB_PORT=5432
