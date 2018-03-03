@@ -3,10 +3,12 @@ from django.conf import settings
 from django.template.context import RequestContext
 from pip._vendor import requests
 
-from .serializers import CuentaSerializer, CuentaSerializer2
+from .models import Cuenta
+from .serializers import CuentaSerializer
 
 
 def save_cuenta(request):
+    Cuenta.objects.all().delete()
     # Para saber si esxiste el usuario. Si existe "<Response [200]>"
     # url = 'https://api.budgetbakers.com/api/v1/user/exists/matgs656@gmail.com'
     # headers = {'X-Token': '5a3709ce-acfb-49fb-8b60-b1b9e55ffb51'}
@@ -18,11 +20,13 @@ def save_cuenta(request):
     }
     r = requests.get(url, headers=headers)
     json = r.json()
-    print(json)
     serializer = CuentaSerializer(data=json, many=True)
-    print(serializer.is_valid())
-    print(serializer.data)
-    if serializer.is_valid():
-        serializer.save()
+    serializer.save()
+    # if serializer.is_valid():
+    #     print('1. Validooo')
+    #     serializer.save()
+    # else:
+    #     Cuenta.objects.all().delete()
+    #     serializer.save()
     return redirect('/')
 

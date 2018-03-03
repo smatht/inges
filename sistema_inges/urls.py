@@ -26,7 +26,7 @@ urlpatterns = patterns('',
     (r'^logout/$', 'django.contrib.auth.views.logout', {'next_page': '/'}),
     url(r'^tellme/', include("tellme.urls")),
     url(r'^', include(facturacion.urls)),
-    url(r'^wallet/', save_cuenta)
+    url(r'^cuentas-wallet/', save_cuenta)
 
 
     # Examples:
