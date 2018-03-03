@@ -9,6 +9,9 @@ class Cuenta(models.Model):
     initAmount = models.FloatField(default=0)
     position = models.IntegerField()
 
+    def __unicode__(self):
+        return format(self.name)
+
 
 class Categoria(models.Model):
     id = models.CharField(primary_key=True, max_length=36)

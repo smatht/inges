@@ -106,6 +106,14 @@ class OrdenPagoAdmin(admin.ModelAdmin):
 class CajaAdmin(admin.ModelAdmin):
     list_display = ('tipoCaja', 'fApertura', 'destino', 'montoInicial', 'acumEntradas', 'acumSalidas', 'saldo')
     # list_filter = ('caja__destino',)
+    fieldsets = (
+        (None, {
+            'fields': ('tipoCaja', 'destino', 'montoInicial'),
+        }),
+        ('Vinculaciones externas:', {
+            'classes': ('collapse',),
+            'fields': ('cuentaWallet',)}),
+    )
 
     def saldo(self, obj):
         return obj.montoInicial + obj.acumEntradas - obj.acumSalidas

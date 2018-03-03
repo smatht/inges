@@ -8,6 +8,7 @@ from facturacion.models import Registro
 from proyectos.models import Obra
 from facturacion.models import Proveedor
 from compras.models import Compra
+from fondos_externos.models import Cuenta
 
 
 class TipoCaja(models.Model):
@@ -30,6 +31,7 @@ class Caja(models.Model):
     acumEntradas = models.FloatField(default=0)
     acumSalidas = models.FloatField(default=0)
     destino = models.ForeignKey(Obra)
+    cuentaWallet = models.ForeignKey(Cuenta, verbose_name='Cuenta Wallet', null=True, blank=True)
 
     def __unicode__(self):
         return format(self.tipoCaja.__unicode__() + ' Obra: ' + self.destino.__unicode__()
