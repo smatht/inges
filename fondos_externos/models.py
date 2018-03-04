@@ -21,8 +21,8 @@ class Categoria(models.Model):
 class MovCuenta(models.Model):
     id = models.CharField(primary_key=True, max_length=36)
     importe = models.FloatField()
-    categoria = models.ForeignKey(Categoria)
-    cuenta = models.ForeignKey(Cuenta)
+    categoria = models.ForeignKey(Categoria, on_delete=models.CASCADE)
+    cuenta = models.ForeignKey(Cuenta, on_delete=models.CASCADE)
     tipoPago = models.CharField(max_length=50) #type of payment (cash,debit_card,credit_card,transfer,voucher,mobile_payment,web_payment)
     fecha = models.DateTimeField()
     notas = models.TextField()

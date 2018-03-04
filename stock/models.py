@@ -40,7 +40,7 @@ class Linea(models.Model):
 
 
 class Familia(models.Model):
-    linea = models.ForeignKey(Linea)
+    linea = models.ForeignKey(Linea, on_delete=models.CASCADE)
     descripcion = models.CharField(max_length=50)
 
     def __unicode__(self):
@@ -51,9 +51,9 @@ class Familia(models.Model):
 class Producto(models.Model):
     descripcion = models.CharField(max_length=150)
     descripcionCorta = models.CharField(max_length=10, blank=True, null=True)
-    familia = models.ForeignKey(Familia)
+    familia = models.ForeignKey(Familia, on_delete=models.CASCADE)
     proveedor = models.ManyToManyField(Proveedor)
-    unidad = models.ForeignKey(Unidades)
+    unidad = models.ForeignKey(Unidades, on_delete=models.CASCADE)
     activo = models.BooleanField(default=True)
 
     def __unicode__(self):
@@ -76,8 +76,8 @@ class Producto(models.Model):
 
 
 class PrecioCompra(models.Model):
-    producto = models.ForeignKey(Producto)
-    proveedor = models.ForeignKey(Proveedor, null=True, blank=True)
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    proveedor = models.ForeignKey(Proveedor, null=True, blank=True, on_delete=models.CASCADE)
     fDesde = models.DateTimeField(default=datetime.datetime.now)
     precioCompra = models.FloatField()
 

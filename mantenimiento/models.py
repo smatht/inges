@@ -69,13 +69,15 @@ class Configuracion(models.Model):
         Registro,
         null=True,
         blank=True,
-        verbose_name='Empresa principal')
+        verbose_name='Empresa principal',
+        on_delete = models.CASCADE)
     compras_tipoDoc = models.ForeignKey(
         TiposDoc,
         related_name='tipoFacCompra',
         null=True,
         blank=True,
-        verbose_name='Tipo doc')
+        verbose_name='Tipo doc',
+        on_delete=models.CASCADE)
     compras_usaPrFinal = models.BooleanField()
     compras_FacAfectaStk = models.BooleanField()
     ventas_tipoDoc = models.ForeignKey(
@@ -83,7 +85,8 @@ class Configuracion(models.Model):
         related_name='tipoFacVenta',
         null=True,
         blank=True,
-        verbose_name='Tipo doc')
+        verbose_name='Tipo doc',
+        on_delete=models.CASCADE)
 
     def __unicode__(self):
         return unicode('Ajustes')

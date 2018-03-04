@@ -24,14 +24,14 @@ class TipoCaja(models.Model):
 
 
 class Caja(models.Model):
-    tipoCaja = models.ForeignKey(TipoCaja)
+    tipoCaja = models.ForeignKey(TipoCaja, on_delete=models.CASCADE)
     fApertura = models.DateTimeField(default=datetime.datetime.now)
     fCierre = models.DateTimeField(null=True, blank=True)
     montoInicial = models.FloatField(default=0)
     acumEntradas = models.FloatField(default=0)
     acumSalidas = models.FloatField(default=0)
-    destino = models.ForeignKey(Obra)
-    cuentaWallet = models.ForeignKey(Cuenta, verbose_name='Cuenta Wallet', null=True, blank=True)
+    destino = models.ForeignKey(Obra, on_delete=models.CASCADE)
+    cuentaWallet = models.ForeignKey(Cuenta, verbose_name='Cuenta Wallet', null=True, blank=True, on_delete=models.CASCADE)
 
     def __unicode__(self):
         return format(self.tipoCaja.__unicode__() + ' Obra: ' + self.destino.__unicode__()
@@ -52,16 +52,16 @@ class TipoMovCaja(models.Model):
 
 
 class MovCaja(models.Model):
-    caja = models.ForeignKey(Caja)
-    empresa = models.ForeignKey(Registro)
+    caja = models.ForeignKey(Caja, on_delete=models.CASCADE)
+    empresa = models.ForeignKey(Registro, on_delete=models.CASCADE)
     fecha = models.DateTimeField(default=datetime.datetime.now, verbose_name='Fecha y hora')
-    tipoDoc = models.ForeignKey(TiposDoc, null=True, blank=True, verbose_name='Tipo de documento')
+    tipoDoc = models.ForeignKey(TiposDoc, null=True, blank=True, verbose_name='Tipo de documento', on_delete=models.CASCADE)
     numDoc = models.IntegerField(null=True, blank=True, verbose_name='Numero de documento')
     descripcion = models.CharField(max_length=100)
-    operador = models.ForeignKey(User, null=True)
+    operador = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     importe = models.FloatField()
-    tipoMovCaja = models.ForeignKey(TipoMovCaja, verbose_name='Operacion')
-    proveedor = models.ForeignKey(Proveedor, null=True, blank=True)
+    tipoMovCaja = models.ForeignKey(TipoMovCaja, verbose_name='Operacion', on_delete=models.CASCADE)
+    proveedor = models.ForeignKey(Proveedor, null=True, blank=True, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = 'Movimiento de caja'
@@ -69,18 +69,18 @@ class MovCaja(models.Model):
 
 
 class OrdenPago(models.Model):
-    empresa = models.ForeignKey(Registro)
-    proveedor = models.ForeignKey(Proveedor)
+    empresa = models.ForeignKey(Registro, on_delete=models.CASCADE)
+    proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE)
     fPago = models.DateField(default=datetime.datetime.now, verbose_name='Fecha pago')
     fCarga = models.DateTimeField(default=datetime.datetime.now) #No admin
     importe = models.FloatField()
-    operador = models.ForeignKey(User, null=True)
+    operador = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     anulado = models.BooleanField(default=False)
     aplicado = models.BooleanField(default=False)
     comentario = models.CharField(max_length=100, null=True, blank=True)
     facturas = models.ManyToManyField(Compra, blank=True)
     # Si es pago en efectivo
-    caja = models.ForeignKey(Caja)
+    caja = models.ForeignKey(Caja, on_delete=models.CASCADE)
 
     # def save(self, *args, **kwargs):
     #     if self.diferencia != 0:

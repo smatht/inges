@@ -3,7 +3,7 @@ import datetime
 
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.db import models
 from django.utils.html import format_html
 
@@ -17,17 +17,17 @@ from mantenimiento.models import TiposDoc, Impuesto
 
 
 class Pedido(models.Model):
-    usuario = models.ForeignKey(User, null=True)
+    usuario = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     # cuit = lambda: Registro.objects.get(cuit='23144591119')
-    registro = models.ForeignKey(Registro, default=1, verbose_name='Empresa')
+    registro = models.ForeignKey(Registro, default=1, verbose_name='Empresa', on_delete=models.CASCADE)
     fechaPedido = models.DateField(default=datetime.datetime.now, verbose_name='Fecha')
     fechaCarga = models.DateTimeField(default=datetime.datetime.now)
-    proveedor = models.ForeignKey(Proveedor)
-    se_autoriza = models.ForeignKey(User, related_name='toUser1', verbose_name='Se autoriza a', blank=True, null=True)
-    destino = models.ForeignKey(Obra, verbose_name='Obra')
+    proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE)
+    se_autoriza = models.ForeignKey(User, related_name='toUser1', verbose_name='Se autoriza a', blank=True, null=True, on_delete=models.CASCADE)
+    destino = models.ForeignKey(Obra, verbose_name='Obra', on_delete=models.CASCADE)
     bGeneraRemito = models.BooleanField(default=False, verbose_name="Recepción inmediata")
-    firmante = models.ForeignKey(User, related_name='fromUser1', help_text='Persona que autoriza', blank=True, null=True)
-    remitente = models.ForeignKey(User, related_name='registerUser1', help_text='Persona que registra')
+    firmante = models.ForeignKey(User, related_name='fromUser1', help_text='Persona que autoriza', blank=True, null=True, on_delete=models.CASCADE)
+    remitente = models.ForeignKey(User, related_name='registerUser1', help_text='Persona que registra', on_delete=models.CASCADE)
     bAnulado = models.BooleanField(default=False)
 
     class Meta:
@@ -55,11 +55,11 @@ class Pedido(models.Model):
 
 
 class PedidoItem(models.Model):
-    pedido = models.ForeignKey(Pedido)
-    producto = models.ForeignKey(Producto)
+    pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE)
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
     sAclaracion = models.CharField(max_length=150, null=True, blank=True, verbose_name='aclaracion')
     sCantidad = models.CharField(max_length=10, verbose_name='cantidad', default='1')
-    unidades = models.ForeignKey(Unidades, default=1)
+    unidades = models.ForeignKey(Unidades, default=1, on_delete=models.CASCADE)
     # precioUnitario = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     # importe = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
@@ -72,10 +72,10 @@ class PedidoItem(models.Model):
 
 
 class PedidoItemConcepto(models.Model):
-    pedido = models.ForeignKey(Pedido)
+    pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE)
     sDescripcion = models.CharField(max_length=300, verbose_name='descripcion')
     sCantidad = models.CharField(max_length=10, verbose_name='cantidad', default='1')
-    unidades = models.ForeignKey(Unidades, default=1)
+    unidades = models.ForeignKey(Unidades, default=1, on_delete=models.CASCADE)
     # precioUnitario = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     # importe = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
@@ -85,16 +85,16 @@ class PedidoItemConcepto(models.Model):
 
 
 class Remito(models.Model):
-    usuario = models.ForeignKey(User, null=True)
+    usuario = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     # cuit = lambda: Registro.objects.get(cuit='23144591119')
-    factura = models.ForeignKey(Registro_factura, blank=True, null=True)
-    pedido = models.ForeignKey(Pedido, blank=True, null=True)
-    registro = models.ForeignKey(Registro, default=1, verbose_name='Empresa')
-    proveedor = models.ForeignKey(Proveedor, blank=True, null=True)
+    factura = models.ForeignKey(Registro_factura, blank=True, null=True, on_delete=models.CASCADE)
+    pedido = models.ForeignKey(Pedido, blank=True, null=True, on_delete=models.CASCADE)
+    registro = models.ForeignKey(Registro, default=1, verbose_name='Empresa', on_delete=models.CASCADE)
+    proveedor = models.ForeignKey(Proveedor, blank=True, null=True, on_delete=models.CASCADE)
     sNumeroRemito = models.CharField(max_length=20, blank=True, null=True, verbose_name='Numero remito')
     fechaRemito = models.DateField(default=datetime.datetime.now)
     fechaCarga = models.DateTimeField(default=datetime.datetime.now)
-    destino = models.ForeignKey(Obra, blank=True, null=True)
+    destino = models.ForeignKey(Obra, blank=True, null=True, on_delete=models.CASCADE)
     sObservaciones = models.TextField(blank=True)
     iOrigen = models.SmallIntegerField(default=0)
     # (origen) Se usa para saber si el remito se creo a partir de un pedido o no
@@ -109,11 +109,11 @@ class Remito(models.Model):
 
 
 class RemitoItem(models.Model):
-    remito = models.ForeignKey(Remito)
+    remito = models.ForeignKey(Remito, on_delete=models.CASCADE)
     bConfirmacion = models.BooleanField(default=True)
-    producto = models.ForeignKey(Producto)
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
     sCantidad = models.CharField(max_length=10)
-    unidades = models.ForeignKey(Unidades, default=1)
+    unidades = models.ForeignKey(Unidades, default=1, on_delete=models.CASCADE)
     # precioUnitario = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     # importe = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
@@ -133,18 +133,18 @@ class RemitoItem(models.Model):
 #  Clases principal Facturacion Compras    #
 ############################################
 class AbstractCompra(models.Model):
-    proveedor = models.ForeignKey(Proveedor)
-    tipoDoc = models.ForeignKey(TiposDoc, verbose_name='Documento')
+    proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE)
+    tipoDoc = models.ForeignKey(TiposDoc, verbose_name='Documento', on_delete=models.CASCADE)
     sucursal = models.IntegerField()
     numDoc = models.IntegerField(verbose_name='Numero')
     fDocumento = models.DateField(verbose_name='Fecha del documento')
     fRegistro = models.DateTimeField(default=datetime.datetime.now)
-    operador = models.ForeignKey(User, null=True)
+    operador = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     observaciones = models.TextField(null=True, blank=True)
     anulado = models.BooleanField(default=False)
     fanulacion = models.DateTimeField(null=True, blank=True)
-    afectaEmpresa = models.ForeignKey(Registro, default=1, verbose_name='Empresa')
-    obra = models.ForeignKey(Obra)
+    afectaEmpresa = models.ForeignKey(Registro, default=1, verbose_name='Empresa', on_delete=models.CASCADE)
+    obra = models.ForeignKey(Obra, on_delete=models.CASCADE)
 
     class Meta:
         abstract = True
@@ -184,12 +184,12 @@ class Compra(AbstractCompra):
 
 
 class CompraItem(models.Model):
-    factura = models.ForeignKey(Compra)
-    producto = models.ForeignKey(Producto)
+    factura = models.ForeignKey(Compra, on_delete=models.CASCADE)
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
     cantidad = models.FloatField()
-    alicuota = models.ForeignKey(Impuesto)
+    alicuota = models.ForeignKey(Impuesto, on_delete=models.CASCADE)
     precio_unitario = models.FloatField()
-    obra = models.ForeignKey(Obra, blank=True, null=True)
+    obra = models.ForeignKey(Obra, blank=True, null=True, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = 'Detalle de factura'
@@ -197,12 +197,12 @@ class CompraItem(models.Model):
 
 
 class CompraItemConcepto(models.Model):
-    factura = models.ForeignKey(Compra)
+    factura = models.ForeignKey(Compra, on_delete=models.CASCADE)
     descripcion = models.CharField(max_length=300)
     cantidad = models.FloatField()
-    alicuota = models.ForeignKey(Impuesto)
+    alicuota = models.ForeignKey(Impuesto, on_delete=models.CASCADE)
     precio_unitario = models.FloatField()
-    obra = models.ForeignKey(Obra, blank=True, null=True)
+    obra = models.ForeignKey(Obra, blank=True, null=True, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = 'Concepto'

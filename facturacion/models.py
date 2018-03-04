@@ -27,7 +27,7 @@ class Pais(models.Model):
 
 class Ciudad(models.Model):
 	nombre = models.CharField(max_length=50)
-	pais = models.ForeignKey(Pais)
+	pais = models.ForeignKey(Pais, on_delete=models.CASCADE)
 
 	def __unicode__(self):
 		return unicode(self.nombre)
@@ -35,7 +35,7 @@ class Ciudad(models.Model):
 
 class Localidad(models.Model):
 	nombre = models.CharField(max_length=50)
-	ciudad = models.ForeignKey(Ciudad)
+	ciudad = models.ForeignKey(Ciudad, on_delete=models.CASCADE)
 
 	def __unicode__(self):
 		return unicode(self.nombre)
@@ -50,9 +50,9 @@ class Empresa(models.Model):
   telefono = models.CharField(max_length=50, blank=True)
   telefono_secundario = models.CharField(max_length=50, blank=True)
   email = models.EmailField(blank=True)
-  pais = models.ForeignKey(Pais, blank=True, null=True)
-  ciudad = models.ForeignKey(Ciudad, blank=True, null=True)
-  localidad = models.ForeignKey(Localidad, blank=True, null=True)
+  pais = models.ForeignKey(Pais, blank=True, null=True, on_delete=models.CASCADE)
+  ciudad = models.ForeignKey(Ciudad, blank=True, null=True, on_delete=models.CASCADE)
+  localidad = models.ForeignKey(Localidad, blank=True, null=True, on_delete=models.CASCADE)
 
 	# class Meta:
   #   ordering = ['nombre']
@@ -177,12 +177,12 @@ class Factura(models.Model):
 
 class Registro_factura(Factura):
   # cuit = lambda: Registro.objects.get(cuit='23144591119')
-  emisor = models.ForeignKey(Proveedor)
-  registro = models.ForeignKey(Registro, default=1, verbose_name='Empresa')
+  emisor = models.ForeignKey(Proveedor, on_delete=models.CASCADE)
+  registro = models.ForeignKey(Registro, default=1, verbose_name='Empresa', on_delete=models.CASCADE)
   pagado = models.BooleanField(default=False)
   esCopia = models.BooleanField(default=False)
   # Para registrar al usuario que agrega el registro
-  usuario = models.ForeignKey(User, null=True)
+  usuario = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
 
   class Meta:
     verbose_name_plural = "registro facturas"
@@ -238,11 +238,11 @@ class Registro_factura(Factura):
 
 
 class Factura_detalle(models.Model):
-  factura = models.ForeignKey(Registro_factura)
+  factura = models.ForeignKey(Registro_factura, on_delete=models.CASCADE)
   descripcion = models.CharField(max_length=140)
   impuesto = models.BooleanField(default=False)
   cantidad = models.PositiveSmallIntegerField()
-  alicuota = models.ForeignKey(Iva)
+  alicuota = models.ForeignKey(Iva, on_delete=models.CASCADE)
   precio_unitario = models.DecimalField(max_digits=10, decimal_places=2)
 
   class Meta:
@@ -252,10 +252,10 @@ class Factura_detalle(models.Model):
 
 class Emision_factura(Factura):
   from proyectos.models import Obra
-  cliente = models.ForeignKey(Cliente)
-  obra = models.ForeignKey(Obra, blank=True, null=True)
+  cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
+  obra = models.ForeignKey(Obra, blank=True, null=True, on_delete=models.CASCADE)
   # Para registrar al usuario que agrega el registro
-  usuario = models.ForeignKey(User, null=True)
+  usuario = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
 
   class Meta:
     verbose_name_plural = "emisión facturas"
@@ -283,10 +283,10 @@ class Emision_factura(Factura):
     return "para: " + unicode(self.cliente) + " - fecha: "+unicode(self.fecha_factura) + ' - "' +detalleResumen+ '..."'
 
 class Emision_detalle(models.Model):
-  factura = models.ForeignKey(Emision_factura)
+  factura = models.ForeignKey(Emision_factura, on_delete=models.CASCADE)
   descripcion = models.CharField(max_length=140)
   cantidad = models.PositiveSmallIntegerField()
-  alicuota = models.ForeignKey(Iva)
+  alicuota = models.ForeignKey(Iva, on_delete=models.CASCADE)
   total = models.DecimalField(max_digits=10, decimal_places=2)
 
 
@@ -297,7 +297,7 @@ class Informes(models.Model):
 
 class Pago(models.Model):
   fecha_pago = models.DateField()
-  receptor = models.ForeignKey(Proveedor)
+  receptor = models.ForeignKey(Proveedor, on_delete=models.CASCADE)
   nro_recibo = models.CharField(max_length=15, blank=True)
   comprobantes = models.ManyToManyField(Registro_factura, blank=True)
   TIPO = (
