@@ -4,7 +4,8 @@ from django.forms import SelectMultiple
 from django.forms import TextInput
 from django.forms import Textarea
 
-from models import OrdenPago
+from fondos_externos.models import Cuenta
+from models import OrdenPago, Caja
 
 
 class FondosForm(forms.ModelForm):
@@ -29,3 +30,11 @@ class FondosForm(forms.ModelForm):
     class Media:
         js = ('js/filterM2M.js',)
 
+
+class CajaForm(forms.ModelForm):
+    cuentaWallet = forms.ModelChoiceField(queryset=Cuenta.objects.all(), required=False)
+    caca = forms.CharField(required=False)
+
+    class Meta:
+        model = Caja
+        fields = '__all__'

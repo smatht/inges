@@ -5,10 +5,12 @@ from django.forms import SelectMultiple
 from django.db import models
 
 # Register your models here.
-from forms import FondosForm
+from forms import FondosForm, CajaForm
 from mantenimiento.models import Configuracion
 
 from compras.models import Compra
+
+from fondos_externos.models import Cuenta
 from models import TipoCaja, MovCaja, TipoMovCaja, OrdenPago, Caja
 
 
@@ -94,16 +96,17 @@ class OrdenPagoAdmin(admin.ModelAdmin):
         return super(OrdenPagoAdmin, self).render_change_form(request, context, args, kwargs)
 
     # def save_model(self, request, obj, form, change):
-    #     pass
+    #     print(form.diferencia)
     #     if getattr(obj, 'diferencia', None) is not 0:
     #         messages.add_message(request, messages.ERROR, 'ERROR EN LA OPERACION')
-    #         pass
+    #         print(messages.get_messages(request))
     #     else:
     #         obj.save()
 
 
 @admin.register(Caja)
 class CajaAdmin(admin.ModelAdmin):
+    form = CajaForm
     list_display = ('tipoCaja', 'fApertura', 'destino', 'montoInicial', 'acumEntradas', 'acumSalidas', 'saldo')
     # list_filter = ('caja__destino',)
     fieldsets = (
@@ -112,13 +115,25 @@ class CajaAdmin(admin.ModelAdmin):
         }),
         ('Vinculaciones externas:', {
             'classes': ('collapse',),
-            'fields': ('cuentaWallet',)}),
+            'fields': ['cuentaWallet', 'caca']}),
     )
 
     def saldo(self, obj):
         return obj.montoInicial + obj.acumEntradas - obj.acumSalidas
 
+    # def render_change_form(self, request, context, *args, **kwargs):
+    #     context['adminform'].form.fields['cuentaWallet'].queryset = Cuenta.objects.all()
+    #     return super(CajaAdmin, self).render_change_form(request, context, args, kwargs)
 
+    def save_model(self, request, obj, form, change):
+        cuenta = form.cleaned_data['cuentaWallet']
+        if cuenta is not None:
+            obj.idCuentaWallet = cuenta.id
+            obj.nombreCuentaWallet = cuenta.name
+        else:
+            obj.idCuentaWallet = ''
+            obj.nombreCuentaWallet = ''
+        obj.save()
 
 
 

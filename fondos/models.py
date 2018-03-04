@@ -31,7 +31,8 @@ class Caja(models.Model):
     acumEntradas = models.FloatField(default=0)
     acumSalidas = models.FloatField(default=0)
     destino = models.ForeignKey(Obra)
-    cuentaWallet = models.ForeignKey(Cuenta, verbose_name='Cuenta Wallet', null=True, blank=True)
+    idCuentaWallet = models.CharField(max_length=36, null=True, blank=True)
+    nombreCuentaWallet = models.CharField(max_length=50, null=True, blank=True)
 
     def __unicode__(self):
         return format(self.tipoCaja.__unicode__() + ' Obra: ' + self.destino.__unicode__()
@@ -62,6 +63,7 @@ class MovCaja(models.Model):
     importe = models.FloatField()
     tipoMovCaja = models.ForeignKey(TipoMovCaja, verbose_name='Operacion')
     proveedor = models.ForeignKey(Proveedor, null=True, blank=True)
+    origen = models.SmallIntegerField(default=0)
 
     class Meta:
         verbose_name = 'Movimiento de caja'
@@ -83,7 +85,9 @@ class OrdenPago(models.Model):
     caja = models.ForeignKey(Caja)
 
     # def save(self, *args, **kwargs):
+    #     print(self.diferencia)
     #     if self.diferencia != 0:
     #         return  # No se graba!
     #     else:
-    #         super(OrdenPago, self).save(*args, **kwargs)
+    #
+        # super(OrdenPago, self).save(*args, **kwargs)

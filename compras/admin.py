@@ -286,7 +286,7 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
         cabecera.totImpuestos = 0
         # Obtenemos la ultima caja abierta para esa obra
         try:
-            caja = Caja.objects.get(destino=cabecera.obra, fCierre=None)
+            caja = Caja.objects.get(tipoCaja=1, destino=cabecera.obra, fCierre=None)
         except ObjectDoesNotExist:
             caja = None
         print(caja)

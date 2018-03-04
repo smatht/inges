@@ -291,10 +291,15 @@ FIXTURE_DIRS = (
     os.path.join(RUTA_PROYECTO, 'fixtures'),
 )
 
-
 # MODELS VARS
 COND_PAGO = (
         ('CTD', 'Contado'),
         ('CRE', 'Crédito'),
-    )
+)
 
+# Listado de origenes de datos
+ORIGENES_DATOS = (
+    (0, 'SISTEMA INGES'),
+    (1, 'MOVIL'),
+    (2, 'WALLET'),
+)
