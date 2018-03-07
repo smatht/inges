@@ -1,4 +1,4 @@
-from django.contrib import admin
+from django.contrib import admin, messages
 
 # Register your models here.
 from django_extensions.admin import ForeignKeyAutocompleteAdmin
@@ -13,6 +13,15 @@ class ProductoAdmin(ForeignKeyAutocompleteAdmin):
     list_display = ('id', 'descripcion', 'activo', 'familia', 'precio')
     search_fields = ('descripcion',)
     filter_horizontal = ('proveedor',)
+
+    def save_model(self, request, obj, form, change):
+        print(form.changed_data)
+        print(form.cleaned_data['descripcionCorta'])
+        print(obj.descripcionCorta)
+        if 'descripcionCorta' in form.changed_data:
+            messages.success(request, "Se cambio descripcion corta")
+        obj.save()
+
 
 
 

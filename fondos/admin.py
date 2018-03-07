@@ -20,11 +20,11 @@ class MovCajaAdmin(admin.ModelAdmin):
     list_filter = ('caja__destino', 'caja__tipoCaja')
     fieldsets = (
         (None, {
-            'fields': ('empresa', 'caja', 'tipoMovCaja', 'importe', 'descripcion'),
+            'fields': ('empresa', 'caja', 'tipoMovCaja', 'descripcion', 'importe'),
         }),
         ('Datos adicionales:', {
             'classes': ('collapse',),
-            'fields': ('tipoDoc', 'numDoc', 'proveedor')}),
+            'fields': ('fecha', 'tipoDoc', 'numDoc', 'proveedor')}),
     )
 
     def save_model(self, request, obj, form, change):
