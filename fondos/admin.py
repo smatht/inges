@@ -16,7 +16,7 @@ from models import TipoCaja, MovCaja, TipoMovCaja, OrdenPago, Caja
 
 @admin.register(MovCaja)
 class MovCajaAdmin(admin.ModelAdmin):
-    list_display = ('fecha', 'obra', 'importe', 'tipoMovCaja', 'descripcion', 'operacion')
+    list_display = ('fecha', 'tipoCaja', 'obra', 'importe', 'tipoMovCaja', 'descripcion', 'operacion')
     list_filter = ('caja__destino', 'caja__tipoCaja')
     fieldsets = (
         (None, {
@@ -48,6 +48,9 @@ class MovCajaAdmin(admin.ModelAdmin):
 
     def obra(self, obj):
         return obj.caja.destino
+
+    def tipoCaja(self, obj):
+        return obj.caja.tipoCaja
 
     def operacion(self, obj):
         if (obj.tipoMovCaja.suma):
