@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import Cuenta
+from .models import Cuenta, Registro
+
 
 # class CuentaListSerializer(serializers.ListSerializer):
 #     def update(self, instance, validated_data):
@@ -47,17 +48,20 @@ class CuentaSerializer(serializers.ModelSerializer):
 
 
 
-class CuentaSerializer2(serializers.Serializer):
-    id = serializers.CharField()
-    name = serializers.CharField()
-    color = serializers.CharField()
-    excludeFromStats = serializers.BooleanField()
-    gps = serializers.BooleanField()
-    initAmount = serializers.FloatField()
-    position = serializers.IntegerField()
+class RegistroSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Registro
+        # list_serializer_class = CuentaListSerializer
+        fields = ('id', 'amount', 'categoryId', 'accountId', 'currencyId', 'paymentType', 'date', 'note', 'recordState')
 
     def create(self, validated_data):
-        """
-        Create and return a new `Snippet` instance, given the validated data.
-        """
-        return Cuenta.objects.create(**validated_data)
+        # cuenta = Cuenta(idWallet=self.validated_data['id'],
+        #                 name=self.validated_data['name'],
+        #                 color=self.validated_data['color'],
+        #                 excludeFromStats= self.validated_data['excludeFromStats'],
+        #                 gps=self.validated_data['gps'],
+        #                 initAmount=self.validated_data['initAmount'],
+        #                 position=self.validated_data['position'])
+        registro = Registro(**validated_data)
+        registro.save()
+        return registro
