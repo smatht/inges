@@ -71,13 +71,14 @@ class MovCaja(models.Model):
         verbose_name_plural = 'Movimientos de caja'
 
     def save(self, *args, **kwargs):
+        # TODO: A veces guarda dos venes un mismo registro o cuarda en registros diferentes el mismo registro wallet
+        # TODO: Hacer las validaciones necesarias para que no pase.
         if getattr(self, 'fecha', None) is None:
             self.fecha = datetime.datetime.now
         if getattr(self, 'tipoMovCaja').suma:
             self.caja.acumEntradas += self.importe
         else:
             self.caja.acumSalidas += self.importe
-
         self.caja.save()
         print(self.importe)
         print(self.caja.acumEntradas)
