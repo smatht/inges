@@ -33,7 +33,6 @@ class FondosForm(forms.ModelForm):
 
 class CajaForm(forms.ModelForm):
     cuentaWallet = forms.ModelChoiceField(queryset=Cuenta.objects.all(), required=False)
-    caca = forms.CharField(required=False)
 
     class Meta:
         model = Caja

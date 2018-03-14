@@ -28,7 +28,7 @@ urlpatterns = patterns('',
     url(r'^tellme/', include("tellme.urls")),
     url(r'^', include(facturacion.urls)),
     url(r'^cuentas-wallet/', save_cuenta),
-    url(r'^registros-wallet/', get_registros)
+    url(r'^registros-wallet/(\d+)$', get_registros)
 
 
     # Examples:

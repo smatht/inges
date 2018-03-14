@@ -5,6 +5,8 @@ from django.forms import SelectMultiple
 from django.db import models
 
 # Register your models here.
+from django.shortcuts import redirect
+
 from forms import FondosForm, CajaForm
 from mantenimiento.models import Configuracion
 
@@ -30,15 +32,15 @@ class MovCajaAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         if getattr(obj, 'operador', None) is None:
             obj.operador = request.user
-            # messages.add_message(request, messages.INFO, 'Operador registrado')
-        if getattr(obj, 'fecha', None) is None:
-            obj.fecha = datetime.datetime.now
-        if getattr(obj, 'tipoMovCaja').suma:
-            obj.caja.acumEntradas += obj.importe
-        else:
-            obj.caja.acumSalidas += obj.importe
-
-        obj.caja.save()
+        #     # messages.add_message(request, messages.INFO, 'Operador registrado')
+        # if getattr(obj, 'fecha', None) is None:
+        #     obj.fecha = datetime.datetime.now
+        # if getattr(obj, 'tipoMovCaja').suma:
+        #     obj.caja.acumEntradas += obj.importe
+        # else:
+        #     obj.caja.acumSalidas += obj.importe
+        #
+        # obj.caja.save()
         obj.save()
 
     def render_change_form(self, request, context, *args, **kwargs):
@@ -54,9 +56,9 @@ class MovCajaAdmin(admin.ModelAdmin):
 
     def operacion(self, obj):
         if (obj.tipoMovCaja.suma):
-            return '<img src="/static/admin/img/mas.gif" alt="True">'
+            return '<img src="/static/admin/img/ing.png" alt="True">'
         else:
-            return '<img src="/static/admin/img/menos.gif" alt="False">'
+            return '<img src="/static/admin/img/egre.png" alt="False">'
     operacion.allow_tags = True
 
 
@@ -118,7 +120,7 @@ class CajaAdmin(admin.ModelAdmin):
         }),
         ('Vinculaciones externas:', {
             'classes': ('collapse',),
-            'fields': ['cuentaWallet', 'caca']}),
+            'fields': ['cuentaWallet']}),
     )
 
     def saldo(self, obj):
@@ -137,7 +139,6 @@ class CajaAdmin(admin.ModelAdmin):
             obj.idCuentaWallet = ''
             obj.nombreCuentaWallet = ''
         obj.save()
-
 
 
 

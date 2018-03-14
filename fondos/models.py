@@ -31,7 +31,7 @@ class Caja(models.Model):
     acumEntradas = models.FloatField(default=0)
     acumSalidas = models.FloatField(default=0)
     destino = models.ForeignKey(Obra)
-    idCuentaWallet = models.CharField(max_length=36, null=True, blank=True)
+    idCuentaWallet = models.CharField(max_length=40, null=True, blank=True)
     nombreCuentaWallet = models.CharField(max_length=50, null=True, blank=True)
 
     def __unicode__(self):
@@ -64,10 +64,26 @@ class MovCaja(models.Model):
     tipoMovCaja = models.ForeignKey(TipoMovCaja, verbose_name='Operacion')
     proveedor = models.ForeignKey(Proveedor, null=True, blank=True)
     origen = models.SmallIntegerField(default=0)
+    idWallet = models.CharField(max_length=40, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Movimiento de caja'
         verbose_name_plural = 'Movimientos de caja'
+
+    def save(self, *args, **kwargs):
+        if getattr(self, 'fecha', None) is None:
+            self.fecha = datetime.datetime.now
+        if getattr(self, 'tipoMovCaja').suma:
+            self.caja.acumEntradas += self.importe
+        else:
+            self.caja.acumSalidas += self.importe
+
+        self.caja.save()
+        print(self.importe)
+        print(self.caja.acumEntradas)
+        print(self.caja.acumSalidas)
+        # self.save()
+        super(MovCaja, self).save(*args, **kwargs)
 
 
 class OrdenPago(models.Model):
