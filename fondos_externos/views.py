@@ -47,9 +47,8 @@ def get_registros(request, idCaja=0):
     cantInsertados = 0
     if (idCaja != 0):
         caja = Caja.objects.get(pk=idCaja)
-        yaDescargados = MovCaja.objects.exclude(idWallet=None).values_list('idWallet', flat=True)
+        yaDescargados = list(MovCaja.objects.exclude(idWallet=None).values_list('idWallet', flat=True))
         print(yaDescargados)
-        # Registro.objects.all().delete()
         url = 'https://api.budgetbakers.com/api/v1/records'
         headers = {
             'X-Token': '5a3709ce-acfb-49fb-8b60-b1b9e55ffb51',
@@ -59,7 +58,6 @@ def get_registros(request, idCaja=0):
         json = r.json()
         for j in json:
             if j['accountId'] == caja.idCuentaWallet and j['id'] not in yaDescargados:
-                print(j)
                 importe = 0
                 tipoMovCaja = 0
                 if j['amount'] < 0:
@@ -74,16 +72,12 @@ def get_registros(request, idCaja=0):
                 idWallet = j['id']
                 mov = MovCaja(caja=caja, empresa=empresa, fecha=fecha, descripcion=descripcion, importe=importe,
                               tipoMovCaja=tipoMovCaja, idWallet=idWallet, operador=request.user)
+
                 mov.save()
+                yaDescargados = yaDescargados + [idWallet]
+                print(yaDescargados)
                 cantInsertados += 1
-        # serializer = RegistroSerializer(data=json, many=True)
-        # serializer.save()
-        # if serializer.is_valid():
-        #     print('1. Validooo')
-        #     serializer.save()
-        # else:
-        #     Cuenta.objects.all().delete()
-        #     serializer.save()
+
     # messages.add_message(request, messages.SUCCESS, 'Se han exportado 5 registros')
     # messages.add_message(request, messages.WARNING,
     #                      mark_safe("Sin respuesta del servicio externo, por favor <a href='/administracion/fondos/movcaja/'>reintente aqui </a> en unos minutos."))

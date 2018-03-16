@@ -2,6 +2,7 @@
 import datetime
 
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from mantenimiento.models import TiposDoc
 from facturacion.models import Registro
@@ -71,20 +72,31 @@ class MovCaja(models.Model):
         verbose_name_plural = 'Movimientos de caja'
 
     def save(self, *args, **kwargs):
-        # TODO: A veces guarda dos venes un mismo registro o cuarda en registros diferentes el mismo registro wallet
-        # TODO: Hacer las validaciones necesarias para que no pase.
-        if getattr(self, 'fecha', None) is None:
-            self.fecha = datetime.datetime.now
-        if getattr(self, 'tipoMovCaja').suma:
-            self.caja.acumEntradas += self.importe
+        # TODO: Que la actualizacion de caja sea con los valores actuales de la caja no con los valores de caja del objeto.
+        # TODO: Puede darse el caso de que la secuencia de gravacion no sea la esperada
+        try:
+            objYaExistente = MovCaja.objects.get(pk=self.pk)
+            objDuplicado = MovCaja.objects.get(idWallet=self.idWallet)
+            print('Existente: ' + str(objYaExistente.pk))
+            print('Duplicado: ' + str(objDuplicado.idWallet))
+        except ObjectDoesNotExist:
+            print('ObjectDoesNot Exist')
+            objYaExistente = None
+            objDuplicado = None
+        if objDuplicado == None:
+            if objYaExistente != None:
+                self.importe = 0
+
+            if getattr(self, 'fecha', None) is None:
+                self.fecha = datetime.datetime.now
+            if getattr(self, 'tipoMovCaja').suma:
+                self.caja.acumEntradas += self.importe
+            else:
+                self.caja.acumSalidas += self.importe
+            self.caja.save()
+            super(MovCaja, self).save(*args, **kwargs)
         else:
-            self.caja.acumSalidas += self.importe
-        self.caja.save()
-        print(self.importe)
-        print(self.caja.acumEntradas)
-        print(self.caja.acumSalidas)
-        # self.save()
-        super(MovCaja, self).save(*args, **kwargs)
+            return
 
 
 class OrdenPago(models.Model):
