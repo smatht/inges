@@ -72,13 +72,10 @@ class MovCaja(models.Model):
         verbose_name_plural = 'Movimientos de caja'
 
     def save(self, *args, **kwargs):
-        # TODO: Que la actualizacion de caja sea con los valores actuales de la caja no con los valores de caja del objeto.
-        # TODO: Puede darse el caso de que la secuencia de gravacion no sea la esperada
+        cajaActual = Caja.objects.get(pk=self.caja.pk)
         try:
             objYaExistente = MovCaja.objects.get(pk=self.pk)
             objDuplicado = MovCaja.objects.get(idWallet=self.idWallet)
-            print('Existente: ' + str(objYaExistente.pk))
-            print('Duplicado: ' + str(objDuplicado.idWallet))
         except ObjectDoesNotExist:
             print('ObjectDoesNot Exist')
             objYaExistente = None
@@ -86,14 +83,13 @@ class MovCaja(models.Model):
         if objDuplicado == None:
             if objYaExistente != None:
                 self.importe = 0
-
             if getattr(self, 'fecha', None) is None:
                 self.fecha = datetime.datetime.now
             if getattr(self, 'tipoMovCaja').suma:
-                self.caja.acumEntradas += self.importe
+                cajaActual.acumEntradas += self.importe
             else:
-                self.caja.acumSalidas += self.importe
-            self.caja.save()
+                cajaActual.acumSalidas += self.importe
+            cajaActual.save()
             super(MovCaja, self).save(*args, **kwargs)
         else:
             return
