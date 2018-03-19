@@ -114,6 +114,7 @@ class CajaAdmin(admin.ModelAdmin):
     form = CajaForm
     list_display = ('tipoCaja', 'fApertura', 'destino', 'montoInicial', 'acumEntradas', 'acumSalidas', 'saldo')
     # list_filter = ('caja__destino',)
+    ordering = ['-fCierre', '-fApertura']
     fieldsets = (
         (None, {
             'fields': ('tipoCaja', 'destino', 'montoInicial'),
@@ -139,6 +140,13 @@ class CajaAdmin(admin.ModelAdmin):
             obj.idCuentaWallet = ''
             obj.nombreCuentaWallet = ''
         obj.save()
+
+    def suit_row_attributes(self, obj, request):
+        fila = ''
+        if obj.fCierre == None:
+            fila = 'info'
+        if fila != '':
+            return {'class': fila}
 
 
 

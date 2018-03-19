@@ -190,7 +190,6 @@ class RemitoAdmin(ForeignKeyAutocompleteAdmin):
 
 
 class CompraItemInline(ForeignKeyAutocompleteTabularInline):
-  form = CompraForm
   model = CompraItem
   related_search_fields = {
     'producto': ('descripcion',),
@@ -204,7 +203,6 @@ class CompraItemInline(ForeignKeyAutocompleteTabularInline):
 
 
 class CompraItemConceptoInline(ForeignKeyAutocompleteTabularInline):
-  form = CompraForm
   model = CompraItemConcepto
   extra = 0
   fieldsets = [
@@ -218,7 +216,7 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
     form = CompraForm
     list_display = ('tipoDoc', 'proveedor', 'numero_doc', 'fRegistro', 'fDocumento', 'fVencimiento', 'totBruto', 'totImpuestos', 'totNeto')
     exclude = ('fRegistro', 'operador', 'anulado', 'fanulacion', 'totBruto', 'totImpuesto', 'totNeto',
-               'yaAfectoStock', 'totDescuentos')
+               'yaAfectoStock', 'totDescuentos', 'idCaja')
     list_filter = ('fRegistro', ('fDocumento', DateRangeFilter), 'condPago')
     radio_fields = {"condPago": admin.VERTICAL}
     inlines = [CompraItemInline, CompraItemConceptoInline]
@@ -228,6 +226,9 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
         ('Fecha vencimiento:', {
             'classes': ('collapse',),
             'fields': ['fVencimiento']}),
+        ('Caja:', {
+            'classes': ('collapse',),
+            'fields': ['generarMov', 'tipoCaja']}),
         (None, {'fields': [('prFinal', 'afectaStock', 'esCopia')]}),
         ('Cai:', {
           'classes': ('collapse',),
@@ -238,6 +239,19 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
         if getattr(obj, 'operador', None) is None:
             obj.operador = request.user
             # messages.add_message(request, messages.INFO, 'Operador registrado')
+        if form.cleaned_data['generarMov']:
+            if form.cleaned_data['tipoCaja'] is not None:
+                try:
+                    cja = Caja.objects.get(tipoCaja=form.cleaned_data['tipoCaja'], destino=obj.obra, fCierre=None)
+                except ObjectDoesNotExist:
+                    cja = self.abrirCaja(obj.obra, form.cleaned_data['tipoCaja'])
+            else:
+                try:
+                    cja = Caja.objects.get(tipoCaja=1, destino=obj.obra, fCierre=None)
+                except ObjectDoesNotExist:
+                    cja = self.abrirCaja(obj.obra)
+            obj.idCaja = cja.pk
+        print(obj.idCaja)
         obj.save()
 
     def suit_row_attributes(self, obj, request):
@@ -285,13 +299,12 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
         cabecera.totNeto = 0
         cabecera.totImpuestos = 0
         # Obtenemos la ultima caja abierta para esa obra
-        try:
-            caja = Caja.objects.get(tipoCaja=1, destino=cabecera.obra, fCierre=None)
-        except ObjectDoesNotExist:
-            caja = None
-        print(caja)
-        if not caja:
-            caja = self.abrirCaja(cabecera.obra)
+        # Si recibe tipoCaja busca ese tipo de caja de la obra seleccionada, si no recibe, busca la "caja chica" de la
+        # obra seleccionada. Si no existe
+        if getattr(cabecera, 'idCaja', None) is None:
+            caja = Caja.objects.get(pk=cabecera.idCaja)
+        else:
+            caja = False
         # Bucle CompraItem
         for linea in lineas:
             precioLinea = 0 # Usamos para movCaja
@@ -316,20 +329,22 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
             if not linea.obra:
                 linea.obra = cabecera.obra
                 linea.save()
+
             # Hacemos el movimiento de caja.
-            desc = cabecera.tipoDoc.id + " Nro:" + str(cabecera.numDoc) + " Prov: " + cabecera.proveedor.razon_social \
-                   + " " + linea.producto.descripcionCorta + " " + str(linea.cantidad) + " Unid."
-            mc = TipoMovCaja.objects.get(pk=3)
-            m = MovCaja(caja=caja, empresa=cabecera.afectaEmpresa, tipoDoc=cabecera.tipoDoc, numDoc= cabecera.numDoc,
-                        descripcion=desc, operador=request.user, importe=precioLinea, tipoMovCaja=mc)
-            m.save()
+            if caja:
+                desc = cabecera.tipoDoc.id + " Nro:" + str(cabecera.numDoc) + " Prov: " + cabecera.proveedor.razon_social \
+                       + " " + linea.producto.descripcionCorta + " " + str(linea.cantidad) + " Unid."
+                mc = TipoMovCaja.objects.get(pk=3)
+                m = MovCaja(caja=caja, empresa=cabecera.afectaEmpresa, tipoDoc=cabecera.tipoDoc, numDoc= cabecera.numDoc,
+                            descripcion=desc, operador=request.user, importe=precioLinea, tipoMovCaja=mc)
+                m.save()
 
             # Actualizamos el campo salida de Caja
-            if caja.acumSalidas >= 0:
-                caja.acumSalidas += precioLinea
-            else:
-                caja.acumSalidas = precioLinea
-            caja.save()
+            # if caja.acumSalidas >= 0:
+            #     caja.acumSalidas += precioLinea
+            # else:
+            #     caja.acumSalidas = precioLinea
+            # caja.save()
 
             # Actualizamos precio de compra
             if linea.producto.precio(cabecera.proveedor):
@@ -365,29 +380,32 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
             if not concepto.obra:
                 concepto.obra = cabecera.obra
                 concepto.save()
+
             # Hacemos el movimiento de caja.
-            desc = cabecera.tipoDoc.id + " Nro:" + str(
-                cabecera.numDoc) + " Prov: " + cabecera.proveedor.razon_social \
-                   + " " + concepto.descripcion + " " + str(concepto.cantidad) + " Unid."
-            mc = TipoMovCaja.objects.get(pk=3)
-            m = MovCaja(caja=caja, empresa=cabecera.afectaEmpresa, tipoDoc=cabecera.tipoDoc,
-                        numDoc=cabecera.numDoc,
-                        descripcion=desc, operador=request.user, importe=precioConcepto, tipoMovCaja=mc)
-            m.save()
+            if cabecera.generarMov:
+                desc = cabecera.tipoDoc.id + " Nro:" + str(
+                    cabecera.numDoc) + " Prov: " + cabecera.proveedor.razon_social \
+                       + " " + concepto.descripcion + " " + str(concepto.cantidad) + " Unid."
+                mc = TipoMovCaja.objects.get(pk=3)
+                m = MovCaja(caja=caja, empresa=cabecera.afectaEmpresa, tipoDoc=cabecera.tipoDoc,
+                            numDoc=cabecera.numDoc,
+                            descripcion=desc, operador=request.user, importe=precioConcepto, tipoMovCaja=mc)
+                m.save()
 
             # Actualizamos el campo salida de Caja
-            if caja.acumSalidas >= 0:
-                caja.acumSalidas += precioConcepto
-            else:
-                caja.acumSalidas = precioConcepto
-            caja.save()
+            # if caja.acumSalidas >= 0:
+            #     caja.acumSalidas += precioConcepto
+            # else:
+            #     caja.acumSalidas = precioConcepto
+            # caja.save()
 
         cabecera.save()
         return cabecera
 
-    def abrirCaja(self, obra):
-        tc = TipoCaja.objects.get(pk=1)
-        c = Caja(tipoCaja=tc, destino=obra)
+    def abrirCaja(self, obra, tipoCaja = None):
+        if tipoCaja is None:
+            tipoCaja = TipoCaja.objects.get(pk=1)
+        c = Caja(tipoCaja=tipoCaja, destino=obra)
         c.save()
         return c
 

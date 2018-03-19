@@ -239,9 +239,9 @@ SUIT_CONFIG = {
             {'model': 'compras.remito', 'label': 'Remito de compra', 'permissions': 'compras.add_remito'},
         )},
         {'app': 'fondos', 'models': (
-            {'model': 'fondos.tipocaja', 'label': 'Cajas', 'permissions': 'fondos.add_tipocaja'},
-            {'model': 'fondos.caja', 'label': 'Aperturas de caja', 'permissions': 'fondos.add_caja'},
-            {'model': 'fondos.movcaja', 'label': 'Nuevo movimiento', 'permissions': 'fondos.add_movcaja'},
+            {'model': 'fondos.tipocaja', 'label': 'Tipos de caja', 'permissions': 'fondos.add_tipocaja'},
+            {'model': 'fondos.caja', 'label': 'Cajas', 'permissions': 'fondos.add_caja'},
+            {'model': 'fondos.movcaja', 'label': 'Movimiento de caja', 'permissions': 'fondos.add_movcaja'},
             {'model': 'fondos.tipomovcaja', 'label': 'Tipo movimiento', 'permissions': 'fondos.add_tipomovcaja'},
         )},
         {'app': 'stock', 'models': (

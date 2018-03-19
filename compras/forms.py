@@ -6,6 +6,7 @@ from django.forms import Textarea
 from django.forms.widgets import TextInput
 from suit.widgets import SuitDateWidget, NumberInput, SuitSplitDateTimeWidget, EnclosedInput
 
+from fondos.models import TipoCaja
 from models import Compra
 
 
@@ -36,17 +37,22 @@ class RemitoForm(ModelForm):
     }
 
 
-class CompraForm(ModelForm):
-  class Meta:
-    # model = Registro_factura
-    widgets = {
-        'sucursal': TextInput(attrs={'style': 'width: 50px', 'maxlength':'4'}),
-        'numDoc': TextInput(attrs={'style': 'width: 150px', 'maxlength':'8'}),
-        'cantidad': TextInput(attrs={'style': 'width: 40px'}),
-        'alicuota': Select(attrs={'style': 'width: 100px'}),
-        'precio_unitario': EnclosedInput(prepend='$', attrs={'style': 'width: 60px'}),
-        'descripcion': Textarea(attrs={'style': 'width: 370px', 'rows': 1}),
-    }
+class CompraForm(forms.ModelForm):
+    qTCaja = TipoCaja.objects.all()
+    generarMov = forms.BooleanField(label='Generar movimiento caja', initial=True, required=False)
+    tipoCaja = forms.ModelChoiceField(queryset=qTCaja, required=False, label='Caja')
+
+    class Meta:
+        model = Compra
+        fields = '__all__'
+        widgets = {
+            'sucursal': TextInput(attrs={'style': 'width: 50px', 'maxlength':'4'}),
+            'numDoc': TextInput(attrs={'style': 'width: 150px', 'maxlength':'8'}),
+            'cantidad': TextInput(attrs={'style': 'width: 40px'}),
+            'alicuota': Select(attrs={'style': 'width: 100px'}),
+            'precio_unitario': EnclosedInput(prepend='$', attrs={'style': 'width: 60px'}),
+            'descripcion': Textarea(attrs={'style': 'width: 370px', 'rows': 1}),
+        }
 
 
 class CompraItemForm(ModelForm):

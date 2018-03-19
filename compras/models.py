@@ -15,7 +15,6 @@ from stock.models import Producto, Unidades
 from mantenimiento.models import TiposDoc, Impuesto
 
 
-
 class Pedido(models.Model):
     usuario = models.ForeignKey(User, null=True)
     # cuit = lambda: Registro.objects.get(cuit='23144591119')
@@ -170,8 +169,9 @@ class Compra(AbstractCompra):
                                                                                                      'contables.')
     cai = models.BigIntegerField(null=True, blank=True)
     vCai = models.DateField(null=True, blank=True)
-    fVencimiento = models.DateField(verbose_name='Fecha de vencimiento')
+    fVencimiento = models.DateField(verbose_name='Fecha de vencimiento', default=datetime.datetime.now)
     saldo = models.FloatField(null=True, blank=True)
+    idCaja = models.IntegerField(blank=True, null=True)
 
     class Meta:
         verbose_name_plural = "registro facturas"
