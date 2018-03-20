@@ -25,3 +25,4 @@ terminado==0.6
 xlrd==0.9.4
 xlutils==1.7.1
 xlwt==1.0.0
+django-suit-locale==1.0.10

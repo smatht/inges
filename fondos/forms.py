@@ -3,7 +3,8 @@ from django import forms
 from django.forms import SelectMultiple
 from django.forms import TextInput
 from django.forms import Textarea
-
+from django.core.exceptions import ObjectDoesNotExist
+from django.contrib import messages
 from fondos_externos.models import Cuenta
 from models import OrdenPago, Caja
 
@@ -33,6 +34,16 @@ class FondosForm(forms.ModelForm):
 
 class CajaForm(forms.ModelForm):
     cuentaWallet = forms.ModelChoiceField(queryset=Cuenta.objects.all(), required=False)
+
+    def clean(self):
+        cleaned_data = super(CajaForm, self).clean()
+        try:
+            cja = Caja.objects.get(tipoCaja=cleaned_data.get('tipoCaja'), destino=cleaned_data.get('destino'), fCierre=None)
+            raise forms.ValidationError('La caja: "' + cleaned_data.get('tipoCaja').descripcion + '" Obra: "' +
+                                        cleaned_data.get('destino').descripcion_corta + '" ya existe. Cierrela antes de abrir una nueva.')
+        except ObjectDoesNotExist:
+            return
+
 
     class Meta:
         model = Caja

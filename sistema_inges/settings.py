@@ -19,7 +19,6 @@ ADMINS = (
 
 # TELLME_FEEDBACK_EMAIL = 'matgs656@gmail.com'
 # Parse database configuration from $DATABASE_URL
-import dj_database_url
 
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -84,7 +83,7 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
-MEDIA_ROOT = os.path.join(RUTA_PROYECTO,'static')
+MEDIA_ROOT = os.path.join(RUTA_PROYECTO, 'static')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -108,7 +107,7 @@ STATIC_URL = '/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    os.path.join(RUTA_PROYECTO,'static'),
+    os.path.join(RUTA_PROYECTO, 'static'),
     # os.path.join(BASE_DIR, 'static'),
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
@@ -171,6 +170,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
+    'suitlocale',
     'suit',
     'facturacion',
     # 'south',
@@ -216,19 +216,17 @@ SUIT_CONFIG = {
     # 'sites': 'icon-leaf',
     # 'auth': 'icon-lock',
     # },
-    'MENU_OPEN_FIRST_CHILD': True, # Default True
+    'MENU_OPEN_FIRST_CHILD': True,  # Default True
     # 'MENU_EXCLUDE': ('auth.group',),
     'MENU': (
         {'app': 'mantenimiento', 'models': (
             {'label': 'Ajustes', 'url': '/administracion/mantenimiento/configuracion/1/', 'permissions': 'mantenimiento.add_configuracion'},
-            # {'model': 'mantenimiento.configuracion', 'label': 'Ajustes', 'permissions': 'mantenimiento.add_configuracion'},
             {'model': 'facturacion.registro', 'label': 'Empresas', 'permissions': 'facturacion.add_registro'},
             {'model': 'mantenimiento.impuesto', 'label': 'Impuestos', 'permissions': 'mantenimiento.add_impuesto'},
             {'model': 'mantenimiento.tiposdoc', 'label': 'Documentos', 'permissions': 'mantenimiento.add_tiposdoc'},
             {'model': 'proyectos.obra', 'label': 'Obras', 'permissions': 'proyectos.add_obra'},
         )},
         {'app': 'facturacion', 'models': (
-            # {'label': 'Emitir factura', 'icon': 'none', 'url': '/facturacion/emision/', 'permissions': 'facturacion.add_informes'},
             {'model': 'facturacion.cliente', 'label': 'Clientes', 'permissions': 'facturacion.add_cliente'},
             {'model': 'facturacion.emision_factura', 'label': 'Emitir factura', 'permissions': 'facturacion.add_emision_factura'},
         )},

@@ -3,7 +3,7 @@ from django.contrib import admin, messages
 from django.db.models import Q
 from django.forms import SelectMultiple
 from django.db import models
-
+from django.utils.safestring import mark_safe
 # Register your models here.
 from django.shortcuts import redirect
 
