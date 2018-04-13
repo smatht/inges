@@ -5,14 +5,26 @@ from django.forms import TextInput
 from django.forms import Textarea
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
+from suit.widgets import AutosizedTextarea
+
 from fondos_externos.models import Cuenta
-from models import OrdenPago, Caja
+from models import OrdenPago, Caja, TipoCaja
+from proyectos.models import Obra
 
 
-class FondosForm(forms.ModelForm):
+class OPForm(forms.ModelForm):
     total_valores = forms.CharField(required=False)
     total_a_pagar = forms.CharField(required=False)
     diferencia = forms.CharField(required=False)
+    imprimir_recibo = forms.BooleanField(initial=False, required=False)
+    tipoCaja = forms.ModelChoiceField(queryset=TipoCaja.objects.all(), required=False)
+    obra = forms.ModelChoiceField(queryset=Obra.objects.all(), required=False)
+    comentario = forms.CharField(widget=forms.Textarea(attrs={'rows':4, 'class': 'input-xlarge'}))
+
+    # widgets = {
+    #     # You can also specify html attributes
+    #     'comentario': Textarea(attrs={'class': 'input-xlarge'}),
+    # }
 
     # def save(self, commit=True):
     #     diferencia = self.cleaned_data.get('diferencia', None)

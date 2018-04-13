@@ -197,7 +197,7 @@ class CompraItemInline(ForeignKeyAutocompleteTabularInline):
   extra = 10
   fieldsets = [
       (None, {
-          'fields': ['producto', 'cantidad', 'alicuota', 'precio_unitario', 'obra'],
+          'fields': ['producto', 'cantidad', 'alicuota', 'precio_unitario'],
           'description': "Use linea de concepto cuando quiera agregar un producto no recurrente o alguna compra especial"}),
   ]
 
@@ -207,7 +207,7 @@ class CompraItemConceptoInline(ForeignKeyAutocompleteTabularInline):
   extra = 0
   fieldsets = [
     (None, {
-      'fields': ['descripcion', 'cantidad', 'alicuota', 'precio_unitario', 'obra'],
+      'fields': ['descripcion', 'cantidad', 'alicuota', 'precio_unitario'],
       'description': "Use linea de concepto cuando quiera agregar un producto no recurrente o alguna compra especial"}),
   ]
 
@@ -254,6 +254,7 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
         print(obj.idCaja)
         obj.save()
 
+    # Colorea LIST DISPLAY dependiendo si la factura esta pagada o no, vencida o por vencer
     def suit_row_attributes(self, obj, request):
         condPago = 'info'
         if obj.condPago == 'CRE':
@@ -269,9 +270,11 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
         if condPago:
             return {'class': condPago}
 
+    # Retorna numero de factura en formato estandar 0000-00000000
     def numero_doc(self, obj):
         return '%s-%s' % (str(obj.sucursal).zfill(4), str(obj.numDoc).zfill(8))
 
+    # Setea valores iniciales de campos de form segun configuracion
     def render_change_form(self, request, context, *args, **kwargs):
         context['adminform'].form.fields['tipoDoc'].queryset = TiposDoc.objects.filter(tipo=1)
         context['adminform'].form.fields['condPago'].initial = Configuracion.objects.get(pk=1).compras_condPago
@@ -282,7 +285,6 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
         return super(CompraAdmin, self).render_change_form(request, context, args, kwargs)
 
     # Los siguientes 3 metodos sirven para Operar con cada FacturaItem
-    # the following functions are for calculating the total price of the invoice header based on the lines
     def response_add(self, request, new_object, **kwargs):
         obj = self.after_saving_model_and_related_inlines(request, new_object)
         return super(CompraAdmin, self).response_add(request, obj)

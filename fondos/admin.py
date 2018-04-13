@@ -7,7 +7,7 @@ from django.utils.safestring import mark_safe
 # Register your models here.
 from django.shortcuts import redirect
 
-from forms import FondosForm, CajaForm
+from forms import OPForm, CajaForm
 from mantenimiento.models import Configuracion
 
 from compras.models import Compra
@@ -65,7 +65,7 @@ class MovCajaAdmin(admin.ModelAdmin):
 
 @admin.register(OrdenPago)
 class OrdenPagoAdmin(admin.ModelAdmin):
-    form = FondosForm
+    form = OPForm
     list_display = ('empresa', 'fPago', 'proveedor', 'importe')
     list_filter = ('empresa', 'proveedor')
     exclude = ('fCarga', 'operador', 'anulado', 'aplicado')
@@ -73,11 +73,11 @@ class OrdenPagoAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
             'classes': ('suit-tab', 'suit-tab-facturas',),
-            'fields': ('empresa', 'proveedor', 'fPago', 'facturas'),
+            'fields': ('empresa', 'proveedor', 'personal', 'fPago', 'facturas'),
         }),
         ('Efectivo', {
             'classes': ('suit-tab', 'suit-tab-valores',),
-            'fields': ('caja', 'importe', 'comentario'),
+            'fields': ('tipoCaja', 'obra', 'importe', 'comentario'),
         }),
         ('Cheques propios', {
             'classes': ('suit-tab', 'suit-tab-valores', 'collapse'),
@@ -89,7 +89,7 @@ class OrdenPagoAdmin(admin.ModelAdmin):
         }),
         ('Datos del pago', {
             'classes': ('suit-tab', 'suit-tab-valores',),
-            'fields': ['total_valores', 'total_a_pagar', 'diferencia']}),
+            'fields': [('total_valores', 'imprimir_recibo'), 'total_a_pagar', 'diferencia']}),
     )
     suit_form_tabs = (('facturas', 'Facturas a pagar'), ('valores', 'Valores'))
 
