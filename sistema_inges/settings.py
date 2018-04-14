@@ -241,6 +241,7 @@ SUIT_CONFIG = {
             {'model': 'fondos.caja', 'label': 'Cajas', 'permissions': 'fondos.add_caja'},
             {'model': 'fondos.movcaja', 'label': 'Movimiento de caja', 'permissions': 'fondos.add_movcaja'},
             {'model': 'fondos.tipomovcaja', 'label': 'Tipo movimiento', 'permissions': 'fondos.add_tipomovcaja'},
+            {'model': 'fondos.ordenpago', 'label': 'Orden de pago', 'permissions': 'fondos.add_ordenpago'},
         )},
         {'app': 'stock', 'models': (
             {'model': 'stock.producto', 'label': 'Productos', 'permissions': 'stock.add_producto'},

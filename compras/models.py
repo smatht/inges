@@ -190,7 +190,7 @@ class CompraItem(models.Model):
     cantidad = models.FloatField()
     alicuota = models.ForeignKey(Impuesto)
     precio_unitario = models.FloatField()
-    obra = models.ForeignKey(Obra, blank=True, null=True)
+    # obra = models.ForeignKey(Obra, blank=True, null=True)
 
     class Meta:
         verbose_name = 'Detalle de factura'
@@ -203,7 +203,7 @@ class CompraItemConcepto(models.Model):
     cantidad = models.FloatField()
     alicuota = models.ForeignKey(Impuesto)
     precio_unitario = models.FloatField()
-    obra = models.ForeignKey(Obra, blank=True, null=True)
+    # obra = models.ForeignKey(Obra, blank=True, null=True)
 
     class Meta:
         verbose_name = 'Concepto'

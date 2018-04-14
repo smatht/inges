@@ -97,17 +97,18 @@ class MovCaja(models.Model):
 
 class OrdenPago(models.Model):
     empresa = models.ForeignKey(Registro)
-    proveedor = models.ForeignKey(Proveedor)
+    proveedor = models.ForeignKey(Proveedor, null=True, blank=True)
+    personal = models.ForeignKey(User, null=True, blank=True, related_name='Perceptor')
     fPago = models.DateField(default=datetime.datetime.now, verbose_name='Fecha pago')
     fCarga = models.DateTimeField(default=datetime.datetime.now) #No admin
     importe = models.FloatField()
-    operador = models.ForeignKey(User, null=True)
-    anulado = models.BooleanField(default=False)
-    aplicado = models.BooleanField(default=False)
+    operador = models.ForeignKey(User, null=True, related_name='Usuario') #No admin
+    anulado = models.BooleanField(default=False) #No admin
+    aplicado = models.BooleanField(default=False) #No admin
     comentario = models.CharField(max_length=100, null=True, blank=True)
     facturas = models.ManyToManyField(Compra, blank=True)
     # Si es pago en efectivo
-    caja = models.ForeignKey(Caja)
+    caja = models.ForeignKey(Caja, null=True, blank=True)
 
     # def save(self, *args, **kwargs):
     #     print(self.diferencia)
