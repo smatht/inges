@@ -101,6 +101,9 @@
                     {% firstof user.first_name user.username %}{% endfilter %}</strong>.
                 <span class="user-links">
                 {% block userlinks %}
+                  {% load tags %}
+                  <a href="{% blog_url %}" target="_blank">Blog</a>
+                  <span class="separator">|</span>
                   {% url 'django-admindocs-docroot' as docsroot %}
                   {% if docsroot %}
                     <a href="{{ docsroot }}">{% trans 'Documentation' %}</a>

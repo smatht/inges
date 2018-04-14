@@ -162,7 +162,7 @@ class Compra(AbstractCompra):
         verbose_name='Condicion pago',
     )
     esCopia = models.BooleanField(default=False, verbose_name='Es copia')
-    afectaStock = models.BooleanField(default=False, verbose_name='Afecta a stock')
+    afectaStock = models.BooleanField(default=True, verbose_name='Afecta a stock')
     yaAfectoStock = models.BooleanField(default=False)
     prFinal = models.BooleanField(default=True, verbose_name='Utiliza precio final')
     fContabilizar = models.DateField(default=datetime.datetime.now, verbose_name='Fecha contable', help_text='Afecta a informes '
@@ -172,6 +172,7 @@ class Compra(AbstractCompra):
     fVencimiento = models.DateField(verbose_name='Fecha de vencimiento', default=datetime.datetime.now)
     saldo = models.FloatField(null=True, blank=True)
     idCaja = models.IntegerField(blank=True, null=True)
+    afectaCaja = models.BooleanField(default=True, verbose_name='Generar mov. caja')
 
     class Meta:
         verbose_name_plural = "registro facturas"

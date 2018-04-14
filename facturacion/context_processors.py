@@ -6,6 +6,7 @@ from random import choice
 saludo = ['Hola Inges!', 'Welcome my cousin!', 'Accogliere mio fratello',
 			'Saluto vos extollatur', 'Olá meu povo']
 def ejemplo(request):
-    print('SALUDICOSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS')
     print(choice(saludo))
-    return {'saludo': choice(saludo)}
+    return {'saludo': choice(saludo),
+            'blog': 'https://medium.com/@smatht/'
+            }

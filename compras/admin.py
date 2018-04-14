@@ -228,8 +228,8 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
             'fields': ['fVencimiento']}),
         ('Caja:', {
             'classes': ('collapse',),
-            'fields': ['generarMov', 'tipoCaja']}),
-        (None, {'fields': [('prFinal', 'afectaStock', 'esCopia')]}),
+            'fields': ['afectaCaja', 'tipoCaja']}),
+        (None, {'fields': [('afectaStock', 'prFinal', 'esCopia')]}),
         ('Cai:', {
           'classes': ('collapse',),
           'fields': ['cai', 'vCai']}),
