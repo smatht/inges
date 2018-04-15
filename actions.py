@@ -101,7 +101,7 @@ def frameCabecera(pdf, qs):
   fb.drawBoundary(pdf)
 
   # Tabla proveedor y domicilio
-  p0 = Paragraph('''<b>Senor(es):</b>''', stylesheet['Normal'])
+  p0 = Paragraph('''<b>Señor(es):</b>''', stylesheet['Normal'])
   p1 = Paragraph('''<b>Domicilio:</b>''', stylesheet['Normal'])
   data = [[p0, qs.proveedor],[p1, qs.proveedor.domicilio_comercial]]
   t1 = Table(data, colWidths=[3 * cm, 5 * cm])
@@ -117,7 +117,7 @@ def frameCabecera(pdf, qs):
   ))
 
   # Tabla telefono y localidad
-  p0 = Paragraph('''<b>Telefono:</b>''', stylesheet['Normal'])
+  p0 = Paragraph('''<b>Teléfono:</b>''', stylesheet['Normal'])
   p1 = Paragraph('''<b>Localidad:</b>''', stylesheet['Normal'])
   data = [[p0, qs.proveedor.telefono], [p1, qs.proveedor.localidad]]
   t2 = Table(data, colWidths=[3 * cm, 5 * cm])

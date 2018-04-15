@@ -6,6 +6,7 @@ from django.conf.urls import url
 from django.contrib import admin, messages
 from django.core.exceptions import ObjectDoesNotExist
 
+from fondos.utils import getOrOpenCaja
 from mantenimiento.models import TiposDoc, Impuesto, Configuracion
 
 from fondos.models import Caja, MovCaja, TipoCaja, TipoMovCaja
@@ -241,17 +242,10 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
             # messages.add_message(request, messages.INFO, 'Operador registrado')
         if form.cleaned_data['generarMov']:
             if form.cleaned_data['tipoCaja'] is not None:
-                try:
-                    cja = Caja.objects.get(tipoCaja=form.cleaned_data['tipoCaja'], destino=obj.obra, fCierre=None)
-                except ObjectDoesNotExist:
-                    cja = self.abrirCaja(obj.obra, form.cleaned_data['tipoCaja'])
+                cja = getOrOpenCaja(form.cleaned_data['tipoCaja'], obj.obra)
             else:
-                try:
-                    cja = Caja.objects.get(tipoCaja=1, destino=obj.obra, fCierre=None)
-                except ObjectDoesNotExist:
-                    cja = self.abrirCaja(obj.obra)
+                cja = getOrOpenCaja(1, obj.obra)
             obj.idCaja = cja.pk
-        print(obj.idCaja)
         obj.save()
 
     # Colorea LIST DISPLAY dependiendo si la factura esta pagada o no, vencida o por vencer
@@ -403,13 +397,6 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
 
         cabecera.save()
         return cabecera
-
-    def abrirCaja(self, obra, tipoCaja = None):
-        if tipoCaja is None:
-            tipoCaja = TipoCaja.objects.get(pk=1)
-        c = Caja(tipoCaja=tipoCaja, destino=obra)
-        c.save()
-        return c
 
 
 # admin.site.unregister(User)

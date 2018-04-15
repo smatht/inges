@@ -1,5 +1,8 @@
 import datetime
+
+from django.conf.urls import url
 from django.contrib import admin, messages
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.forms import SelectMultiple
 from django.db import models
@@ -7,6 +10,8 @@ from django.utils.safestring import mark_safe
 # Register your models here.
 from django.shortcuts import redirect
 
+from fondos.reports import orden_pago_as_pdf
+from fondos.utils import getOrOpenCaja
 from forms import OPForm, CajaForm
 from mantenimiento.models import Configuracion
 
@@ -66,7 +71,7 @@ class MovCajaAdmin(admin.ModelAdmin):
 @admin.register(OrdenPago)
 class OrdenPagoAdmin(admin.ModelAdmin):
     form = OPForm
-    list_display = ('empresa', 'fPago', 'proveedor', 'importe')
+    list_display = ('empresa', 'fPago', 'beneficiario', 'importe', 'acciones')
     list_filter = ('empresa', 'proveedor')
     exclude = ('fCarga', 'operador', 'anulado', 'aplicado')
     filter_horizontal = ('facturas',)
@@ -98,21 +103,45 @@ class OrdenPagoAdmin(admin.ModelAdmin):
         idPagadas = OrdenPago.facturas.through.objects.values_list('compra', flat=True)
         context['adminform'].form.fields['empresa'].initial = Configuracion.objects.get(pk=1).empresa
         context['adminform'].form.fields['facturas'].queryset = Compra.objects.filter(~Q(id__in=idPagadas), condPago='CRE')
+        if kwargs.get('change'):
+            if kwargs.get('obj').caja:
+                tc = kwargs.get('obj').caja.tipoCaja
+                oc = kwargs.get('obj').caja.destino
+                context['adminform'].form.fields['tipoCaja'].initial = tc
+                context['adminform'].form.fields['obra'].initial = oc
         return super(OrdenPagoAdmin, self).render_change_form(request, context, args, kwargs)
 
-    # def save_model(self, request, obj, form, change):
-    #     print(form.diferencia)
-    #     if getattr(obj, 'diferencia', None) is not 0:
-    #         messages.add_message(request, messages.ERROR, 'ERROR EN LA OPERACION')
-    #         print(messages.get_messages(request))
-    #     else:
-    #         obj.save()
+    def save_model(self, request, obj, form, change):
+        if form.cleaned_data['tipoCaja'] is not None:
+            obj.caja = getOrOpenCaja(form.cleaned_data['tipoCaja'], form.cleaned_data['obra'])
+        obj.save()
+
+    def beneficiario(self, obj):
+        if obj.proveedor:
+            return obj.proveedor
+        else:
+            return obj.personal.last_name + ', ' + obj.personal.first_name
+
+    def imprimirOrden(self, request, orden_id, *args, **kwargs):
+        qs = OrdenPago.objects.get(pk=orden_id)
+        return orden_pago_as_pdf(request, qs)
+
+    def get_urls(self):
+        urls = super(OrdenPagoAdmin, self).get_urls()
+        custom_urls = [
+            url(
+                r'^(?P<orden_id>.+)/deposit/$',
+                self.admin_site.admin_view(self.imprimirOrden),
+                name='imprimirOrden',
+            ),
+        ]
+        return custom_urls + urls
 
 
 @admin.register(Caja)
 class CajaAdmin(admin.ModelAdmin):
     form = CajaForm
-    list_display = ('tipoCaja', 'fApertura', 'destino', 'montoInicial', 'acumEntradas', 'acumSalidas', 'saldo')
+    list_display = ('tipoCaja', 'destino', 'fApertura', 'montoInicial', 'acumEntradas', 'acumSalidas', 'saldo')
     # list_filter = ('caja__destino',)
     ordering = ['-fCierre', '-fApertura']
     fieldsets = (

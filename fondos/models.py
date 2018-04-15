@@ -3,7 +3,10 @@ import datetime
 
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.urlresolvers import reverse
 from django.db import models
+from django.utils.html import format_html
+
 from mantenimiento.models import TiposDoc
 from facturacion.models import Registro
 from proyectos.models import Obra
@@ -109,6 +112,15 @@ class OrdenPago(models.Model):
     facturas = models.ManyToManyField(Compra, blank=True)
     # Si es pago en efectivo
     caja = models.ForeignKey(Caja, null=True, blank=True)
+
+    # Botones de acciones
+    def acciones(self):
+        return format_html(
+            '<a class="btn" href="{}" target="_blank" title="Imprimir orden"><i class="icon-print"></i></a>',
+            reverse('admin:imprimirOrden', args=[self.pk]),
+        )
+    acciones.short_description = 'Acciones'
+    acciones.allow_tags = True
 
     # def save(self, *args, **kwargs):
     #     print(self.diferencia)

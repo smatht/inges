@@ -19,7 +19,7 @@ class OPForm(forms.ModelForm):
     imprimir_recibo = forms.BooleanField(initial=False, required=False)
     tipoCaja = forms.ModelChoiceField(queryset=TipoCaja.objects.all(), required=False)
     obra = forms.ModelChoiceField(queryset=Obra.objects.all(), required=False)
-    comentario = forms.CharField(widget=forms.Textarea(attrs={'rows':4, 'class': 'input-xlarge'}))
+    comentario = forms.CharField(widget=forms.Textarea(attrs={'rows':4, 'class': 'input-xlarge'}), required=False)
 
     # widgets = {
     #     # You can also specify html attributes
