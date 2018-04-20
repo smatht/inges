@@ -9,6 +9,7 @@ from django.db import models
 from django.utils.safestring import mark_safe
 # Register your models here.
 from django.shortcuts import redirect
+from functools32 import update_wrapper
 
 from fondos.reports import orden_pago_as_pdf
 from fondos.utils import getOrOpenCaja
@@ -97,6 +98,13 @@ class OrdenPagoAdmin(admin.ModelAdmin):
             'fields': [('total_valores', 'imprimir_recibo'), 'total_a_pagar', 'diferencia']}),
     )
     suit_form_tabs = (('facturas', 'Facturas a pagar'), ('valores', 'Valores'))
+
+    def wrap(self, view):
+        def wrapper(*args, **kwargs):
+            return self.admin_site.admin_view(view)(*args, **kwargs)
+
+        wrapper.model_admin = self
+        return update_wrapper(wrapper, view)
 
     def render_change_form(self, request, context, *args, **kwargs):
         # Busca ids de facturas ya pagadas (asignadas a un recibo)

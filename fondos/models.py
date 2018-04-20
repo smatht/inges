@@ -122,6 +122,12 @@ class OrdenPago(models.Model):
     acciones.short_description = 'Acciones'
     acciones.allow_tags = True
 
+    def beneficiario(self):
+        if self.proveedor:
+            return format(self.proveedor.__str__())
+        else:
+            return format(self.personal.last_name + ', ' + self.personal.first_name)
+
     # def save(self, *args, **kwargs):
     #     print(self.diferencia)
     #     if self.diferencia != 0:
