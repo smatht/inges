@@ -47,6 +47,7 @@ def orden_pago_as_pdf(request, obj):
 
 def frameCabecera(pdf, obj):
     beneficiario = obj.beneficiario()
+    motivo = obj.motivo.__str__()
     # Recuadro
     pdf.setStrokeColorRGB(0, 0, 0)
     f = Frame(margXizq, margYtop-185, 540, 170)
@@ -60,7 +61,7 @@ def frameCabecera(pdf, obj):
     p1 = Paragraph('''<b>Cuit:</b>''', stylesheet['Normal'])
     p2 = Paragraph('''<b>Recibo:</b>''', stylesheet['Normal'])
     p3 = Paragraph('''<b>Motivo:</b>''', stylesheet['Normal'])
-    data = [[p0, beneficiario], [p1, ' '], [p2, ' '], [p3, ' ']]
+    data = [[p0, beneficiario], [p1, ' '], [p2, ' '], [p3, motivo]]
     t1 = Table(data, colWidths=[3 * cm, 5 * cm])
     t1.setStyle(TableStyle(
         [

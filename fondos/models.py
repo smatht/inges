@@ -7,7 +7,7 @@ from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.html import format_html
 
-from mantenimiento.models import TiposDoc
+from mantenimiento.models import TiposDoc, TipoMovCaja
 from facturacion.models import Registro
 from proyectos.models import Obra
 from facturacion.models import Proveedor
@@ -41,19 +41,6 @@ class Caja(models.Model):
     def __unicode__(self):
         return format(self.tipoCaja.__unicode__() + ' Obra: ' + self.destino.__unicode__()
                       + ' ' + self.fApertura.strftime("%d-%m-%Y"))
-
-
-class TipoMovCaja(models.Model):
-    descripcion = models.CharField(max_length=75)
-    suma = models.BooleanField(default=False)
-
-    class Meta:
-        ordering = ['pk']
-        verbose_name = 'Tipo movimiento'
-        verbose_name_plural = 'Tipo movimiento'
-
-    def __unicode__(self):
-        return format(self.descripcion)
 
 
 class MovCaja(models.Model):
@@ -112,6 +99,7 @@ class OrdenPago(models.Model):
     facturas = models.ManyToManyField(Compra, blank=True)
     # Si es pago en efectivo
     caja = models.ForeignKey(Caja, null=True, blank=True)
+    motivo = models.ForeignKey(TipoMovCaja, null=True, blank=True)
 
     # Botones de acciones
     def acciones(self):

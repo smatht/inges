@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.shortcuts import redirect
 
-from models import TiposDoc, Impuesto, Configuracion
+from models import TiposDoc, Impuesto, Configuracion, TipoMovCaja
 
 
 @admin.register(TiposDoc)
@@ -32,8 +32,11 @@ class ConfigAdmin(admin.ModelAdmin):
         (None, {
             'classes': ('suit-tab suit-tab-ventas',),
             'fields': ['ventas_tipoDoc']}),
+        (None, {
+            'classes': ('suit-tab suit-tab-fondos',),
+            'fields': ['fondos_orden_pago_movimiento']}),
     ]
-    suit_form_tabs = (('general', 'General'),('compras', 'Compras'), ('ventas', 'Ventas'))
+    suit_form_tabs = (('general', 'General'),('compras', 'Compras'), ('ventas', 'Ventas'), ('fondos', 'Fondos'))
 
     def response_add(self, request, new_object, **kwargs):
         return redirect('/administracion/')
@@ -43,3 +46,4 @@ class ConfigAdmin(admin.ModelAdmin):
 
 
 # Register your models here.
+admin.site.register(TipoMovCaja)

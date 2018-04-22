@@ -58,6 +58,19 @@ class Impuesto(models.Model):
         return unicode(self.descripcion)
 
 
+class TipoMovCaja(models.Model):
+    descripcion = models.CharField(max_length=75)
+    suma = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['pk']
+        verbose_name = 'Tipo movimiento'
+        verbose_name_plural = 'Tipo movimiento'
+
+    def __unicode__(self):
+        return format(self.descripcion)
+
+
 class Configuracion(models.Model):
     compras_condPago = models.CharField(
         max_length=3,
@@ -84,6 +97,12 @@ class Configuracion(models.Model):
         null=True,
         blank=True,
         verbose_name='Tipo doc')
+    fondos_orden_pago_movimiento = models.ForeignKey(
+        TipoMovCaja,
+        related_name='tipoMovCaja',
+        null=True,
+        blank=True,
+        verbose_name='Tipo movimiento de caja')
 
     def __unicode__(self):
         return unicode('Ajustes')

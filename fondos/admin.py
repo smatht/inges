@@ -19,7 +19,7 @@ from mantenimiento.models import Configuracion
 from compras.models import Compra
 
 from fondos_externos.models import Cuenta
-from models import TipoCaja, MovCaja, TipoMovCaja, OrdenPago, Caja
+from models import TipoCaja, MovCaja, OrdenPago, Caja
 
 
 @admin.register(MovCaja)
@@ -95,7 +95,7 @@ class OrdenPagoAdmin(admin.ModelAdmin):
         }),
         ('Datos del pago', {
             'classes': ('suit-tab', 'suit-tab-valores',),
-            'fields': [('total_valores', 'imprimir_recibo'), 'total_a_pagar', 'diferencia']}),
+            'fields': [('total_valores', 'motivo'), ('total_a_pagar', 'imprimir_recibo'), 'diferencia']}),
     )
     suit_form_tabs = (('facturas', 'Facturas a pagar'), ('valores', 'Valores'))
 
@@ -107,10 +107,11 @@ class OrdenPagoAdmin(admin.ModelAdmin):
         return update_wrapper(wrapper, view)
 
     def render_change_form(self, request, context, *args, **kwargs):
-        # Busca ids de facturas ya pagadas (asignadas a un recibo)
+        # Busca ids de facturas ya pagadapython manage.pys (asignadas a un recibo)
         idPagadas = OrdenPago.facturas.through.objects.values_list('compra', flat=True)
         context['adminform'].form.fields['empresa'].initial = Configuracion.objects.get(pk=1).empresa
         context['adminform'].form.fields['facturas'].queryset = Compra.objects.filter(~Q(id__in=idPagadas), condPago='CRE')
+        context['adminform'].form.fields['motivo'].initial = Configuracion.objects.get(pk=1).fondos_orden_pago_movimiento
         if kwargs.get('change'):
             if kwargs.get('obj').caja:
                 tc = kwargs.get('obj').caja.tipoCaja
@@ -144,6 +145,9 @@ class OrdenPagoAdmin(admin.ModelAdmin):
             ),
         ]
         return custom_urls + urls
+
+
+
 
 
 @admin.register(Caja)
@@ -188,4 +192,4 @@ class CajaAdmin(admin.ModelAdmin):
 
 
 admin.site.register(TipoCaja)
-admin.site.register(TipoMovCaja)
+
