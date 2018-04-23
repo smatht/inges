@@ -17,9 +17,9 @@ class OPForm(forms.ModelForm):
     total_a_pagar = forms.CharField(required=False)
     diferencia = forms.CharField(required=False)
     imprimir_recibo = forms.BooleanField(initial=False, required=False)
-    tipoCaja = forms.ModelChoiceField(queryset=TipoCaja.objects.all(), required=False)
+    tipoCaja = forms.ModelChoiceField(queryset=TipoCaja.objects.all(), required=False, label="Tipo caja")
     obra = forms.ModelChoiceField(queryset=Obra.objects.all(), required=False)
-    comentario = forms.CharField(widget=forms.Textarea(attrs={'rows':4, 'class': 'input-xlarge'}), required=False)
+    comentario = forms.CharField(widget=forms.Textarea(attrs={'rows':4, 'class': 'input-xxlarge'}), required=False)
 
     # widgets = {
     #     # You can also specify html attributes

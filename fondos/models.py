@@ -95,7 +95,7 @@ class OrdenPago(models.Model):
     operador = models.ForeignKey(User, null=True, related_name='Usuario') #No admin
     anulado = models.BooleanField(default=False) #No admin
     aplicado = models.BooleanField(default=False) #No admin
-    comentario = models.CharField(max_length=100, null=True, blank=True)
+    comentario = models.CharField(max_length=500, null=True, blank=True)
     facturas = models.ManyToManyField(Compra, blank=True)
     # Si es pago en efectivo
     caja = models.ForeignKey(Caja, null=True, blank=True)
@@ -112,9 +112,9 @@ class OrdenPago(models.Model):
 
     def beneficiario(self):
         if self.proveedor:
-            return format(self.proveedor.__str__())
+            return self.proveedor
         else:
-            return format(self.personal.last_name + ', ' + self.personal.first_name)
+            return self.personal
 
     # def save(self, *args, **kwargs):
     #     print(self.diferencia)

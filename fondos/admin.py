@@ -83,7 +83,11 @@ class OrdenPagoAdmin(admin.ModelAdmin):
         }),
         ('Efectivo', {
             'classes': ('suit-tab', 'suit-tab-valores',),
-            'fields': ('tipoCaja', 'obra', 'importe', 'comentario'),
+            'fields': ('tipoCaja', 'obra', 'importe'),
+        }),
+        (None, {
+            'classes': ('suit-tab', 'suit-tab-valores',),
+            'fields': (('motivo', 'imprimir_recibo'), 'comentario'),
         }),
         ('Cheques propios', {
             'classes': ('suit-tab', 'suit-tab-valores', 'collapse'),
@@ -95,7 +99,7 @@ class OrdenPagoAdmin(admin.ModelAdmin):
         }),
         ('Datos del pago', {
             'classes': ('suit-tab', 'suit-tab-valores',),
-            'fields': [('total_valores', 'motivo'), ('total_a_pagar', 'imprimir_recibo'), 'diferencia']}),
+            'fields': ['total_valores', 'total_a_pagar', 'diferencia']}),
     )
     suit_form_tabs = (('facturas', 'Facturas a pagar'), ('valores', 'Valores'))
 

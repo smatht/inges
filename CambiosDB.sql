@@ -12,6 +12,8 @@
 --Migracion fondos 0023_auto_20180421_1930:
 --Se agrega foreign key de Tipomovcaja a mantenimiento.TipoMovCaja. Se elimina modelo TipoMovCaja
 
+-- Fuente: https://mikola.by/blog/how-move-model-between-two-django-apps/
+
 -- Si genera error hay que corregir la tabla ContentType
 select * from public.django_content_type -- Tiene que haber solo un model label de cada modelo, si hay mas
 delete from public.auth_permission where content_type_id=61 -- Primero se lo borra de auth

@@ -13,6 +13,9 @@ from reportlab.platypus import TableStyle
 from reportlab.platypus.para import Paragraph
 from reportlab.lib.styles import getSampleStyleSheet
 
+from fondos.utils import Moneda
+from mantenimiento.models import ExtendUser
+
 stylesheet=getSampleStyleSheet()
 #Definimos margenes
 margXizq = 30
@@ -48,6 +51,13 @@ def orden_pago_as_pdf(request, obj):
 def frameCabecera(pdf, obj):
     beneficiario = obj.beneficiario()
     motivo = obj.motivo.__str__()
+    if getattr(obj.beneficiario(), 'cuit', None) is None:
+        usr = ExtendUser.objects.get(pk=obj.beneficiario().pk)
+        cdn = str(usr.dni)
+    else:
+        cdn = str(obj.beneficiario().cuit)
+    importe = Moneda(obj.importe)
+    print(importe.toText())
     # Recuadro
     pdf.setStrokeColorRGB(0, 0, 0)
     f = Frame(margXizq, margYtop-185, 540, 170)
@@ -58,10 +68,10 @@ def frameCabecera(pdf, obj):
     pdf.drawString(margXizq*11+12, margYtop-45, str(obj.id).zfill(5))
     # Tabla Cabecera
     p0 = Paragraph('''<b>Beneficiario:</b>''', stylesheet['Normal'])
-    p1 = Paragraph('''<b>Cuit:</b>''', stylesheet['Normal'])
+    p1 = Paragraph('''<b>Cuit/DNI:</b>''', stylesheet['Normal'])
     p2 = Paragraph('''<b>Recibo:</b>''', stylesheet['Normal'])
     p3 = Paragraph('''<b>Motivo:</b>''', stylesheet['Normal'])
-    data = [[p0, beneficiario], [p1, ' '], [p2, ' '], [p3, motivo]]
+    data = [[p0, beneficiario], [p1, cdn], [p2, ' '], [p3, motivo]]
     t1 = Table(data, colWidths=[3 * cm, 5 * cm])
     t1.setStyle(TableStyle(
         [
@@ -73,5 +83,14 @@ def frameCabecera(pdf, obj):
             # ('FONTSIZE', (0, 0), (-1, -1), 10),
         ]
     ))
+
+    pdf.rect(margXizq, margYtop-145, 540, 1, 1, 1)
+
+    p4 = Paragraph('''<b>SON PESOS: </b>''', stylesheet['Normal'])
+    data2 = [[p4, importe.toText()]]
+    t2 = Table(data2, colWidths=[3 * cm, 5 * cm])
+
     t1.wrapOn(pdf, 800, 600)
-    t1.drawOn(pdf, margXizq+15, margYtop-150)
+    t2.wrapOn(pdf, 800, 600)
+    t1.drawOn(pdf, margXizq+15, margYtop-135)
+    t2.drawOn(pdf, margXizq+15, margYtop-175)
