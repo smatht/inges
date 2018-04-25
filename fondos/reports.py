@@ -14,7 +14,7 @@ from reportlab.platypus import TableStyle
 from reportlab.platypus.para import Paragraph
 from reportlab.lib.styles import getSampleStyleSheet
 
-from fondos.utils import Moneda
+from fondos.moneda import Moneda
 from mantenimiento.models import ExtendUser
 
 stylesheet=getSampleStyleSheet()
