@@ -41,7 +41,7 @@ class OPForm(forms.ModelForm):
         }
 
     class Media:
-        js = ('js/filterM2M.js',)
+        js = ('js/jquery.textcomplete.min.js', 'js/filterM2M.js', 'js/algoliasearch.jquery.min.js', 'js/template_autocomplete.js')
 
 
 class CajaForm(forms.ModelForm):

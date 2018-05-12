@@ -250,7 +250,7 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
 
     # Colorea LIST DISPLAY dependiendo si la factura esta pagada o no, vencida o por vencer
     def suit_row_attributes(self, obj, request):
-        condPago = 'info'
+        condPago = False
         if obj.condPago == 'CRE':
             if obj.pk not in OrdenPago.facturas.through.objects.values_list('compra', flat=True):
                 if (obj.fVencimiento < date.today()):
@@ -258,9 +258,7 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
                 elif (obj.fVencimiento <= (date.today() + timedelta(days=3))):
                     condPago = 'warning'
                 else:
-                    condPago = 'success'
-        #condPago = {'CTD': '', 'CRE': 'warning'}.get(obj.condPago)
-        # copia = {1: 'error', 0: ''}.get(obj.esCopia)
+                    condPago = 'info'
         if condPago:
             return {'class': condPago}
 
@@ -297,7 +295,7 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
         # Obtenemos la ultima caja abierta para esa obra
         # Si recibe tipoCaja busca ese tipo de caja de la obra seleccionada, si no recibe, busca la "caja chica" de la
         # obra seleccionada. Si no existe
-        if getattr(cabecera, 'idCaja', None) is None:
+        if getattr(cabecera, 'idCaja', None) is not None:
             caja = Caja.objects.get(pk=cabecera.idCaja)
         else:
             caja = False
@@ -372,13 +370,9 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
                 cabecera.totImpuestos = cabecera.totImpuestos + totImpuestos
                 cabecera.totNeto = totBruto + totImpuestos
 
-            # Si campo Obra de concepto esta vacio completamos con la Obra seleccionada en cabecera sino se deja como esta
-            if not concepto.obra:
-                concepto.obra = cabecera.obra
-                concepto.save()
 
             # Hacemos el movimiento de caja.
-            if cabecera.generarMov:
+            if cabecera.afectaCaja:
                 desc = cabecera.tipoDoc.id + " Nro:" + str(
                     cabecera.numDoc) + " Prov: " + cabecera.proveedor.razon_social \
                        + " " + concepto.descripcion + " " + str(concepto.cantidad) + " Unid."

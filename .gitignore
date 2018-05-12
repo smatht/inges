@@ -7,3 +7,5 @@ venv/
 
 .idea/
 sistema_inges/static/xls/InformeSI*
+bower_components/
+node_modules/git add

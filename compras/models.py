@@ -31,8 +31,8 @@ class Pedido(models.Model):
 
     class Meta:
         ordering = ['-fechaPedido']
-        verbose_name = 'Pedido'
-        verbose_name_plural = 'Pedidos'
+        verbose_name = 'Orden de compra'
+        verbose_name_plural = 'Ordenes de compra'
 
     def __unicode__(self):
         return unicode('[' + str(self.pk) + '] ' + self.fechaPedido.strftime('%d/%m/%Y') + ' - ' + str(self.proveedor) +
@@ -175,7 +175,7 @@ class Compra(AbstractCompra):
     afectaCaja = models.BooleanField(default=True, verbose_name='Generar mov. caja')
 
     class Meta:
-        verbose_name_plural = "registro facturas"
+        verbose_name_plural = "Compras"
 
     def __unicode__(self):
         return " Num: " + self.sucursal.__str__().zfill(4) + " - " + self.numDoc.__str__().zfill(8) \
@@ -193,8 +193,8 @@ class CompraItem(models.Model):
     # obra = models.ForeignKey(Obra, blank=True, null=True)
 
     class Meta:
-        verbose_name = 'Detalle de factura'
-        verbose_name_plural = 'Detalle de factura'
+        verbose_name = 'Detalle de documento'
+        verbose_name_plural = 'Detalle de documento'
 
 
 class CompraItemConcepto(models.Model):

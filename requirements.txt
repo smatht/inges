@@ -13,14 +13,14 @@ gunicorn==19.3.0
 numpy==1.13.1
 packaging==16.8
 Pillow==3.4.2
-psycopg2==2.6.1
+# psycopg2==2.6.1
 pyparsing==2.1.10
 pystache==0.5.4
 reportlab==3.3.0
 simplejson==3.8.0
 static==1.1.1
 static3==0.6.1
-stock==2.0
+# stock==2.0
 terminado==0.6
 xlrd==0.9.4
 xlutils==1.7.1

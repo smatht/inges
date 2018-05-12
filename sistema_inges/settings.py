@@ -30,11 +30,11 @@ MANAGERS = ADMINS
 
 # SETTING DATA BASE
 # Configurar las variables de entorno en /etc/profile
-NAME = os.environ['INGESDB_NAME']
-HOST = os.environ['INGESDB_HOST']
-PORT = os.environ['INGESDB_PORT'] if os.environ['INGESDB_PORT'] else 5432
-USER = os.environ['INGESDB_USER']
-PASSWORD = os.environ['INGESDB_PASSWORD']
+NAME = os.environ.get('INGESDB_NAME', 'df4sco1u608bra')
+HOST = os.environ.get('INGESDB_HOST', 'ec2-107-21-236-219.compute-1.amazonaws.com')
+PORT = os.environ.get('INGESDB_PORT', 5432)
+USER = os.environ.get('INGESDB_USER', 'opxavbxjahzkut')
+PASSWORD = os.environ.get('INGESDB_PASSWORD', '5c8cd1ae416ad7593efae3ded70d6db194cc40d629cc531aff51b959dedb30f7')
 DATABASES = {
   'default': {
     'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -232,9 +232,9 @@ SUIT_CONFIG = {
         )},
         {'app': 'compras', 'models': (
             {'model': 'facturacion.proveedor', 'label': 'Proveedores', 'permissions': 'facturacion.add_proveedor'},
-            {'model': 'compras.compra', 'label': 'Factura de compra', 'permissions': 'compras.add_compra'},
-            {'model': 'compras.pedido', 'label': 'Orden de compra', 'permissions': 'compras.add_pedido'},
-            {'model': 'compras.remito', 'label': 'Remito de compra', 'permissions': 'compras.add_remito'},
+            {'model': 'compras.compra', 'label': 'Documentos de compra', 'permissions': 'compras.add_compra'},
+            {'model': 'compras.pedido', 'label': 'Ordenes de compra', 'permissions': 'compras.add_pedido'},
+            {'model': 'compras.remito', 'label': 'Remitos de compra', 'permissions': 'compras.add_remito'},
         )},
         {'app': 'fondos', 'models': (
             {'model': 'fondos.tipocaja', 'label': 'Tipos de caja', 'permissions': 'fondos.add_tipocaja'},
