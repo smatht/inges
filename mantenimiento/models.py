@@ -91,6 +91,12 @@ class Configuracion(models.Model):
         verbose_name='Tipo doc')
     compras_usaPrFinal = models.BooleanField()
     compras_FacAfectaStk = models.BooleanField()
+    compras_tipoMovCajaDef = models.ForeignKey(
+        TipoMovCaja,
+        related_name='tipoMovCajaCompra',
+        null=True,
+        blank=True,
+        verbose_name='Tipo Mov Caja por defecto')
     ventas_tipoDoc = models.ForeignKey(
         TiposDoc,
         related_name='tipoFacVenta',

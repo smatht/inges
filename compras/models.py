@@ -3,6 +3,7 @@ import datetime
 
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.html import format_html
@@ -165,22 +166,30 @@ class Compra(AbstractCompra):
     afectaStock = models.BooleanField(default=True, verbose_name='Afecta a stock')
     yaAfectoStock = models.BooleanField(default=False)
     prFinal = models.BooleanField(default=True, verbose_name='Utiliza precio final')
-    fContabilizar = models.DateField(default=datetime.datetime.now, verbose_name='Fecha contable', help_text='Afecta a informes '
-                                                                                                     'contables.')
+    fContabilizar = models.DateField(default=datetime.datetime.now, verbose_name='Fecha contable', help_text='Afecta a informes '                                                                                        'contables.')
     cai = models.BigIntegerField(null=True, blank=True)
     vCai = models.DateField(null=True, blank=True)
     fVencimiento = models.DateField(verbose_name='Fecha de vencimiento', default=datetime.datetime.now)
-    saldo = models.FloatField(null=True, blank=True)
     idCaja = models.IntegerField(blank=True, null=True)
     afectaCaja = models.BooleanField(default=True, verbose_name='Generar mov. caja')
+    fSaldada = models.DateTimeField(null=True, blank=True)
+
+    def saldo(self):
+        if self.condPago == 'CRE':
+            try:
+                return DocCuentaProveedor.objects.get(documento=self).importeSaldo
+            except ObjectDoesNotExist:
+                return self.totNeto
+        else:
+            return self.totNeto
 
     class Meta:
         verbose_name_plural = "Compras"
 
     def __unicode__(self):
-        return " Num: " + self.sucursal.__str__().zfill(4) + " - " + self.numDoc.__str__().zfill(8) \
-               + " Vto: " + unicode(self.fVencimiento) + " Saldo: " + unicode(self.totNeto) \
-               + " (" + unicode(self.proveedor) + ")"
+        return self.tipoDoc.id + " " + self.sucursal.__str__().zfill(4) + " - " + self.numDoc.__str__().zfill(8) \
+               + " Saldo: " + unicode(self.saldo()) + " Vto: " + unicode(self.fVencimiento) \
+               + " (" + unicode(self.proveedor) + ": " + unicode(self.obra) + ")"
 
 
 
@@ -208,3 +217,14 @@ class CompraItemConcepto(models.Model):
     class Meta:
         verbose_name = 'Concepto'
         verbose_name_plural = 'Conceptos'
+
+
+
+class DocCuentaProveedor(models.Model):
+    documento = models.ForeignKey(Compra)
+    importeDocumento = models.FloatField()
+    importePagado = models.FloatField(default=0)
+    importeSaldo = models.FloatField()
+
+
+

@@ -46,7 +46,7 @@ class ConfigAdmin(admin.ModelAdmin):
         (None, {
             'classes': ('suit-tab suit-tab-compras',),
             'fields': ['compras_tipoDoc', 'compras_condPago', 'compras_usaPrFinal',
-                       'compras_FacAfectaStk']}),
+                       'compras_FacAfectaStk', 'compras_tipoMovCajaDef']}),
         (None, {
             'classes': ('suit-tab suit-tab-ventas',),
             'fields': ['ventas_tipoDoc']}),

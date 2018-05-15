@@ -116,10 +116,10 @@ class OrdenPago(models.Model):
         else:
             return self.personal
 
-    # def save(self, *args, **kwargs):
-    #     print(self.diferencia)
-    #     if self.diferencia != 0:
-    #         return  # No se graba!
-    #     else:
-    #
-        # super(OrdenPago, self).save(*args, **kwargs)
+
+class PagosProveedor(models.Model):
+    documento = models.ForeignKey(Compra)
+    nroPago = models.IntegerField()
+    fPago = models.DateTimeField(auto_now=True)
+    importe = models.FloatField()
+    ordenPago = models.ForeignKey(OrdenPago)

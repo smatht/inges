@@ -16,10 +16,10 @@ from fondos.utils import getOrOpenCaja
 from forms import OPForm, CajaForm
 from mantenimiento.models import Configuracion
 
-from compras.models import Compra
+from compras.models import Compra, DocCuentaProveedor
 
 from fondos_externos.models import Cuenta
-from models import TipoCaja, MovCaja, OrdenPago, Caja
+from models import TipoCaja, MovCaja, OrdenPago, Caja, PagosProveedor
 
 
 @admin.register(MovCaja)
@@ -112,9 +112,10 @@ class OrdenPagoAdmin(admin.ModelAdmin):
 
     def render_change_form(self, request, context, *args, **kwargs):
         # Busca ids de facturas ya pagadapython manage.pys (asignadas a un recibo)
-        idPagadas = OrdenPago.facturas.through.objects.values_list('compra', flat=True)
+        # idPagadas = OrdenPago.facturas.through.objects.values_list('compra', flat=True)
         context['adminform'].form.fields['empresa'].initial = Configuracion.objects.get(pk=1).empresa
-        context['adminform'].form.fields['facturas'].queryset = Compra.objects.filter(~Q(id__in=idPagadas), condPago='CRE')
+        # context['adminform'].form.fields['facturas'].queryset = Compra.objects.filter(~Q(id__in=idPagadas), condPago='CRE')
+        context['adminform'].form.fields['facturas'].queryset = Compra.objects.filter(fSaldada=None)
         context['adminform'].form.fields['motivo'].initial = Configuracion.objects.get(pk=1).fondos_orden_pago_movimiento
         if kwargs.get('change'):
             if kwargs.get('obj').caja:
@@ -150,8 +151,34 @@ class OrdenPagoAdmin(admin.ModelAdmin):
         ]
         return custom_urls + urls
 
+    # Los siguientes 3 metodos sirven para Operar con cada FacturaItem
+    def response_add(self, request, new_object, **kwargs):
+        obj = self.despues_guardar_orden_pago(request, new_object)
+        return super(OrdenPagoAdmin, self).response_add(request, obj)
 
+    def response_change(self, request, obj):
+        obj = self.despues_guardar_orden_pago(request, obj)
+        return super(OrdenPagoAdmin, self).response_change(request, obj)
 
+    def despues_guardar_orden_pago(self, request, op):
+        facturas = op.facturas.all()
+        if facturas.count() > 0:
+            saldoTotal = 0
+            # Importe dividido entre cantidad de facturas a pagar
+            imp_div = op.importe / facturas.count()
+            for factura in facturas:
+                p = PagosProveedor(documento=factura, nroPago=1, fPago=datetime.datetime.now, importe=imp_div, ordenPago=op)
+                dc = DocCuentaProveedor.objects.get(documento=factura)
+                dc.importePagado += imp_div
+                dc.importeSaldo -= imp_div
+                if dc.importeSaldo <= 0.1:
+                    factura.fSaldada = datetime.datetime.now()
+                    factura.save()
+                p.save()
+                dc.save()
+            op.facturas = []
+            op.save()
+        return op
 
 
 @admin.register(Caja)

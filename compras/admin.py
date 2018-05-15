@@ -5,6 +5,7 @@ from daterange_filter.filter import DateRangeFilter
 from django.conf.urls import url
 from django.contrib import admin, messages
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
 
 from fondos.utils import getOrOpenCaja
 from mantenimiento.models import TiposDoc, Impuesto, Configuracion
@@ -12,7 +13,7 @@ from mantenimiento.models import TiposDoc, Impuesto, Configuracion
 from fondos.models import Caja, MovCaja, TipoCaja, TipoMovCaja
 
 from fondos.models import OrdenPago
-from models import PedidoItem, Pedido, Remito, RemitoItem, PedidoItemConcepto, Compra, CompraItem, CompraItemConcepto
+from models import PedidoItem, Pedido, Remito, RemitoItem, PedidoItemConcepto, Compra, CompraItem, CompraItemConcepto, DocCuentaProveedor
 from functools32 import update_wrapper
 from mantenimiento.models import ExtendUser
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
@@ -240,7 +241,7 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
         if getattr(obj, 'operador', None) is None:
             obj.operador = request.user
             # messages.add_message(request, messages.INFO, 'Operador registrado')
-        if form.cleaned_data['generarMov']:
+        if obj.afectaCaja:
             if form.cleaned_data['tipoCaja'] is not None:
                 cja = getOrOpenCaja(form.cleaned_data['tipoCaja'], obj.obra)
             else:
@@ -268,7 +269,7 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
 
     # Setea valores iniciales de campos de form segun configuracion
     def render_change_form(self, request, context, *args, **kwargs):
-        context['adminform'].form.fields['tipoDoc'].queryset = TiposDoc.objects.filter(tipo=1)
+        context['adminform'].form.fields['tipoDoc'].queryset = TiposDoc.objects.filter(Q(tipo=1) | Q(tipo=2))
         context['adminform'].form.fields['condPago'].initial = Configuracion.objects.get(pk=1).compras_condPago
         context['adminform'].form.fields['afectaEmpresa'].initial = Configuracion.objects.get(pk=1).empresa
         context['adminform'].form.fields['tipoDoc'].initial = Configuracion.objects.get(pk=1).compras_tipoDoc
@@ -319,19 +320,6 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
                 cabecera.totImpuestos = cabecera.totImpuestos + totImpuestos
                 cabecera.totNeto = totBruto + totImpuestos
 
-            # Si campo Obra de linea esta vacio completamos con la Obra seleccionada en cabecera sino se deja como esta
-            if not linea.obra:
-                linea.obra = cabecera.obra
-                linea.save()
-
-            # Hacemos el movimiento de caja.
-            if caja:
-                desc = cabecera.tipoDoc.id + " Nro:" + str(cabecera.numDoc) + " Prov: " + cabecera.proveedor.razon_social \
-                       + " " + linea.producto.descripcionCorta + " " + str(linea.cantidad) + " Unid."
-                mc = TipoMovCaja.objects.get(pk=3)
-                m = MovCaja(caja=caja, empresa=cabecera.afectaEmpresa, tipoDoc=cabecera.tipoDoc, numDoc= cabecera.numDoc,
-                            descripcion=desc, operador=request.user, importe=precioLinea, tipoMovCaja=mc)
-                m.save()
 
             # Actualizamos el campo salida de Caja
             # if caja.acumSalidas >= 0:
@@ -346,6 +334,7 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
                     linea.producto.nuevoPrecio(cabecera.proveedor, linea.precio_unitario)
             else:
                 linea.producto.nuevoPrecio(cabecera.proveedor, linea.precio_unitario)
+
 
         # Bucle CompraItemConcepto
         for concepto in conceptos:
@@ -370,26 +359,25 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
                 cabecera.totImpuestos = cabecera.totImpuestos + totImpuestos
                 cabecera.totNeto = totBruto + totImpuestos
 
+        # Hacemos el movimiento de caja.
+        if caja:
+            desc = cabecera.tipoDoc.id + ": " + str(cabecera.sucursal).zfill(4) + "-" + \
+                   str(cabecera.numDoc).zfill(8) + " Prov: " + cabecera.proveedor.razon_social
+            movCajaXDefecto = Configuracion.objects.get(pk=1).compras_tipoMovCajaDef
+            mc = movCajaXDefecto
+            m = MovCaja(caja=caja, empresa=cabecera.afectaEmpresa, tipoDoc=cabecera.tipoDoc,
+                        numDoc=cabecera.numDoc,
+                        descripcion=desc, operador=request.user, importe=cabecera.totNeto, tipoMovCaja=mc)
+            m.save()
 
-            # Hacemos el movimiento de caja.
-            if cabecera.afectaCaja:
-                desc = cabecera.tipoDoc.id + " Nro:" + str(
-                    cabecera.numDoc) + " Prov: " + cabecera.proveedor.razon_social \
-                       + " " + concepto.descripcion + " " + str(concepto.cantidad) + " Unid."
-                mc = TipoMovCaja.objects.get(pk=3)
-                m = MovCaja(caja=caja, empresa=cabecera.afectaEmpresa, tipoDoc=cabecera.tipoDoc,
-                            numDoc=cabecera.numDoc,
-                            descripcion=desc, operador=request.user, importe=precioConcepto, tipoMovCaja=mc)
-                m.save()
 
-            # Actualizamos el campo salida de Caja
-            # if caja.acumSalidas >= 0:
-            #     caja.acumSalidas += precioConcepto
-            # else:
-            #     caja.acumSalidas = precioConcepto
-            # caja.save()
+        # Si es a credito generar DocCuenta
+        if cabecera.condPago == 'CRE':
+            docCuenta = DocCuentaProveedor(documento=cabecera, importeDocumento=cabecera.totNeto,
+                                           importeSaldo=cabecera.totNeto)
 
         cabecera.save()
+        docCuenta.save()
         return cabecera
 
 

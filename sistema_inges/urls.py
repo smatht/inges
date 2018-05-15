@@ -5,6 +5,7 @@ from django.conf.urls.static import static
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 
+from compras.views import ComprasViewSet
 from stock.views import PROViewSet
 
 admin.autodiscover()
@@ -18,6 +19,7 @@ from fondos_externos.views import save_cuenta, get_registros
 
 router.register(r'links', FRViewSet)
 router.register(r'precios', PROViewSet)
+router.register(r'compras', ComprasViewSet)
 
 urlpatterns = patterns('',
     url(r'^api/', include(router.urls)),

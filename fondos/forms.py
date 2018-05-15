@@ -13,9 +13,9 @@ from proyectos.models import Obra
 
 
 class OPForm(forms.ModelForm):
-    total_valores = forms.CharField(required=False)
-    total_a_pagar = forms.CharField(required=False)
-    diferencia = forms.CharField(required=False)
+    total_valores = forms.CharField(required=False, initial=0)
+    total_a_pagar = forms.CharField(required=False, initial=0)
+    diferencia = forms.CharField(required=False, initial=0)
     imprimir_recibo = forms.BooleanField(initial=False, required=False)
     tipoCaja = forms.ModelChoiceField(queryset=TipoCaja.objects.all(), required=False, label="Tipo caja")
     obra = forms.ModelChoiceField(queryset=Obra.objects.all(), required=False)
