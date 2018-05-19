@@ -79,7 +79,7 @@ class OrdenPagoAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
             'classes': ('suit-tab', 'suit-tab-facturas',),
-            'fields': ('empresa', 'proveedor', 'personal', 'fPago', 'facturas'),
+            'fields': ('empresa', 'proveedor', 'personal', ('fPago', 'pagoACuenta'), 'facturas'),
         }),
         ('Efectivo', {
             'classes': ('suit-tab', 'suit-tab-valores',),

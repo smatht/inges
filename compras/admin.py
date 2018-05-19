@@ -253,7 +253,8 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
     def suit_row_attributes(self, obj, request):
         condPago = False
         if obj.condPago == 'CRE':
-            if obj.pk not in OrdenPago.facturas.through.objects.values_list('compra', flat=True):
+            # if obj.pk not in OrdenPago.facturas.through.objects.values_list('compra', flat=True):
+            if obj.fSaldada is None:
                 if (obj.fVencimiento < date.today()):
                     condPago = 'error'
                 elif (obj.fVencimiento <= (date.today() + timedelta(days=3))):

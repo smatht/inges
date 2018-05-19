@@ -20,6 +20,7 @@ class OPForm(forms.ModelForm):
     tipoCaja = forms.ModelChoiceField(queryset=TipoCaja.objects.all(), required=False, label="Tipo caja")
     obra = forms.ModelChoiceField(queryset=Obra.objects.all(), required=False)
     comentario = forms.CharField(widget=forms.Textarea(attrs={'rows':4, 'class': 'input-xxlarge'}), required=False)
+    pagoACuenta = forms.BooleanField(label='Pago a cuenta', required=False)
 
     # widgets = {
     #     # You can also specify html attributes
@@ -49,13 +50,21 @@ class CajaForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super(CajaForm, self).clean()
-        try:
-            cja = Caja.objects.get(tipoCaja=cleaned_data.get('tipoCaja'), destino=cleaned_data.get('destino'), fCierre=None)
-            raise forms.ValidationError('La caja: "' + cleaned_data.get('tipoCaja').descripcion + '" Obra: "' +
-                                        cleaned_data.get('destino').descripcion_corta + '" ya existe. Cierrela antes de abrir una nueva.')
-        except ObjectDoesNotExist:
-            return
-
+        ch = super(CajaForm, self).changed_data
+        if 'tipoCaja' in ch:
+            try:
+                cja = Caja.objects.get(tipoCaja=cleaned_data.get('tipoCaja'), destino=cleaned_data.get('destino'), fCierre=None)
+                raise forms.ValidationError('La caja: "' + cleaned_data.get('tipoCaja').descripcion + '" Obra: "' +
+                                            cleaned_data.get('destino').descripcion_corta + '" ya existe. Cierrela antes de abrir una nueva.')
+            except ObjectDoesNotExist:
+                return
+        if 'destino' in ch:
+            try:
+                cja = Caja.objects.get(tipoCaja=cleaned_data.get('tipoCaja'), destino=cleaned_data.get('destino'), fCierre=None)
+                raise forms.ValidationError('La caja: "' + cleaned_data.get('tipoCaja').descripcion + '" Obra: "' +
+                                            cleaned_data.get('destino').descripcion_corta + '" ya existe. Cierrela antes de abrir una nueva.')
+            except ObjectDoesNotExist:
+                return
 
     class Meta:
         model = Caja
