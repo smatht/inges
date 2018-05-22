@@ -3,7 +3,8 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 from django.shortcuts import redirect
 
-from models import TiposDoc, Impuesto, Configuracion, TipoMovCaja, ExtendUser
+from models import Configuracion, ExtendUser
+from common.models import Impuesto, TiposDoc, TipoMovCaja
 
 
 class ExtedUserInline(admin.StackedInline):
@@ -43,6 +44,10 @@ class ConfigAdmin(admin.ModelAdmin):
         (None, {
             'classes': ('suit-tab suit-tab-general',),
             'fields': ['empresa']}),
+        ('Caja por defecto', {
+            'classes': ('suit-tab suit-tab-general',),
+            'description': 'Si no se configura caja, todas las operaciones usaran esta caja por defecto',
+            'fields': ['general_tipoCaja', 'general_obraCaja']}),
         (None, {
             'classes': ('suit-tab suit-tab-compras',),
             'fields': ['compras_tipoDoc', 'compras_condPago', 'compras_usaPrFinal',

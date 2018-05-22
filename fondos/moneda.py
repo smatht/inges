@@ -183,9 +183,11 @@ class Moneda:
             num = self._billion(a)
 
         # tratamiento entero
-        if d != '00':
-            if int(d) in range(21, 30):
-                con = self._ten2(d)
-            else:
-                con = self._ten(d)
-        return  (num + ' CON ' + con).upper() + ' cv.'
+        if d == '00':
+            d = '0';
+        # if d != '00':
+        #     if int(d) in range(21, 30):
+        #         con = self._ten2(d)
+        #     else:
+        #         con = self._ten(d)
+        return  (num + ' CON ' + d + '/100').upper() + ' cv.'

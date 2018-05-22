@@ -173,7 +173,7 @@ INSTALLED_APPS = (
     'suitlocale',
     'suit',
     'facturacion',
-    # 'south',
+    'common',
     'rest_framework',
     'tellme',
     'proyectos',

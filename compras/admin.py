@@ -8,14 +8,12 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 
 from fondos.utils import getOrOpenCaja
-from mantenimiento.models import TiposDoc, Impuesto, Configuracion
+from mantenimiento.models import Configuracion, ExtendUser
+from common.models import TiposDoc
+from fondos.models import Caja, MovCaja
 
-from fondos.models import Caja, MovCaja, TipoCaja, TipoMovCaja
-
-from fondos.models import OrdenPago
 from models import PedidoItem, Pedido, Remito, RemitoItem, PedidoItemConcepto, Compra, CompraItem, CompraItemConcepto, DocCuentaProveedor
 from functools32 import update_wrapper
-from mantenimiento.models import ExtendUser
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from actions import export_OR_as_pdf, save_then_pdf
 from forms import PedidoItemForm, PedidoForm, RemitoForm, CompraForm

@@ -2,13 +2,6 @@ import datetime
 
 from django.conf.urls import url
 from django.contrib import admin, messages
-from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Q
-from django.forms import SelectMultiple
-from django.db import models
-from django.utils.safestring import mark_safe
-# Register your models here.
-from django.shortcuts import redirect
 from functools32 import update_wrapper
 
 from fondos.reports import orden_pago_as_pdf
@@ -17,8 +10,6 @@ from forms import OPForm, CajaForm
 from mantenimiento.models import Configuracion
 
 from compras.models import Compra, DocCuentaProveedor
-
-from fondos_externos.models import Cuenta
 from models import TipoCaja, MovCaja, OrdenPago, Caja, PagosProveedor
 
 

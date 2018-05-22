@@ -6,13 +6,11 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils.html import format_html
-
-from mantenimiento.models import TiposDoc, TipoMovCaja
 from facturacion.models import Registro
 from proyectos.models import Obra
 from facturacion.models import Proveedor
 from compras.models import Compra
-from fondos_externos.models import Cuenta
+from common.models import TiposDoc, TipoMovCaja
 
 
 class TipoCaja(models.Model):

@@ -12,8 +12,7 @@ from facturacion.models import Registro, Registro_factura, Proveedor
 from proyectos.models import Obra
 
 from stock.models import Producto, Unidades
-
-from mantenimiento.models import TiposDoc, Impuesto
+from common.models import TiposDoc, Impuesto
 
 
 class Pedido(models.Model):
