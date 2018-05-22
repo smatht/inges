@@ -30,6 +30,7 @@ class Pedido(models.Model):
     bAnulado = models.BooleanField(default=False)
 
     class Meta:
+        db_table = 'Pedidos'
         ordering = ['-fechaPedido']
         verbose_name = 'Orden de compra'
         verbose_name_plural = 'Ordenes de compra'
@@ -63,6 +64,7 @@ class PedidoItem(models.Model):
     # importe = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
     class Meta:
+        db_table = 'PedidosItems'
         verbose_name = 'Item'
         verbose_name_plural = 'Items'
 
@@ -79,6 +81,7 @@ class PedidoItemConcepto(models.Model):
     # importe = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
     class Meta:
+        db_table = 'PedidosItemsConceptos'
         verbose_name = 'Concepto'
         verbose_name_plural = 'Conceptos'
 
@@ -100,6 +103,7 @@ class Remito(models.Model):
     # afectaStock = models.BooleanField(default=True)
 
     class Meta:
+        db_table = 'Remitos'
         verbose_name = 'Remito'
         verbose_name_plural = 'Remitos'
 
@@ -117,6 +121,7 @@ class RemitoItem(models.Model):
     # importe = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
     class Meta:
+        db_table = 'RemitosItems'
         verbose_name = 'Item'
         verbose_name_plural = 'Items'
 
@@ -183,6 +188,7 @@ class Compra(AbstractCompra):
             return self.totNeto
 
     class Meta:
+        db_table = 'Compras'
         verbose_name_plural = "Compras"
 
     def __unicode__(self):
@@ -201,6 +207,7 @@ class CompraItem(models.Model):
     # obra = models.ForeignKey(Obra, blank=True, null=True)
 
     class Meta:
+        db_table = 'ComprasItems'
         verbose_name = 'Detalle de documento'
         verbose_name_plural = 'Detalle de documento'
 
@@ -214,6 +221,7 @@ class CompraItemConcepto(models.Model):
     # obra = models.ForeignKey(Obra, blank=True, null=True)
 
     class Meta:
+        db_table = 'ComprasItemsConceptos'
         verbose_name = 'Concepto'
         verbose_name_plural = 'Conceptos'
 
@@ -224,6 +232,9 @@ class DocCuentaProveedor(models.Model):
     importeDocumento = models.FloatField()
     importePagado = models.FloatField(default=0)
     importeSaldo = models.FloatField()
+
+    class Meta:
+        db_table = 'DocCuentaProveedor'
 
 
 

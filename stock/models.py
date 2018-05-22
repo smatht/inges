@@ -12,24 +12,9 @@ class Unidades(models.Model):
 
     def __unicode__(self):
         return unicode(self.descripcion + ' (' + self.descripcionCorta + ')')
-    # UNIDAD_MEDIDA = (
-    #     ('un', 'unidades'),
-    #     ('mt', 'metros'),
-    #     ('m²', 'metros cuadrados'),
-    #     ('m³', 'metros cubicos'),
-    #     ('gr', 'gramos'),
-    #     ('kg', 'kilogramos'),
-    #     ('lt', 'litros'),
-    #     ('ml', 'milimetros'),
-    #     ('km', 'kilómetros'),
-    #     ('tn', 'toneladas'),
-    #     ('om', 'otras medidas'),
-    # )
-    # medida = models.CharField(
-    #     max_length=2,
-    #     choices=UNIDAD_MEDIDA,
-    #     default='un',
-    # )
+
+    class Meta:
+        db_table = 'Unidades'
 
 
 class Linea(models.Model):
@@ -38,6 +23,9 @@ class Linea(models.Model):
     def __unicode__(self):
         return unicode(self.descripcion)
 
+    class Meta:
+        db_table = 'Lineas'
+
 
 class Familia(models.Model):
     linea = models.ForeignKey(Linea)
@@ -45,6 +33,9 @@ class Familia(models.Model):
 
     def __unicode__(self):
         return unicode(self.descripcion)
+
+    class Meta:
+        db_table = 'Familias'
 
 
 
@@ -55,6 +46,9 @@ class Producto(models.Model):
     proveedor = models.ManyToManyField(Proveedor)
     unidad = models.ForeignKey(Unidades)
     activo = models.BooleanField(default=True)
+
+    class Meta:
+        db_table = 'Productos'
 
     def __unicode__(self):
         return unicode(self.descripcion)
@@ -80,6 +74,9 @@ class PrecioCompra(models.Model):
     proveedor = models.ForeignKey(Proveedor, null=True, blank=True)
     fDesde = models.DateTimeField(default=datetime.datetime.now)
     precioCompra = models.FloatField()
+
+    class Meta:
+        db_table = 'PreciosCompra'
 
     def __unicode__(self):
         return unicode(self.producto.descripcion + " $" + str(self.precioCompra))

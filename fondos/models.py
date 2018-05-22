@@ -17,6 +17,7 @@ class TipoCaja(models.Model):
     descripcion = models.CharField(max_length=50)
 
     class Meta:
+        db_table = 'TiposCaja'
         ordering = ['pk']
         verbose_name = 'Caja'
         verbose_name_plural = 'Cajas'
@@ -35,6 +36,9 @@ class Caja(models.Model):
     destino = models.ForeignKey(Obra)
     idCuentaWallet = models.CharField(max_length=40, null=True, blank=True)
     nombreCuentaWallet = models.CharField(max_length=50, null=True, blank=True)
+
+    class Meta:
+        db_table = 'Cajas'
 
     def __unicode__(self):
         return format(self.tipoCaja.__unicode__() + ' Obra: ' + self.destino.__unicode__()
@@ -56,6 +60,7 @@ class MovCaja(models.Model):
     idWallet = models.CharField(max_length=40, null=True, blank=True)
 
     class Meta:
+        db_table = 'MovsCaja'
         verbose_name = 'Movimiento de caja'
         verbose_name_plural = 'Movimientos de caja'
 
@@ -99,6 +104,9 @@ class OrdenPago(models.Model):
     caja = models.ForeignKey(Caja, null=True, blank=True)
     motivo = models.ForeignKey(TipoMovCaja, null=True, blank=True)
 
+    class Meta:
+        db_table = 'OrdenesPago'
+
     # Botones de acciones
     def acciones(self):
         return format_html(
@@ -121,3 +129,6 @@ class PagosProveedor(models.Model):
     fPago = models.DateTimeField(auto_now=True)
     importe = models.FloatField()
     ordenPago = models.ForeignKey(OrdenPago)
+
+    class Meta:
+        db_table = 'PagosProveedor'

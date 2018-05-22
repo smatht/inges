@@ -199,3 +199,6 @@ class Configuracion(models.Model):
 
     def __unicode__(self):
         return unicode('Ajustes')
+
+    class Meta:
+        db_table = 'Configuraciones'

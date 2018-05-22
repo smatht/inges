@@ -13,8 +13,8 @@ class Obra(models.Model):
   localidad = models.ForeignKey(Localidad, blank=True, null=True)
   cliente = models.ForeignKey(Cliente, blank=True, null=True)
 
-  # def __unicode__(self):
-  #   return unicode(self.descripcion)
+  class Meta:
+    db_table = 'Obras'
 
   def __unicode__(self):
     if (self.descripcion_corta):
