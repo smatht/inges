@@ -5,12 +5,17 @@ from django.forms import TextInput
 from django.forms import Textarea
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
+from django.utils.safestring import mark_safe
 from suit.widgets import AutosizedTextarea
 
 from fondos_externos.models import Cuenta
 from models import OrdenPago, Caja, TipoCaja
 from proyectos.models import Obra
 
+# Pone radio select en horizontal
+class HorizontalRadioRenderer(forms.RadioSelect.renderer):
+  def render(self):
+    return mark_safe(u'\n'.join([u'%s\n' % w for w in self]))
 
 class OPForm(forms.ModelForm):
     total_valores = forms.CharField(required=False, initial=0)
@@ -20,7 +25,19 @@ class OPForm(forms.ModelForm):
     tipoCaja = forms.ModelChoiceField(queryset=TipoCaja.objects.all(), required=False, label="Tipo caja")
     obra = forms.ModelChoiceField(queryset=Obra.objects.all(), required=False)
     comentario = forms.CharField(widget=forms.Textarea(attrs={'rows':4, 'class': 'input-xxlarge'}), required=False)
-    pagoACuenta = forms.BooleanField(label='Pago a cuenta', required=False)
+    TIPO = (
+        (0, 'Pago facturas'),
+        (1, 'Pago a cuenta'),
+    )
+    tipoPago = forms.ChoiceField(
+        choices=TIPO,
+        widget=forms.RadioSelect(renderer=HorizontalRadioRenderer),
+        initial=0,
+        label='',
+        required=False,
+
+    )
+    # pagoACuenta = forms.BooleanField(label='Pago a cuenta', required=False)
 
     # widgets = {
     #     # You can also specify html attributes

@@ -70,7 +70,7 @@ class OrdenPagoAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {
             'classes': ('suit-tab', 'suit-tab-facturas',),
-            'fields': ('empresa', 'proveedor', 'personal', ('fPago', 'pagoACuenta'), 'facturas'),
+            'fields': ('empresa', 'proveedor', 'personal', ('fPago', 'tipoPago'), 'facturas'),
         }),
         ('Efectivo', {
             'classes': ('suit-tab', 'suit-tab-valores',),
@@ -142,7 +142,7 @@ class OrdenPagoAdmin(admin.ModelAdmin):
         ]
         return custom_urls + urls
 
-    # Los siguientes 3 metodos sirven para Operar con cada FacturaItem
+    # Los siguientes 3 metodos sirven para Operar con la OP una vez guardada
     def response_add(self, request, new_object, **kwargs):
         obj = self.despues_guardar_orden_pago(request, new_object)
         return super(OrdenPagoAdmin, self).response_add(request, obj)
@@ -158,7 +158,9 @@ class OrdenPagoAdmin(admin.ModelAdmin):
             # Importe dividido entre cantidad de facturas a pagar
             imp_div = op.importe / facturas.count()
             for factura in facturas:
-                p = PagosProveedor(documento=factura, nroPago=1, fPago=datetime.datetime.now, importe=imp_div, ordenPago=op)
+                nroPago = PagosProveedor.objects.filter(documento=factura).count()
+                p = PagosProveedor(documento=factura, nroPago=nroPago+1, fPago=datetime.datetime.now,
+                                   importe=imp_div, ordenPago=op)
                 dc = DocCuentaProveedor.objects.get(documento=factura)
                 dc.importePagado += imp_div
                 dc.importeSaldo -= imp_div

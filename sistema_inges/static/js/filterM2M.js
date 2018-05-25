@@ -36,7 +36,8 @@ $(document).ready(function() {
     var totalValores = $('#id_total_valores');
     var aPagar = $('#id_total_a_pagar');
     var diferencia = $('#id_diferencia');
-    var chkACuenta = $('#id_pagoACuenta');
+    var rdoFactura = $('#id_tipoPago_0');
+    var rdoCuenta = $('#id_tipoPago_1');
     var secFacturas = $('.field-facturas');
     totalValores.attr('readonly', true)
     totalValores.css(styleNormal)
@@ -58,13 +59,13 @@ $(document).ready(function() {
     });
 
 //  Si se selecciona, esconde m2m de facturas
-    chkACuenta.on('change', function (e){
-        if ($(this).is(":checked")) {
+    rdoCuenta.on('click', function (e){
+        if ($(this).is(":checked"))
             secFacturas.css('visibility', 'hidden');
-        }
-        else {
+    });
+    rdoFactura.on('click', function (e){
+        if ($(this).is(":checked"))
             secFacturas.css('visibility', 'inherit');
-        }
     });
 
     function actualizarDiferencia(importe=0, pagar=0){
@@ -124,10 +125,10 @@ $(document).ready(function() {
 //  Recalculo diferencia cada vez que modifico el importe
     importe = $('#id_importe');
     importe.on('keyup', function (){
-    if (chkACuenta.is(":checked")){
-        actualizarDiferencia(importe.val(), importe.val())
-    } else {
-        actualizarDiferencia(importe.val())
-    }
+        if (rdoCuenta.is(":checked")){
+            actualizarDiferencia(importe.val(), importe.val())
+        } else {
+            actualizarDiferencia(importe.val())
+        }
     });
 });
