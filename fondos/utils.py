@@ -17,5 +17,3 @@ def abrirCaja(obra, tipoCaja = None):
     cja = Caja(tipoCaja=tipoCaja, destino=obra)
     cja.save()
     return cja
-
-

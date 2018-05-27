@@ -118,7 +118,8 @@ class OrdenPagoAdmin(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         if form.cleaned_data['tipoCaja'] is not None:
-            obj.caja = getOrOpenCaja(form.cleaned_data['tipoCaja'], form.cleaned_data['obra'])
+            if form.cleaned_data['obra'] is not None:
+                obj.caja = getOrOpenCaja(form.cleaned_data['tipoCaja'], form.cleaned_data['obra'])
         obj.save()
 
     def beneficiario(self, obj):
@@ -152,6 +153,7 @@ class OrdenPagoAdmin(admin.ModelAdmin):
         return super(OrdenPagoAdmin, self).response_change(request, obj)
 
     def despues_guardar_orden_pago(self, request, op):
+        # Modifica saldos de facturas implicadas (si las hubiere)
         facturas = op.facturas.all()
         if facturas.count() > 0:
             saldoTotal = 0
@@ -171,6 +173,19 @@ class OrdenPagoAdmin(admin.ModelAdmin):
                 dc.save()
             op.facturas = []
             op.save()
+
+        # Realizamos movimiento de caja
+        caja = getattr(op, 'caja', None)
+
+        if caja is not None:
+            if getattr(op, 'proveedor', None) is not None:
+                benef = op.proveedor
+            else:
+                benef = op.personal
+            desc = "Orden de pago: %s. Beneficiario: %s" % (op.motivo, benef)
+            m = MovCaja(caja=caja, empresa=op.empresa, descripcion=desc, operador=request.user,
+                        importe=op.importe, tipoMovCaja=op.motivo)
+            m.save()
         return op
 
 

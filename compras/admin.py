@@ -319,14 +319,6 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
                 cabecera.totImpuestos = cabecera.totImpuestos + totImpuestos
                 cabecera.totNeto = totBruto + totImpuestos
 
-
-            # Actualizamos el campo salida de Caja
-            # if caja.acumSalidas >= 0:
-            #     caja.acumSalidas += precioLinea
-            # else:
-            #     caja.acumSalidas = precioLinea
-            # caja.save()
-
             # Actualizamos precio de compra
             if linea.producto.precio(cabecera.proveedor):
                 if linea.producto.precio(cabecera.proveedor) != linea.precio_unitario:
@@ -368,7 +360,6 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
                         numDoc=cabecera.numDoc,
                         descripcion=desc, operador=request.user, importe=cabecera.totNeto, tipoMovCaja=mc)
             m.save()
-
 
         # Si es a credito generar DocCuenta
         if cabecera.condPago == 'CRE':
