@@ -146,7 +146,7 @@ def informesFacturacion(request):
     
     facturas_emitidas = Emision_factura.objects.filter(fecha_registro__month = mes)
     facturas_recibidas = Registro_factura.objects.filter(fecha_registro__month = mes)
-    albaranes_recibidos = Recibo.objects.filter(fecha_registro__month = mes)
+    # albaranes_recibidos = Recibo.objects.filter(fecha_registro__month = mes)
     facturacion_iva = 0
     descuento_iva = 0
     total_ingresos = 0
@@ -165,8 +165,8 @@ def informesFacturacion(request):
         f_r_civa = f_r_civa + fr.total()
         f_r_siva = f_r_siva + fr.subtotal()
         # percep_otros = percep_otros + fr.percepciones_otros
-    for ar in albaranes_recibidos:
-        totalAlb = totalAlb + ar.total
+    # for ar in albaranes_recibidos:
+    #     totalAlb = totalAlb + ar.total
         
     gasto_c_iva = f_r_civa + totalAlb
     gasto_s_iva = f_r_siva + totalAlb
@@ -174,7 +174,7 @@ def informesFacturacion(request):
     return render(request, template,{'request': request, 'fact_iva': facturacion_iva,
         'title': 'Informes', 'desc_iva': descuento_iva, 'gastoCIva': gasto_c_iva,
         'gastoSIva': gasto_s_iva, 'mespy': mes, 'detalleFacturasR': facturas_recibidas,
-        'detalleFacturasE': facturas_emitidas, 'detalleAlbaranesR': albaranes_recibidos,
+        'detalleFacturasE': facturas_emitidas, #'detalleAlbaranesR': albaranes_recibidos,
          'percep_otros': percep_otros, 'totalAlb': totalAlb, 'total_ingresos': total_ingresos,
          'subtotal_ingresos': subtotal_ingresos, 'f_r_civa': f_r_civa, 'f_r_siva': f_r_siva}, context_instance=RequestContext(request))
 
