@@ -114,6 +114,7 @@ class PedidoAdmin(ForeignKeyAutocompleteAdmin):
   def render_change_form(self, request, context, *args, **kwargs):
     context['adminform'].form.fields['firmante'].queryset = User.objects.filter(extenduser__habilitarPedido=True)
     context['adminform'].form.fields['firmante'].initial = request.user
+    context['adminform'].form.fields['destino'].initial = Configuracion.objects.get(pk=1).general_obraDefault
     return super(PedidoAdmin, self).render_change_form(request, context, args, kwargs)
 
   def process_print(self, request, pedido_id, *args, **kwargs):
@@ -187,6 +188,10 @@ class RemitoAdmin(ForeignKeyAutocompleteAdmin):
   def get_urls(self):
     urlpatterns = super(RemitoAdmin, self).get_urls()
     return urlpatterns
+
+  def render_change_form(self, request, context, *args, **kwargs):
+    context['adminform'].form.fields['destino'].initial = Configuracion.objects.get(pk=1).general_obraDefault
+    return super(RemitoAdmin, self).render_change_form(request, context, args, kwargs)
 
 
 class CompraItemInline(ForeignKeyAutocompleteTabularInline):
@@ -274,6 +279,7 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
         context['adminform'].form.fields['tipoDoc'].initial = Configuracion.objects.get(pk=1).compras_tipoDoc
         context['adminform'].form.fields['prFinal'].initial = Configuracion.objects.get(pk=1).compras_usaPrFinal
         context['adminform'].form.fields['afectaStock'].initial = Configuracion.objects.get(pk=1).compras_FacAfectaStk
+        context['adminform'].form.fields['obra'].initial = Configuracion.objects.get(pk=1).general_obraDefault
         return super(CompraAdmin, self).render_change_form(request, context, args, kwargs)
 
     # Los siguientes 3 metodos sirven para Operar con cada FacturaItem

@@ -196,6 +196,12 @@ class Configuracion(models.Model):
         null=True,
         blank=True,
         verbose_name='Obra de caja')
+    general_obraDefault = models.ForeignKey(
+        Obra,
+        related_name='obraDefault',
+        null=True,
+        blank=True,
+        verbose_name='Obra por defecto')
 
     def __unicode__(self):
         return unicode('Ajustes')

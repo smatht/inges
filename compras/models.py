@@ -190,6 +190,7 @@ class Compra(AbstractCompra):
     class Meta:
         db_table = 'Compras'
         verbose_name_plural = "Compras"
+        unique_together = (('tipoDoc', 'sucursal', 'numDoc', 'proveedor'),)
 
     def __unicode__(self):
         return self.tipoDoc.id + " " + self.sucursal.__str__().zfill(4) + " - " + self.numDoc.__str__().zfill(8) \

@@ -43,7 +43,7 @@ class ConfigAdmin(admin.ModelAdmin):
     fieldsets = [
         (None, {
             'classes': ('suit-tab suit-tab-general',),
-            'fields': ['empresa']}),
+            'fields': ['empresa', 'general_obraDefault']}),
         ('Caja por defecto', {
             'classes': ('suit-tab suit-tab-general',),
             'description': 'Si no se configura caja, todas las operaciones usaran esta caja por defecto',
