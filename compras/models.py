@@ -227,6 +227,16 @@ class CompraItemConcepto(models.Model):
         verbose_name_plural = 'Conceptos'
 
 
+class ImpuestoXCompra(models.Model):
+    factura = models.ForeignKey(Compra)
+    impuesto = models.ForeignKey(Impuesto)
+    importe_neto = models.FloatField()
+
+    class Meta:
+        db_table = 'ImpuestoXCompra'
+        verbose_name = 'Otro impuesto'
+        verbose_name_plural = 'Otros impuestos'
+
 
 class DocCuentaProveedor(models.Model):
     documento = models.ForeignKey(Compra)

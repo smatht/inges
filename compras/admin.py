@@ -12,7 +12,8 @@ from mantenimiento.models import Configuracion, ExtendUser
 from common.models import TiposDoc
 from fondos.models import Caja, MovCaja
 
-from models import PedidoItem, Pedido, Remito, RemitoItem, PedidoItemConcepto, Compra, CompraItem, CompraItemConcepto, DocCuentaProveedor
+from models import PedidoItem, Pedido, Remito, RemitoItem, PedidoItemConcepto, Compra, CompraItem, CompraItemConcepto, \
+    DocCuentaProveedor, ImpuestoXCompra
 from functools32 import update_wrapper
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from actions import export_OR_as_pdf, save_then_pdf
@@ -213,7 +214,17 @@ class CompraItemConceptoInline(ForeignKeyAutocompleteTabularInline):
   fieldsets = [
     (None, {
       'fields': ['descripcion', 'cantidad', 'alicuota', 'precio_unitario'],
-      'description': "Use linea de concepto cuando quiera agregar un producto no recurrente o alguna compra especial"}),
+      'description': "Use linea de concepto cuando quiera agregar un item no registrado."}),
+  ]
+
+
+class ImpuestoXCompraInline(ForeignKeyAutocompleteTabularInline):
+  model = ImpuestoXCompra
+  extra = 0
+  fieldsets = [
+    (None, {
+      'fields': ['impuesto', 'importe_neto'],
+    }),
   ]
 
 @admin.register(Compra)
@@ -224,7 +235,7 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
                'yaAfectoStock', 'totDescuentos', 'idCaja')
     list_filter = ('fRegistro', ('fDocumento', DateRangeFilter), 'condPago')
     radio_fields = {"condPago": admin.VERTICAL}
-    inlines = [CompraItemInline, CompraItemConceptoInline]
+    inlines = [CompraItemInline, CompraItemConceptoInline, ImpuestoXCompraInline]
     fieldsets = [
         (None, {'fields': ['afectaEmpresa', 'obra', 'fContabilizar', 'fDocumento', 'proveedor',
                            'tipoDoc', ('sucursal', 'numDoc'), 'condPago']}),
