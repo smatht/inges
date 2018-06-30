@@ -237,10 +237,6 @@ class ImpuestoXCompraInline(ForeignKeyAutocompleteTabularInline):
     }),
   ]
 
-  def formfield_for_foreignkey(self, db_field, request, **kwargs):
-      if db_field.name == "impuesto":
-          kwargs["queryset"] = Impuesto.objects.filter(~Q(tipoImpuesto=1))
-      return super(ImpuestoXCompraInline, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
 @admin.register(Compra)
 class CompraAdmin(ForeignKeyAutocompleteAdmin):
@@ -320,6 +316,7 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
     def after_saving_model_and_related_inlines(self, request, cabecera):
         lineas = CompraItem.objects.filter(factura=cabecera.pk)
         conceptos = CompraItemConcepto.objects.filter(factura=cabecera.pk)
+        otrosImpuestos = ImpuestoXCompra.objects.filter(factura=cabecera.pk)
 
         cabecera.totBruto = 0
         cabecera.totNeto = 0
@@ -382,6 +379,34 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
                 cabecera.totImpuestos = cabecera.totImpuestos + totImpuestos
                 cabecera.totNeto = totBruto + totImpuestos
 
+                # Bucle CompraItemConcepto
+                for concepto in conceptos:
+                    precioConcepto = 0  # Usamos para movCaja
+                    # Completa datos de cabecera con valores de las conceptos dependiendo si se usa precio final o bruto por item
+                    if cabecera.prFinal:
+                        totNeto = (concepto.precio_unitario * concepto.cantidad)
+                        totBruto = ((concepto.precio_unitario / (
+                                1 + (concepto.alicuota.valorImpuesto / 100))) * concepto.cantidad)
+                        totImpuestos = ((concepto.precio_unitario - (concepto.precio_unitario / (
+                                1 + (concepto.alicuota.valorImpuesto / 100)))) * concepto.cantidad)
+                        cabecera.totNeto = cabecera.totNeto + totNeto
+                        cabecera.totBruto = cabecera.totBruto + totBruto
+                        cabecera.totImpuestos = cabecera.totImpuestos + totImpuestos
+                        precioConcepto = totNeto
+                    else:
+                        totBruto = (concepto.precio_unitario * concepto.cantidad)
+                        precioConcepto = (concepto.precio_unitario * (
+                                1 + (concepto.alicuota.valorImpuesto / 100))) * concepto.cantidad
+                        totImpuestos = (precioConcepto - totBruto)
+                        cabecera.totBruto = cabecera.totBruto + totBruto
+                        cabecera.totImpuestos = cabecera.totImpuestos + totImpuestos
+                        cabecera.totNeto = totBruto + totImpuestos
+
+        # Bucle otros impuestos
+        for imp in otrosImpuestos:
+            # Completa datos de cabecera con valores de las conceptos dependiendo si se usa precio final o bruto por item
+            cabecera.totImpuestos = cabecera.totImpuestos + imp.importe_neto
+
         # Hacemos el movimiento de caja.
         if caja:
             desc = cabecera.tipoDoc.id + ": " + str(cabecera.sucursal).zfill(4) + "-" + \
@@ -397,9 +422,9 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
         if cabecera.condPago == 'CRE':
             docCuenta = DocCuentaProveedor(documento=cabecera, importeDocumento=cabecera.totNeto,
                                            importeSaldo=cabecera.totNeto)
+            docCuenta.save()
 
         cabecera.save()
-        docCuenta.save()
         return cabecera
 
 
