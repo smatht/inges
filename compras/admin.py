@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-impuesto
 from datetime import date, timedelta
 
 from daterange_filter.filter import DateRangeFilter
@@ -9,7 +9,7 @@ from django.db.models import Q
 
 from fondos.utils import getOrOpenCaja
 from mantenimiento.models import Configuracion, ExtendUser
-from common.models import TiposDoc
+from common.models import TiposDoc, Impuesto
 from fondos.models import Caja, MovCaja
 
 from models import PedidoItem, Pedido, Remito, RemitoItem, PedidoItemConcepto, Compra, CompraItem, CompraItemConcepto, \
@@ -207,6 +207,11 @@ class CompraItemInline(ForeignKeyAutocompleteTabularInline):
           'description': "Use linea de concepto cuando quiera agregar un producto no recurrente o alguna compra especial"}),
   ]
 
+  def formfield_for_foreignkey(self, db_field, request, **kwargs):
+      if db_field.name == "alicuota":
+          kwargs["queryset"] = Impuesto.objects.filter(tipoImpuesto=1)
+      return super(CompraItemInline, self).formfield_for_foreignkey(db_field, request, **kwargs)
+
 
 class CompraItemConceptoInline(ForeignKeyAutocompleteTabularInline):
   model = CompraItemConcepto
@@ -217,6 +222,11 @@ class CompraItemConceptoInline(ForeignKeyAutocompleteTabularInline):
       'description': "Use linea de concepto cuando quiera agregar un item no registrado."}),
   ]
 
+  def formfield_for_foreignkey(self, db_field, request, **kwargs):
+      if db_field.name == "alicuota":
+          kwargs["queryset"] = Impuesto.objects.filter(tipoImpuesto=1)
+      return super(CompraItemConceptoInline, self).formfield_for_foreignkey(db_field, request, **kwargs)
+
 
 class ImpuestoXCompraInline(ForeignKeyAutocompleteTabularInline):
   model = ImpuestoXCompra
@@ -226,6 +236,11 @@ class ImpuestoXCompraInline(ForeignKeyAutocompleteTabularInline):
       'fields': ['impuesto', 'importe_neto'],
     }),
   ]
+
+  def formfield_for_foreignkey(self, db_field, request, **kwargs):
+      if db_field.name == "impuesto":
+          kwargs["queryset"] = Impuesto.objects.filter(~Q(tipoImpuesto=1))
+      return super(ImpuestoXCompraInline, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
 @admin.register(Compra)
 class CompraAdmin(ForeignKeyAutocompleteAdmin):
