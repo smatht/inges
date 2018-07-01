@@ -250,6 +250,7 @@ SUIT_CONFIG = {
         )},
         {'label': 'Informes - Consultas', 'icon': 'icon-briefcase', 'models': (
             {'label': 'Informe compra x venta', 'icon': 'icon-briefcase', 'url': 'facturacion.views.informesFacturacion', 'permissions': 'facturacion.add_informes'},
+            {'label': 'Reporte Analisis Corporativo', 'icon': 'icon-briefcase', 'url': 'compras.views.InformeAnalisisCorporativo', 'permissions': 'facturacion.add_informes'},
         )},
         {'app': 'auth', 'icon':'icon-lock', 'models': ('user', 'group')},
         ),

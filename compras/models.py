@@ -187,6 +187,9 @@ class Compra(AbstractCompra):
         else:
             return self.totNeto
 
+    def NumeroIdentificacion(self):
+        return self.sucursal.__str__().zfill(4) + " - " + self.numDoc.__str__().zfill(8)
+
     class Meta:
         db_table = 'Compras'
         verbose_name_plural = "Compras"

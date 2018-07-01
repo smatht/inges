@@ -5,6 +5,7 @@ from django.conf.urls.static import static
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 
+import compras
 from compras.views import ComprasViewSet
 from stock.views import PROViewSet
 
@@ -29,6 +30,7 @@ urlpatterns = patterns('',
     (r'^logout/$', 'django.contrib.auth.views.logout', {'next_page': '/'}),
     url(r'^tellme/', include("tellme.urls")),
     url(r'^', include(facturacion.urls)),
+    url(r'^reportes/analisis_corporativo$', compras.views.InformeAnalisisCorporativo, name='analisis_corporativo'),
     url(r'^cuentas-wallet/', save_cuenta),
     url(r'^registros-wallet/(\d+)/', get_registros)
 
