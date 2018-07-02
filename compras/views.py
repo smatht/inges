@@ -1,10 +1,12 @@
 import datetime
 
+import simplejson
 import xlwt
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.template import RequestContext
+from django.utils.safestring import mark_safe
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets
 from xlrd import open_workbook
@@ -12,7 +14,8 @@ from xlutils.copy import copy
 
 from sistema_inges import settings
 from .serializers import CompraSerializer
-from .models import Compra
+from .models import Compra, CompraItem
+
 
 class ComprasViewSet(viewsets.ModelViewSet):
     queryset = Compra.objects.all()
@@ -175,4 +178,53 @@ def InformeAnalisisCorporativo(request):
                                       'subtotal_ingresos': subtotal_ingresos, 'f_r_civa': f_r_civa,
                                       'f_r_siva': f_r_siva}, context_instance=RequestContext(request))
 
+def jsonify(object):
+    # if isinstance(object, QuerySet):
+    #     return mark_safe(serialize('json', object))
+    return mark_safe(simplejson.dumps(object))
 
+
+@login_required
+@csrf_exempt
+def ExclusivoLaRuta(request):
+    now = datetime.datetime.now()
+    mes = now.month
+    template = 'exclusivo_laruta.html'
+    if request.method == "GET":
+        if request.GET.get('fecha'):
+            mes = request.GET.get('fecha')[-2:]
+            # anio = int(request.POST.get('anio'))
+            # now = datetime.datetime(anio,mes,1)
+
+    compras = Compra.objects.filter(fDocumento__month=mes, proveedor__razon_social__icontains='LA RUTA S.A')
+    totalFinal = 0
+    series = []
+
+    for compra in compras:
+        dic = {}
+        compraItem = CompraItem.objects.get(factura=compra.pk)
+        key = compra.observaciones
+        inicia = key.find('atente :') + 9
+
+        key = key[inicia:inicia+7]
+        value = compraItem.cantidad
+        existeKey = 0
+
+        for e in series:
+            if key == e.get('name'):
+                existeKey = 1
+                e['data'] = [round(e.get('data')[0] + round(value, 2), 2)]
+
+        if existeKey == 0:
+            dic['data'] = [round(value, 2)]
+            dic['name'] = key
+            dic['type'] = 'column'
+            series.append(dic)
+
+        simplejson = jsonify(series)
+        compra.patente = key
+        totalFinal += compra.totNeto
+
+
+    return render(request, template, {'request': request, 'series': simplejson, 'facturas': compras, 'total': totalFinal,
+                                      'mespy': mes}, context_instance=RequestContext(request))

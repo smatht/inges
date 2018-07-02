@@ -51,7 +51,7 @@ class CompraForm(forms.ModelForm):
             'cantidad': TextInput(attrs={'style': 'width: 40px'}),
             'alicuota': Select(attrs={'style': 'width: 100px'}),
             'precio_unitario': EnclosedInput(prepend='$', attrs={'style': 'width: 60px'}),
-            'descripcion': Textarea(attrs={'style': 'width: 370px', 'rows': 1}),
+            'observaciones': Textarea(attrs={'style': 'width:100%; min-width: 300px', 'rows': 1}),
         }
 
 

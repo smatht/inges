@@ -249,7 +249,7 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
     inlines = [CompraItemInline, CompraItemConceptoInline, ImpuestoXCompraInline]
     fieldsets = [
         (None, {'fields': ['afectaEmpresa', 'obra', 'fContabilizar', 'fDocumento', 'proveedor',
-                           'tipoDoc', ('sucursal', 'numDoc'), 'condPago']}),
+                           'tipoDoc', ('sucursal', 'numDoc'), 'condPago', 'observaciones']}),
         ('Fecha vencimiento:', {
             'classes': ('collapse',),
             'fields': ['fVencimiento']}),
@@ -420,9 +420,12 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
 
         # Si es a credito generar DocCuenta
         if cabecera.condPago == 'CRE':
-            docCuenta = DocCuentaProveedor(documento=cabecera, importeDocumento=cabecera.totNeto,
+            try:
+                DocCuentaProveedor.objects.get(documento=cabecera)
+            except ObjectDoesNotExist:
+                docCuenta = DocCuentaProveedor(documento=cabecera, importeDocumento=cabecera.totNeto,
                                            importeSaldo=cabecera.totNeto)
-            docCuenta.save()
+                docCuenta.save()
 
         cabecera.save()
         return cabecera

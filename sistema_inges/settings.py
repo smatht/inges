@@ -248,9 +248,12 @@ SUIT_CONFIG = {
             {'model': 'stock.familia', 'label': 'Familias', 'permissions': 'stock.add_familia'},
             {'model': 'stock.unidades', 'label': 'Unidades', 'permissions': 'stock.add_unidades'},
         )},
-        {'label': 'Informes - Consultas', 'icon': 'icon-briefcase', 'models': (
+        {'label': 'Reportes - Consultas', 'icon': 'icon-briefcase', 'models': (
             {'label': 'Informe compra x venta', 'icon': 'icon-briefcase', 'url': 'facturacion.views.informesFacturacion', 'permissions': 'facturacion.add_informes'},
             {'label': 'Reporte Analisis Corporativo', 'icon': 'icon-briefcase', 'url': 'compras.views.InformeAnalisisCorporativo', 'permissions': 'facturacion.add_informes'},
+        )},
+        {'label': 'Reportes exclusivos', 'icon': 'icon-briefcase', 'models': (
+            {'label': 'La Ruta (consumo mensual)', 'icon': 'icon-briefcase', 'url': 'compras.views.ExclusivoLaRuta', 'permissions': 'facturacion.add_informes'},
         )},
         {'app': 'auth', 'icon':'icon-lock', 'models': ('user', 'group')},
         ),

@@ -19,26 +19,36 @@ class Iva(models.Model):
 
 
 class Pais(models.Model):
-	nombre = models.CharField(max_length=50)
+  nombre = models.CharField(max_length=50)
 
-	def __unicode__(self):
-		return unicode(self.nombre)
+
+  class Meta:
+    db_table = 'Paises'
+
+  def __unicode__(self):
+    return unicode(self.nombre)
 
 
 class Ciudad(models.Model):
-	nombre = models.CharField(max_length=50)
-	pais = models.ForeignKey(Pais)
+  nombre = models.CharField(max_length=50)
+  pais = models.ForeignKey(Pais)
 
-	def __unicode__(self):
-		return unicode(self.nombre)
+  class Meta:
+   db_table = 'Ciudades'
+
+  def __unicode__(self):
+    return unicode(self.nombre)
 
 
 class Localidad(models.Model):
-	nombre = models.CharField(max_length=50)
-	ciudad = models.ForeignKey(Ciudad)
+  nombre = models.CharField(max_length=50)
+  ciudad = models.ForeignKey(Ciudad)
 
-	def __unicode__(self):
-		return unicode(self.nombre)
+  class Meta:
+    db_table = 'Localidades'
+
+  def __unicode__(self):
+    return unicode(self.nombre)
 
 
 ############################################

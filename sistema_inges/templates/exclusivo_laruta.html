@@ -1,0 +1,394 @@
+{% extends "admin/base.html" %}
+{% load admin_static %}
+
+{# Additional <head> content here, some extra meta tags or favicon #}
+{% block extrahead %}
+<script src="{% static 'js/chart/highcharts.js' %}" type="text/javascript"></script>
+<script src="{% static 'js/chart/modules/exporting.js' %}" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'css/my_project.css' %}" media="all">
+
+{% endblock %}
+
+
+{# Additional CSS includes #}
+{#{% block extrastyle %}#}
+<link rel="stylesheet" type="text/css" href="/static/css/my_project.css" media="all">
+{#{% endblock %}#}
+
+
+{# Additional JS files in footer, right before </body> #}
+{#{% block extrajs %}#}
+{# <script type="text/javascript" src="{% static 'js/my_project.js' %}"></script>#}
+{#{% endblock %}#}
+
+
+{# Footer links (left side) #}
+{% block footer_links %}
+<a href="/docs/" class="icon"><i class="icon-question-sign"></i>Reportar un problema</a>
+{% endblock %}
+
+{# Additional header content like notifications or language switcher #}
+{% block header_content %}
+{{ block.super }}
+
+{# <div class="header-content">#}
+{# <!-- First icon column -->#}
+{# <div class="header-column icon">#}
+{# <i class="icon-home"></i><br>#}
+{# <i class="icon-cog"></i>#}
+{# </div>#}
+{# <div class="header-column" style="margin-right: 20px">#}
+{# <a href="/" class="grey">Front-end</a><br>#}
+{# <a href="" class="grey">One more link</a>#}
+{# </div>#}
+{# <!-- Second icon column -->#}
+{# <div class="header-column icon">#}
+{# <i class="icon-comment"></i>#}
+{# </div>#}
+{# <div class="header-column">#}
+{# <a href="" class="grey">5 new messages</a>#}
+{# </div>#}
+{# </div>#}
+{% endblock %}
+
+{% block content-center %}
+<div id="suit-center" class="suit-column">
+
+
+
+  {% if not is_popup %}
+  {% block breadcrumbs %}
+  <ul class="breadcrumb">
+    <li><a href="{% url 'admin:index' %}">Inicio</a>
+      {% if title %}
+      <span class="divider">&raquo;</span>
+    </li>
+    <li class="active">
+      {{ title }}
+      {% endif %}
+    </li>
+  </ul>
+  {% endblock %}
+  {% endif %}
+
+  {% block messages %}
+  {% if messages %}
+
+  {% for message in messages %}
+  <div class="alert alert-{% firstof message.tags 'info' %}">
+    <button class="close" data-dismiss="alert">×</button>
+    {{ message }}
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endblock messages %}
+
+  <!-- Content -->
+  <div id="content" class="{% block coltype %}colM{% endblock %} row-fluid">
+    {% block pretitle %}{% endblock %}
+    {% block content_title %}{% if title %}
+    <h2 class="content-title">{{ title }}</h2>
+    {% endif %}{% endblock %}
+    {% block content %}
+
+    <!-- ///////////////////////// -->
+    <!--       FORM BUSQUEDA       -->
+    <!-- ///////////////////////// -->
+    <form style="display: inline;" class="form-inline form-periodo" action="" method="get">
+      <input class="form-control" type="month" placeholder="mes" name="fecha">
+      {#{% csrf_token %}#}
+      <button type="submit" class="btn btn-default">Mostrar periodo</button>
+    </form>
+    <form style="display: inline;" class="form-inline form-botonera" action="" method="post" target="_blank">
+        <button type="submit" class="print btn btn-success pull-right"><i class="icon-download-alt icon-white"></i> Excel</button>
+        <button type="button" class="print btn btn-warning pull-right" onclick="javascript:window.print()"><i class="icon-print icon-white"></i> Imprimir</button>
+      </form>
+    
+    <!-- ///////////////////////// -->
+    <!--          FIN FORM         -->
+    <!-- ///////////////////////// -->
+    <h3 class="tit">Reporte Exclusivo La Ruta S.A</h3>
+    <h4 class="tit"><small>Periodo: marzo 2014</small></h4>
+    <h4 class="tit"><small>Emision: 
+    <script type="text/javascript">
+      var d = new Date();
+      document.write(d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear());
+    </script>
+    </small></h4>
+    <!-- ///////////////////////// -->
+    <!--      SECCION GASTOS       -->
+    <!-- ///////////////////////// -->
+    <!-- <table style="margin-top:18px" class="table table-bordered table-condensed table-striped">
+      <thead>
+        <tr>
+          <th style="background-color: #FFF898">Gastos facturas total</th>
+          <th>Otros gastos</th>
+          <th>IVA a favor</th>
+          <th>IVA facturado</th>
+          <th>TOTAL</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="table-gastoSI" style="background-color: #A6D2FF">${{f_r_civa|floatformat:"2"}}</td>
+          <td class="table-gastoIVA" style="background-color: #B0AEE5">${{totalAlb|floatformat:"2"}}</td>
+          <td class="table-gastoCI" style="background-color: #DAF584">${{fact_iva|floatformat:"2"}}</td>
+          <td class="table-gastoCI" style="background-color: #FFE6B5">${{desc_iva|floatformat:"2"}}</td>
+          <td class="table-gastoIVA" style="background-color: #F8A493">${{gastoCIva|floatformat:"2"}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <a href="#tabla-detalles" class="block">Ver detalle de facturas</a>-->
+    <!-- ///////////////////////// -->
+    <!--        FIN SECCION        -->
+    <!-- ///////////////////////// -->
+
+
+    <div id="column-grafico-iva"></div>
+    <div id="pie-grafico-iva"></div>
+
+
+    <!-- /////////////////////////////////// -->
+    <!-- SECCION TABLA DE DETALLES F.RECIBIDAS -->
+    <!-- /////////////////////////////////// -->
+    {% if facturas %}
+    <a name="tabla-detalles"></a>
+    <table class="table table-bordered table-condensed table-striped">
+      <thead>
+        <tr>
+          <th colspan="7" class="text-center">Detalle de facturas recibidas</th>
+        </tr>
+        <tr>
+          <th>N°</th>
+          <th>Emisor</th>
+          <th>Fecha</th>
+          <th>subtotal</th>
+          <th>Valor IVA</th>
+          <th>Patente</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in facturas %}
+        <tr>
+          <th>{{ forloop.counter }}</th>
+          <th>{{item.proveedor}}</th>
+          <th>{{item.fDocumento}}</th>
+          <th>${{item.totBruto|floatformat:"2"}}</th>
+          <th>${{item.totImpuestos|floatformat:"2"}}</th>
+          <th>{{item.patente}}</th>
+          <th>${{item.totNeto|floatformat:"2"}}</th>
+        </tr>
+        {% endfor %}
+        <tr>
+          <td></td>
+          <td></td>
+          <td> </td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td class="table-gastoCI" style="background-color: #F3C0AF"><strong>${{total|floatformat:"2"}}</strong></td>
+        </tr>
+      </tbody>
+    </table>
+    {% endif %}
+    <!-- ///////////////////////// -->
+    <!--        FIN SECCION        -->
+    <!-- ///////////////////////// -->
+
+    <form class="form-inline form-botonera" action="" method="post">
+        <button type="button" class="print btn btn-warning" onclick="javascript:window.print()"><i class="icon-print icon-white"></i> Imprimir</button>
+        <a type="button" class="print btn btn-success" href="{{STATIC_URL}}example.xls"><i class="icon-download-alt icon-white"></i> Excel</a>
+      </form>
+
+    {% block object-tools %}{% endblock %}
+    {{ content }}
+    {% endblock %}
+    {% block sidebar_content %}
+    {% block sidebar %}{% endblock %}
+    {% endblock %}
+  </div>
+  <!-- END Content -->
+</div>
+{% endblock %}
+
+
+
+{# Footer branding name (center) #}
+{#{% block footer_branding %}#}
+{#{% endblock %}#}
+
+
+{# Footer copyright (right side) #}
+{% block copyright %}
+Copyright &copy; 2013 Inges<br>Desarrollado por <a href="http://sticchimatias.com.ar" target="_blank">Sticchi Matias G.</a>
+<script type="text/javascript">
+$(function () {
+  
+  var meses = new Array ("ENERO","FEBRERO","MARZO","ABRIL","MAYO","JUNIO","JULIO","AGOSTO","SEPTIEMBRE","OCTUBRE","NOVIEMBRE","DICIEMBRE");
+  a = "{{fact_iva}}";
+  b = "{{desc_iva}}";
+  c = "{{f_r_civa|floatformat:'2'}}"
+  d = "{{total_ingresos|floatformat:'2'}}"
+  gastoTotal = Number(parseFloat(c.replace(",",".")).toFixed(2));
+  ingresoTotal = Number(parseFloat(d.replace(",",".")).toFixed(2));
+  ivaFact = Number(parseFloat(a.replace(",",".")).toFixed(2));
+  descuento = Number(parseFloat(b.replace(",",".")).toFixed(2));
+  diferencia = Number((descuento - ivaFact).toFixed(2));
+  pieDiferencia = diferencia;
+
+  if (pieDiferencia < 0){
+    pieDiferencia = pieDiferencia * (-1);
+  }
+
+  porc = (diferencia * 100) / (ivaFact + descuento + diferencia);
+  slice = ((porc < 30) ? true : false);
+  var f = new Date();
+  var mes = meses[f.getMonth()];
+  {% if mespy %}
+  mes = meses[{{mespy}}-1];
+  pont = {y:10.54}
+  {% endif %}
+
+  <!-- ///////////////////////// -->
+  <!--       GRAFICO             -->
+  <!-- ///////////////////////// -->
+  $('#column-grafico-iva').highcharts({
+    chart: {
+      plotBackgroundColor: null,
+      plotBorderWidth: null,
+      plotShadow: false
+    },
+    title: {
+      text: 'COMPARATIVA LITROS POR VEHICULO '+mes
+    },
+    xAxis: {
+            categories: ['', 'Barras']
+        },
+    tooltip: {
+      pointFormat: 'porcentaje: <b>{point.percentage:.1f} %</b>'
+    },
+    plotOptions: {
+      column: {
+        allowPointSelect: false,
+        cursor: 'pointer',
+        dataLabels: {
+                enabled: true,
+                rotation: 0,
+                color: '#FFFFFF',
+                align: 'center',
+                verticalAlign: "top",
+                x: 0,
+                y: 0,
+                style: {
+                    fontSize: '13px',
+                    fontFamily: 'Verdana, sans-serif',
+                    textShadow: '0 0 3px black'
+                }
+            },
+          groupPadding: 0.1
+      }
+    },
+    series: {{series}}
+    // series: [{
+    //         type: 'column',
+    //         name: 'INGRESOS',
+    //         data: [ingresoTotal]
+    //     }, {
+    //         type: 'column',
+    //         name: 'GASTOS',
+    //         data: [gastoTotal],
+    //         dataLabels: {
+    //             verticalAlign: "top",
+
+    //         }
+    //     }]
+  });
+
+
+
+$('#pie-grafico-iva').highcharts({
+    chart: {
+      plotBackgroundColor: null,
+      plotBorderWidth: null,
+      plotShadow: false
+    },
+    title: {
+      text: 'COMPARATIVA GRAFICO DE ANILLO  '+mes
+    },
+    xAxis: {
+            categories: ['Torta', 'Barras']
+        },
+    tooltip: {
+      pointFormat: 'porcentaje: <b>{point.percentage:.1f} %</b>'
+    },
+    plotOptions: {
+            pie: {
+                allowPointSelect: false,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: ${point.y:.1f}',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+        },
+    // series: [{
+    //   type: 'pie',
+    //   name: 'Cantidad',
+    //   data: [
+
+    //   ['Iva a favor', ivaFact],
+    //   {
+    //     name: 'Diferencia (a pagar)',
+    //                 //y: ({{fact_iva}} - {{desc_iva}}),
+    //                 y: diferencia,
+    //                 sliced: slice,
+    //                 selected: true
+    //               },
+    //               ['Iva facturado', descuento]
+
+    //               ]
+    //             }]
+    series: [{
+            type: 'pie',
+            name: 'Total consumption',
+            data: [{
+                name: 'Iva a favor',
+                y: ivaFact,
+                color: Highcharts.getOptions().colors[0] // Jane's color
+            }, {
+                name: 'Iva a pagar',
+                y: pieDiferencia,
+                color: Highcharts.getOptions().colors[1], // John's color
+                sliced: slice,
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: $'+diferencia,
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }, {
+                name: 'Iva facturado',
+                y: descuento,
+                color: Highcharts.getOptions().colors[2] // Joe's color
+            }],
+            size: 200,
+            showInLegend: false,
+            dataLabels: {
+                enabled: true
+            }
+        }]
+  });
+
+});
+
+<!-- ///////////////////////// -->
+<!--       FIN GRAFICO         -->
+<!-- ///////////////////////// -->
+
+</script>
+{% endblock %}
