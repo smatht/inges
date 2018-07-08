@@ -302,7 +302,14 @@ class CompraAdmin(ForeignKeyAutocompleteAdmin):
         context['adminform'].form.fields['prFinal'].initial = Configuracion.objects.get(pk=1).compras_usaPrFinal
         context['adminform'].form.fields['afectaStock'].initial = Configuracion.objects.get(pk=1).compras_FacAfectaStk
         context['adminform'].form.fields['obra'].initial = Configuracion.objects.get(pk=1).general_obraDefault
+        # context['adminform'].form.fields['tipoCaja'].initial = Configuracion.objects.get(pk=1).compras_FacAfectaStk
         return super(CompraAdmin, self).render_change_form(request, context, args, kwargs)
+
+    # def get_form(self, *args, **kwargs):
+    #     f = super(CompraAdmin, self).get_form(*args, **kwargs)
+    #     f.base_fields['categories'].initial = 1
+    #
+    #     return f
 
     # Los siguientes 3 metodos sirven para Operar con cada FacturaItem
     def response_add(self, request, new_object, **kwargs):

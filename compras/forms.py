@@ -7,6 +7,7 @@ from django.forms.widgets import TextInput
 from suit.widgets import SuitDateWidget, NumberInput, SuitSplitDateTimeWidget, EnclosedInput
 
 from fondos.models import TipoCaja
+from mantenimiento.models import Configuracion
 from models import Compra
 
 
@@ -40,7 +41,8 @@ class RemitoForm(ModelForm):
 class CompraForm(forms.ModelForm):
     qTCaja = TipoCaja.objects.all()
     generarMov = forms.BooleanField(label='Generar movimiento caja', initial=True, required=False)
-    tipoCaja = forms.ModelChoiceField(queryset=qTCaja, required=False, label='Caja')
+    tipoCajaDefecto = Configuracion.objects.get(pk=1).general_tipoCaja
+    tipoCaja = forms.ModelChoiceField(queryset=qTCaja, required=False, label='Caja', initial=tipoCajaDefecto.pk)
 
     class Meta:
         model = Compra
@@ -53,6 +55,9 @@ class CompraForm(forms.ModelForm):
             'precio_unitario': EnclosedInput(prepend='$', attrs={'style': 'width: 60px'}),
             'observaciones': Textarea(attrs={'style': 'width:100%; min-width: 300px', 'rows': 1}),
         }
+
+    class Media:
+        js = ('js/compras.js',)
 
 
 class CompraItemForm(ModelForm):
