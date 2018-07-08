@@ -108,43 +108,43 @@
     <!--          FIN FORM         -->
     <!-- ///////////////////////// -->
     <h3 class="tit">Reporte Exclusivo La Ruta S.A</h3>
-    <h4 class="tit"><small>Periodo: marzo 2014</small></h4>
-    <h4 class="tit"><small>Emision: 
+    <h4 class="tit" align="right"><small>Periodo: 
+      <script type="text/javascript">
+        var meses = new Array ("ENERO","FEBRERO","MARZO","ABRIL","MAYO","JUNIO","JULIO","AGOSTO","SEPTIEMBRE","OCTUBRE","NOVIEMBRE","DICIEMBRE");
+        document.write(meses[{{mespy}}-1]);
+      </script> {{aniopy}}</small></h4>
+    <h4 class="tit" align="right"><small>Emision: 
     <script type="text/javascript">
       var d = new Date();
-      document.write(d.getDate()+'/'+d.getMonth()+'/'+d.getFullYear());
+      document.write(d.getDate()+'/'+(parseInt(d.getMonth())+1)+'/'+d.getFullYear());
     </script>
     </small></h4>
     <!-- ///////////////////////// -->
     <!--      SECCION GASTOS       -->
     <!-- ///////////////////////// -->
-    <!-- <table style="margin-top:18px" class="table table-bordered table-condensed table-striped">
+     <table style="margin-top:18px" class="table table-bordered table-condensed table-striped">
       <thead>
         <tr>
-          <th style="background-color: #FFF898">Gastos facturas total</th>
-          <th>Otros gastos</th>
-          <th>IVA a favor</th>
-          <th>IVA facturado</th>
-          <th>TOTAL</th>
+          <th style="background-color: #FFF898">Proveedor</th>
+          <th>Total litros</th>
+          <th>Total facturado</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td class="table-gastoSI" style="background-color: #A6D2FF">${{f_r_civa|floatformat:"2"}}</td>
-          <td class="table-gastoIVA" style="background-color: #B0AEE5">${{totalAlb|floatformat:"2"}}</td>
-          <td class="table-gastoCI" style="background-color: #DAF584">${{fact_iva|floatformat:"2"}}</td>
-          <td class="table-gastoCI" style="background-color: #FFE6B5">${{desc_iva|floatformat:"2"}}</td>
-          <td class="table-gastoIVA" style="background-color: #F8A493">${{gastoCIva|floatformat:"2"}}</td>
+          <td class="table-gastoSI" style="background-color: #A6D2FF">LA RUTA S.A</td>
+          <td class="table-gastoIVA" style="background-color: #B0AEE5">{{totLitros|floatformat:"2"}} lts.</td>
+          <td class="table-gastoIVA" style="background-color: #F8A493">${{total|floatformat:"2"}}</td>
         </tr>
       </tbody>
     </table>
-    <a href="#tabla-detalles" class="block">Ver detalle de facturas</a>-->
+    <a href="#tabla-detalles" class="block">Ver detalle de facturas</a>
     <!-- ///////////////////////// -->
     <!--        FIN SECCION        -->
     <!-- ///////////////////////// -->
 
 
-    <div id="column-grafico-iva"></div>
+    <!-- <div id="column-grafico-iva"></div> -->
     <div id="pie-grafico-iva"></div>
 
 
@@ -162,8 +162,7 @@
           <th>N°</th>
           <th>Emisor</th>
           <th>Fecha</th>
-          <th>subtotal</th>
-          <th>Valor IVA</th>
+          <th>Cantidad (lts.)</th>
           <th>Patente</th>
           <th>Total</th>
         </tr>
@@ -174,8 +173,7 @@
           <th>{{ forloop.counter }}</th>
           <th>{{item.proveedor}}</th>
           <th>{{item.fDocumento}}</th>
-          <th>${{item.totBruto|floatformat:"2"}}</th>
-          <th>${{item.totImpuestos|floatformat:"2"}}</th>
+          <th>{{item.lts|floatformat:"2"}}</th>
           <th>{{item.patente}}</th>
           <th>${{item.totNeto|floatformat:"2"}}</th>
         </tr>
@@ -183,7 +181,6 @@
         <tr>
           <td></td>
           <td></td>
-          <td> </td>
           <td></td>
           <td></td>
           <td></td>
@@ -253,57 +250,44 @@ $(function () {
   <!-- ///////////////////////// -->
   <!--       GRAFICO             -->
   <!-- ///////////////////////// -->
-  $('#column-grafico-iva').highcharts({
-    chart: {
-      plotBackgroundColor: null,
-      plotBorderWidth: null,
-      plotShadow: false
-    },
-    title: {
-      text: 'COMPARATIVA LITROS POR VEHICULO '+mes
-    },
-    xAxis: {
-            categories: ['', 'Barras']
-        },
-    tooltip: {
-      pointFormat: 'porcentaje: <b>{point.percentage:.1f} %</b>'
-    },
-    plotOptions: {
-      column: {
-        allowPointSelect: false,
-        cursor: 'pointer',
-        dataLabels: {
-                enabled: true,
-                rotation: 0,
-                color: '#FFFFFF',
-                align: 'center',
-                verticalAlign: "top",
-                x: 0,
-                y: 0,
-                style: {
-                    fontSize: '13px',
-                    fontFamily: 'Verdana, sans-serif',
-                    textShadow: '0 0 3px black'
-                }
-            },
-          groupPadding: 0.1
-      }
-    },
-    series: {{series}}
-    // series: [{
-    //         type: 'column',
-    //         name: 'INGRESOS',
-    //         data: [ingresoTotal]
-    //     }, {
-    //         type: 'column',
-    //         name: 'GASTOS',
-    //         data: [gastoTotal],
-    //         dataLabels: {
-    //             verticalAlign: "top",
-
-    //         }
-    //     }]
-  });
+  // $('#column-grafico-iva').highcharts({
+  //   chart: {
+  //     plotBackgroundColor: null,
+  //     plotBorderWidth: null,
+  //     plotShadow: false
+  //   },
+  //   title: {
+  //     text: 'COMPARATIVA LITROS POR VEHICULO '+mes
+  //   },
+  //   xAxis: {
+  //           categories: ['', 'Barras']
+  //       },
+  //   tooltip: {
+  //     pointFormat: 'porcentaje: <b>{point.percentage:.1f} %</b>'
+  //   },
+  //   plotOptions: {
+  //     column: {
+  //       allowPointSelect: false,
+  //       cursor: 'pointer',
+  //       dataLabels: {
+  //               enabled: true,
+  //               rotation: 0,
+  //               color: '#FFFFFF',
+  //               align: 'center',
+  //               verticalAlign: "top",
+  //               x: 0,
+  //               y: 0,
+  //               style: {
+  //                   fontSize: '13px',
+  //                   fontFamily: 'Verdana, sans-serif',
+  //                   textShadow: '0 0 3px black'
+  //               }
+  //           },
+  //         groupPadding: 0.1
+  //     }
+  //   },
+  //   series: {{series}}
+  // });
 
 
 
@@ -314,74 +298,30 @@ $('#pie-grafico-iva').highcharts({
       plotShadow: false
     },
     title: {
-      text: 'COMPARATIVA GRAFICO DE ANILLO  '+mes
+      text: 'Comparativa <b>litros consumidos</b> de '+mes,
+      align: 'center',
+      verticalAlign: 'top',
+      y: 40
     },
-    xAxis: {
-            categories: ['Torta', 'Barras']
-        },
     tooltip: {
       pointFormat: 'porcentaje: <b>{point.percentage:.1f} %</b>'
     },
     plotOptions: {
             pie: {
-                allowPointSelect: false,
-                cursor: 'pointer',
-                dataLabels: {
-                    enabled: true,
-                    format: '<b>{point.name}</b>: ${point.y:.1f}',
-                    style: {
-                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-                    }
-                }
-            }
+              dataLabels: {
+                  enabled: true,
+                  distance: -50,
+                  style: {
+                      fontWeight: 'bold',
+                      color: 'white'
+                  }
+              },
+            startAngle: -90,
+            endAngle: 90,
+            center: ['50%', '75%']
+        }
         },
-    // series: [{
-    //   type: 'pie',
-    //   name: 'Cantidad',
-    //   data: [
-
-    //   ['Iva a favor', ivaFact],
-    //   {
-    //     name: 'Diferencia (a pagar)',
-    //                 //y: ({{fact_iva}} - {{desc_iva}}),
-    //                 y: diferencia,
-    //                 sliced: slice,
-    //                 selected: true
-    //               },
-    //               ['Iva facturado', descuento]
-
-    //               ]
-    //             }]
-    series: [{
-            type: 'pie',
-            name: 'Total consumption',
-            data: [{
-                name: 'Iva a favor',
-                y: ivaFact,
-                color: Highcharts.getOptions().colors[0] // Jane's color
-            }, {
-                name: 'Iva a pagar',
-                y: pieDiferencia,
-                color: Highcharts.getOptions().colors[1], // John's color
-                sliced: slice,
-                dataLabels: {
-                    enabled: true,
-                    format: '<b>{point.name}</b>: $'+diferencia,
-                    style: {
-                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-                    }
-                }
-            }, {
-                name: 'Iva facturado',
-                y: descuento,
-                color: Highcharts.getOptions().colors[2] // Joe's color
-            }],
-            size: 200,
-            showInLegend: false,
-            dataLabels: {
-                enabled: true
-            }
-        }]
+    series: {{seriesPie}}
   });
 
 });

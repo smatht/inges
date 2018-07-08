@@ -13,6 +13,7 @@ from xlrd import open_workbook
 from xlutils.copy import copy
 
 from sistema_inges import settings
+from sistema_inges.settings import SERIES_COLORS
 from .serializers import CompraSerializer
 from .models import Compra, CompraItem
 
@@ -189,16 +190,24 @@ def jsonify(object):
 def ExclusivoLaRuta(request):
     now = datetime.datetime.now()
     mes = now.month
+    anio = now.year
     template = 'exclusivo_laruta.html'
     if request.method == "GET":
         if request.GET.get('fecha'):
             mes = request.GET.get('fecha')[-2:]
-            # anio = int(request.POST.get('anio'))
+            anio = request.GET.get('fecha')[:4]
             # now = datetime.datetime(anio,mes,1)
 
     compras = Compra.objects.filter(fDocumento__month=mes, proveedor__razon_social__icontains='LA RUTA S.A')
+    totLitros = 0
     totalFinal = 0
+    # Datos para grafico de barras
     series = []
+    # Datos para grafico Semi Pie
+    seriesPie = []
+    seriesPie.append({
+        'data': []
+    })
 
     for compra in compras:
         dic = {}
@@ -221,10 +230,27 @@ def ExclusivoLaRuta(request):
             dic['type'] = 'column'
             series.append(dic)
 
-        simplejson = jsonify(series)
         compra.patente = key
+        compra.lts = compraItem.cantidad
+        totLitros += compraItem.cantidad
         totalFinal += compra.totNeto
+    j = 4
+    for e in series:
+        dic = {}
+        dic['color'] = SERIES_COLORS[j]
+        dic['name'] = e.get('name') + ' (' + str(e.get('data')[0]) + ' lts.)'
+        dic['y'] = e.get('data')[0]
+        seriesPie[0].get('data').append(dic)
+        j = j + 1
 
+    seriesPie[0]['type'] = 'pie'
+    seriesPie[0]['name'] = 'Browser share'
+    seriesPie[0]['innerSize'] = '50%'
+    series = jsonify(series)
+    seriesPie = jsonify(seriesPie)
+    print(series)
+    print(seriesPie)
 
-    return render(request, template, {'request': request, 'series': simplejson, 'facturas': compras, 'total': totalFinal,
-                                      'mespy': mes}, context_instance=RequestContext(request))
+    return render(request, template, {'request': request, 'series': series, 'facturas': compras, 'total': totalFinal,
+                                      'seriesPie': seriesPie, 'mespy': mes, 'aniopy': anio, 'totLitros': totLitros},
+                  context_instance=RequestContext(request))
