@@ -40,6 +40,10 @@ class Caja(models.Model):
     class Meta:
         db_table = 'Cajas'
 
+
+    def saldo(self):
+        return self.montoInicial + self.acumEntradas - self.acumSalidas
+
     def __unicode__(self):
         return format(self.tipoCaja.__unicode__() + ' Obra: ' + self.destino.__unicode__()
                       + ' ' + self.fApertura.strftime("%d-%m-%Y"))

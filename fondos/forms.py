@@ -101,11 +101,11 @@ class ConfiguracionReporteCaja(forms.Form):
     tipoCajaDefecto = Configuracion.objects.get(pk=1).general_tipoCaja
     obraCajaDefecto = Configuracion.objects.get(pk=1).general_obraDefault
     # FIELDS
-    desde = forms.DateField(label='Desde', initial=first, widget=forms.TextInput(attrs={"type": "date"}))
-    hasta = forms.DateField(label='Hasta', initial=last, widget=forms.TextInput(attrs={"type": "date"}))
-    tipoCaja = forms.ModelChoiceField(queryset=TipoCaja.objects.all(), required=False,
-                                      label="Tipo caja", initial=tipoCajaDefecto.pk)
-    obraCaja = forms.ModelChoiceField(queryset=Obra.objects.all(), required=False, initial=obraCajaDefecto)
+    desde = forms.DateField(label='Desde: ', initial=first, widget=forms.TextInput(attrs={"type": "date"}))
+    hasta = forms.DateField(label='Hasta: ', initial=last, widget=forms.TextInput(attrs={"type": "date"}))
+    tipoCaja = forms.ModelChoiceField(queryset=TipoCaja.objects.all(), label="Tipo caja: ", initial=tipoCajaDefecto.pk)
+    obraCaja = forms.ModelChoiceField(queryset=Obra.objects.all(), label="Obra: ", initial=obraCajaDefecto)
+    ver_todo = forms.BooleanField(initial=False, label='Ver todo: ', required=False)
 
     # class Meta:
     #     widgets = {

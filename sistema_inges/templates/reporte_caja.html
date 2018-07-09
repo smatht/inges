@@ -109,8 +109,8 @@
     <form style="display: inline;" class="form-inline form-periodo" action="" method="get">
       <!-- <input class="form-control" type="date" placeholder="mes" name="fecha"> -->
       {#{% csrf_token %}#}
-      {{ form.desde }} {{ form.hasta }} <br /><br />
-      {{ form.tipoCaja }} {{ form.obraCaja }} <br /><br />
+      {{ form.desde.label }}{{ form.desde }} {{ form.hasta.label }}{{ form.hasta }} {{ form.ver_todo.label }}{{ form.ver_todo }} <br /><br />
+      {{ form.tipoCaja.label }}{{ form.tipoCaja }} {{ form.obraCaja.label }}{{ form.obraCaja }} <br /><br />
       <button type="submit" class="btn btn-default">Mostrar periodo</button> 
     </form>
     <form style="display: inline;" class="form-inline form-botonera" action="" method="post" target="_blank">
@@ -133,63 +133,68 @@
       document.write(d.getDate()+'/'+(parseInt(d.getMonth())+1)+'/'+d.getFullYear());
     </script>
     </small></h4>
+    <h4 class="tit">CAJA: {{ caja.tipoCaja }} - {{ caja.destino }} </h4>
     <!-- ///////////////////////// -->
     <!--      SECCION GASTOS       -->
     <!-- ///////////////////////// -->
      <table style="margin-top:18px" class="table table-bordered table-condensed table-striped">
       <thead>
         <tr>
-          <th style="background-color: #FFF898">Proveedor</th>
-          <th>Total litros</th>
-          <th>Total facturado</th>
+          <th style="background-color: #FFF898">Apertura</th>
+          <th>Monto inicial</th>
+          <th>Entradas</th>
+          <th>Salidas</th>
+          <th>Saldo</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td class="table-gastoSI" style="background-color: #A6D2FF">LA RUTA S.A</td>
-          <td class="table-gastoIVA" style="background-color: #B0AEE5">{{totLitros|floatformat:"2"}} lts.</td>
-          <td class="table-gastoIVA" style="background-color: #F8A493">${{total|floatformat:"2"}}</td>
+          <td class="table-gastoSI" style="background-color: #A6D2FF">{{ caja.fApertura }}</td>
+          <td class="table-gastoIVA" style="background-color: #B0AEE5">{{ caja.montoInicial }}</td>
+          <td class="table-gastoIVA" style="background-color: #B0AEE5">${{ caja.acumEntradas | floatformat:"2" }}</td>
+          <td class="table-gastoIVA" style="background-color: #B0AEE5">${{ caja.acumSalidas | floatformat:"2" }}</td>
+          <td class="table-gastoIVA" style="background-color: #B0AEE5">${{ caja.saldo | floatformat:"2" }}</td>
         </tr>
       </tbody>
     </table>
-    <a href="#tabla-detalles" class="block">Ver detalle de facturas</a>
+    <!-- <a href="#tabla-detalles" class="block">Ver detalle de facturas</a> -->
     <!-- ///////////////////////// -->
     <!--        FIN SECCION        -->
     <!-- ///////////////////////// -->
 
 
     <!-- <div id="column-grafico-iva"></div> -->
-    <div id="pie-grafico-iva"></div>
+    <!-- <div id="pie-grafico-iva"></div> -->
 
 
     <!-- /////////////////////////////////// -->
     <!-- SECCION TABLA DE DETALLES F.RECIBIDAS -->
     <!-- /////////////////////////////////// -->
-    {% if facturas %}
+    {% if movimientos %}
     <a name="tabla-detalles"></a>
     <table class="table table-bordered table-condensed table-striped">
       <thead>
         <tr>
-          <th colspan="7" class="text-center">Detalle de facturas recibidas</th>
+          <th colspan="7" class="text-center">Detalle de movimientos</th>
         </tr>
         <tr>
-          <th>N°</th>
-          <th>Emisor</th>
-          <th>Fecha</th>
-          <th>Cantidad (lts.)</th>
-          <th>Patente</th>
-          <th>Total</th>
+          <th>Nº</th>
+          <th>fecha</th>
+          <th>Empresa</th>
+          <th>Descripcion</th>
+          <th>Tipo mov.</th>
+          <th>Importe</th>
         </tr>
       </thead>
       <tbody>
-        {% for item in facturas %}
+        {% for item in movimientos %}
         <tr>
           <th>{{ forloop.counter }}</th>
-          <th>{{item.proveedor}}</th>
-          <th>{{item.fDocumento}}</th>
-          <th>{{item.lts|floatformat:"2"}}</th>
-          <th>{{item.patente}}</th>
-          <th>${{item.totNeto|floatformat:"2"}}</th>
+          <th>{{ item.fecha }}</th>
+          <th>{{ item.empresa }}</th>
+          <th>{{ item.descripcion }}</th>
+          <th>{{ item.tipoMovCaja }}</th>
+          <th>${{ item.importe | floatformat:"2" }}</th>
         </tr>
         {% endfor %}
         <tr>
