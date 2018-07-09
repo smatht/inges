@@ -6,7 +6,9 @@ from django.conf.urls.static import static
 from django.contrib import admin
 
 import compras
+import fondos
 from compras.views import ComprasViewSet
+from fondos.views import ReporteCajaView
 from stock.views import PROViewSet
 
 admin.autodiscover()
@@ -32,6 +34,7 @@ urlpatterns = patterns('',
     url(r'^', include(facturacion.urls)),
     url(r'^reportes/analisis_corporativo$', compras.views.InformeAnalisisCorporativo, name='analisis_corporativo'),
     url(r'^reportes/exclusivos_laruta$', compras.views.ExclusivoLaRuta, name='exclusivos_laruta'),
+    url(r'^reportes/reporte_caja$', fondos.views.ReporteCajaView, name='reporte_caja'),
     url(r'^cuentas-wallet/', save_cuenta),
     url(r'^registros-wallet/(\d+)/', get_registros)
 

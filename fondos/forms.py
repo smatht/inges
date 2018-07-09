@@ -1,14 +1,19 @@
 #encoding:utf-8
+import calendar
+import datetime
+
 from django import forms
 from django.forms import SelectMultiple
 from django.forms import TextInput
 from django.forms import Textarea
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import messages
+from django.forms.extras import SelectDateWidget
 from django.utils.safestring import mark_safe
-from suit.widgets import AutosizedTextarea
+from suit.widgets import AutosizedTextarea, SuitDateWidget
 
 from fondos_externos.models import Cuenta
+from mantenimiento.models import Configuracion
 from models import OrdenPago, Caja, TipoCaja
 from proyectos.models import Obra
 
@@ -86,3 +91,18 @@ class CajaForm(forms.ModelForm):
     class Meta:
         model = Caja
         fields = '__all__'
+
+
+class ConfiguracionReporteCaja(forms.Form):
+    # VARS
+    now = datetime.date.today()
+    first = datetime.date(now.year, now.month, 1)
+    last = datetime.date(now.year, now.month, calendar.monthrange(now.year, now.month)[1])
+    tipoCajaDefecto = Configuracion.objects.get(pk=1).general_tipoCaja
+    obraCajaDefecto = Configuracion.objects.get(pk=1).general_obraDefault
+    # FIELDS
+    desde = forms.DateField(label='Desde', initial=first)
+    hasta = forms.DateField(label='Hasta', initial=last)
+    tipoCaja = forms.ModelChoiceField(queryset=TipoCaja.objects.all(), required=False,
+                                      label="Tipo caja", initial=tipoCajaDefecto.pk)
+    obraCaja = forms.ModelChoiceField(queryset=Obra.objects.all(), required=False, initial=obraCajaDefecto)

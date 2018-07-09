@@ -242,6 +242,7 @@ SUIT_CONFIG = {
             {'model': 'fondos.movcaja', 'label': 'Movimiento de caja', 'permissions': 'fondos.add_movcaja'},
             {'model': 'fondos.tipomovcaja', 'label': 'Tipo movimiento', 'permissions': 'fondos.add_tipomovcaja'},
             {'model': 'fondos.ordenpago', 'label': 'Orden de pago', 'permissions': 'fondos.add_ordenpago'},
+            {'label': 'Reporte de caja', 'icon': 'icon-briefcase', 'url': 'fondos.views.ReporteCajaView', 'permissions': 'facturacion.add_informes'},
         )},
         {'app': 'stock', 'models': (
             {'model': 'stock.producto', 'label': 'Productos', 'permissions': 'stock.add_producto'},
