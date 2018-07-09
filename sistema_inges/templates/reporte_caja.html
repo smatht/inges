@@ -107,7 +107,7 @@
     <!--       FORM BUSQUEDA       -->
     <!-- ///////////////////////// -->
     <form style="display: inline;" class="form-inline form-periodo" action="" method="get">
-      <!--<input class="form-control" type="month" placeholder="mes" name="fecha">-->
+      <!-- <input class="form-control" type="date" placeholder="mes" name="fecha"> -->
       {#{% csrf_token %}#}
       {{ form.desde }} {{ form.hasta }} <br /><br />
       {{ form.tipoCaja }} {{ form.obraCaja }} <br /><br />

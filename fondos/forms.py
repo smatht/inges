@@ -101,8 +101,13 @@ class ConfiguracionReporteCaja(forms.Form):
     tipoCajaDefecto = Configuracion.objects.get(pk=1).general_tipoCaja
     obraCajaDefecto = Configuracion.objects.get(pk=1).general_obraDefault
     # FIELDS
-    desde = forms.DateField(label='Desde', initial=first)
-    hasta = forms.DateField(label='Hasta', initial=last)
+    desde = forms.DateField(label='Desde', initial=first, widget=forms.TextInput(attrs={"type": "date"}))
+    hasta = forms.DateField(label='Hasta', initial=last, widget=forms.TextInput(attrs={"type": "date"}))
     tipoCaja = forms.ModelChoiceField(queryset=TipoCaja.objects.all(), required=False,
                                       label="Tipo caja", initial=tipoCajaDefecto.pk)
     obraCaja = forms.ModelChoiceField(queryset=Obra.objects.all(), required=False, initial=obraCajaDefecto)
+
+    # class Meta:
+    #     widgets = {
+    #         'desde': TextInput(attrs={'type': 'date', })
+    #     }
