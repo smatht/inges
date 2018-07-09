@@ -123,10 +123,7 @@
     <!-- ///////////////////////// -->
     <h3 class="tit">Reporte de caja</h3>
     <h4 class="tit" align="right"><small>Periodo:
-      <script type="text/javascript">
-        var meses = new Array ("ENERO","FEBRERO","MARZO","ABRIL","MAYO","JUNIO","JULIO","AGOSTO","SEPTIEMBRE","OCTUBRE","NOVIEMBRE","DICIEMBRE");
-        document.write(meses[{{mespy}}-1]);
-      </script> {{aniopy}}</small></h4>
+       {{ rangoFecha.desde | date:"d/m/y" }} - {{ rangoFecha.hasta | date:"d/m/y" }} </small></h4>
     <h4 class="tit" align="right"><small>Emision:
     <script type="text/javascript">
       var d = new Date();
